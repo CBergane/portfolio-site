@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+
+{% block content %}
+
+{# Hero Section #}
+<section class="min-h-screen flex items-center justify-center bg-gradient-to-b from-htb-darker via-htb-dark to-htb-darker relative overflow-hidden">
+    {# Animated background grid #}
+    <div class="absolute inset-0 bg-[linear-gradient(rgba(159,239,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(159,239,0,0.03)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
+    
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 fade-in">
+        <div class="text-center space-y-8">
+            {# Terminal-style greeting #}
+            <div class="font-mono text-htb-green text-sm sm:text-base">
+                <span class="text-gray-500">christian@portfolio:~$</span> whoami
+            </div>
+            
+            {# Main heading with glitch effect #}
+            <h1 class="text-5xl sm:text-6xl md:text-7xl font-bold glitch">
+                <span class="text-htb-cyan">Christian</span>
+                <span class="text-htb-green"> Bergane</span>
+            </h1>
+            
+            {# Subtitle with typing effect #}
+            <p class="text-xl sm:text-2xl md:text-3xl text-gray-300 font-mono">
+                Site Reliability Engineer<span class="text-htb-green cursor-blink">_</span>
+            </p>
+            
+            {# Description #}
+            <div class="max-w-2xl mx-auto space-y-4 text-gray-400">
+                <p class="text-lg">
+                    Building secure, scalable infrastructure while breaking into systems on HackTheBox. 
+                    From kitchen to cloud, I bring reliability and creativity to everything I do.
+                </p>
+            </div>
+            
+            {# Skills badges #}
+            <div class="flex flex-wrap justify-center gap-3 pt-4">
+                <span class="px-4 py-2 bg-htb-gray border border-htb-green/30 rounded-lg text-sm font-mono text-htb-green hover:bg-htb-green/10 transition-colors">Python</span>
+                <span class="px-4 py-2 bg-htb-gray border border-htb-cyan/30 rounded-lg text-sm font-mono text-htb-cyan hover:bg-htb-cyan/10 transition-colors">Django</span>
+                <span class="px-4 py-2 bg-htb-gray border border-htb-green/30 rounded-lg text-sm font-mono text-htb-green hover:bg-htb-green/10 transition-colors">Proxmox</span>
+                <span class="px-4 py-2 bg-htb-gray border border-htb-cyan/30 rounded-lg text-sm font-mono text-htb-cyan hover:bg-htb-cyan/10 transition-colors">PostgreSQL</span>
+                <span class="px-4 py-2 bg-htb-gray border border-htb-green/30 rounded-lg text-sm font-mono text-htb-green hover:bg-htb-green/10 transition-colors">Podman</span>
+            </div>
+            
+            {# CTA Buttons #}
+            <div class="flex flex-col sm:flex-row gap-4 justify-center pt-8">
+                <a href="#projects" class="px-8 py-4 bg-htb-green text-htb-darker font-mono font-bold rounded-lg hover:bg-htb-green/90 transition-all hover:scale-105 transform">
+                    View Projects
+                </a>
+                <a href="/contact" class="px-8 py-4 bg-transparent border-2 border-htb-cyan text-htb-cyan font-mono font-bold rounded-lg hover:bg-htb-cyan/10 transition-all">
+                    Get In Touch
+                </a>
+            </div>
+            
+            {# Scroll indicator #}
+            <div class="pt-16 animate-bounce">
+                <svg class="w-6 h-6 mx-auto text-htb-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                </svg>
+            </div>
+        </div>
+    </div>
+</section>
+
+{# About Section with HTMX #}
+<section id="about" class="py-20 bg-htb-dark">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-4xl font-bold text-htb-cyan font-mono mb-12 text-center">
+            <span class="text-htb-green">~/</span>about
+        </h2>
+        
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+            <div class="space-y-6 text-gray-300">
+                {{ page.body|richtext }}
+                
+                <div class="space-y-4">
+                    <h3 class="text-xl font-mono text-htb-green">Current Focus</h3>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-start">
+                            <span class="text-htb-green text-lg font-mono">[<span class="text-htb-cyan">~</span>]</span>
+                            Pursuing OSCP & CPTS certifications
+                        </li>
+                        <li class="flex items-start">
+                           <span class="text-htb-green text-lg font-mono">[<span class="text-htb-cyan">~</span>]</span>
+                            Building home lab infrastructure
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-htb-green text-lg font-mono">[<span class="text-htb-cyan">~</span>]</span>
+                            Web development for small businesses
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            {# Interactive stats with HTMX #}
+{% load wagtailsettings_tags %}
+{% get_settings %}
+
+<div class="space-y-4">
+    <div class="bg-htb-gray border border-htb-green/30 rounded-lg p-6 hover:border-htb-green/60 transition-colors">
+        <div class="flex justify-between items-center">
+            <span class="text-gray-400 font-mono">Experience</span>
+            <span class="text-2xl font-bold text-htb-green">2+ years</span>
+        </div>
+    </div>
+    
+    <div class="bg-htb-gray border border-htb-cyan/30 rounded-lg p-6 hover:border-htb-cyan/60 transition-colors">
+        <div class="flex justify-between items-center">
+            <span class="text-gray-400 font-mono">Projects</span>
+            <span class="text-2xl font-bold text-htb-cyan">{{ total_projects }}</span>
+        </div>
+    </div>
+    
+    {% if settings.home.SocialMediaSettings.hackthebox_url %}
+    <a href="{{ settings.home.SocialMediaSettings.hackthebox_url }}" target="_blank"
+       class="block bg-htb-dark border-2 border-htb-green/30 rounded-lg p-6 hover:border-htb-green hover:shadow-lg hover:shadow-htb-green/20 transition-all transform hover:-translate-y-1 group">
+        <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-3">
+                <span class="text-3xl">🟢</span>
+                <div>
+                    <h3 class="text-lg font-mono font-bold text-htb-green">HackTheBox</h3>
+                    <p class="text-xs text-gray-500 font-mono">{{ settings.home.SocialMediaSettings.htb_rank }}</p>
+                </div>
+            </div>
+            <svg class="w-5 h-5 text-htb-green transform group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+            </svg>
+        </div>
+        
+        <div class="grid grid-cols-2 gap-3 text-sm">
+            <div class="bg-htb-gray/50 rounded p-2">
+                <p class="text-gray-500 text-xs mb-1">Boxes Owned</p>
+                <p class="text-htb-green font-mono font-bold">{{ settings.home.SocialMediaSettings.htb_boxes_owned }}</p>
+            </div>
+            <div class="bg-htb-gray/50 rounded p-2">
+                <p class="text-gray-500 text-xs mb-1">User Owns</p>
+                <p class="text-htb-cyan font-mono font-bold">{{ settings.home.SocialMediaSettings.htb_user_owns }}</p>
+            </div>
+            <div class="bg-htb-gray/50 rounded p-2">
+                <p class="text-gray-500 text-xs mb-1">System Owns</p>
+                <p class="text-htb-cyan font-mono font-bold">{{ settings.home.SocialMediaSettings.htb_system_owns }}</p>
+            </div>
+            <div class="bg-htb-gray/50 rounded p-2">
+                <p class="text-gray-500 text-xs mb-1">Challenges</p>
+                <p class="text-htb-green font-mono font-bold">{{ settings.home.SocialMediaSettings.htb_challenges }}</p>
+            </div>
+        </div>
+    </a>
+    {% endif %}
+</div>
+        </div>
+    </div>
+</section>
+
+{# Services Section #}
+<section id="services" class="py-20 bg-htb-darker">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-4xl font-bold text-htb-cyan font-mono mb-12 text-center">
+            <span class="text-htb-green">~/</span>services
+        </h2>
+        
+        <div class="grid md:grid-cols-3 gap-8">
+            {# Service 1 #}
+            <div class="bg-htb-gray border border-htb-green/30 rounded-lg p-6 hover:border-htb-green hover:shadow-lg hover:shadow-htb-green/20 transition-all transform hover:-translate-y-2">
+                <div class="text-htb-green text-3xl mb-4">🌐</div>
+                <h3 class="text-xl font-mono text-htb-cyan mb-3">Web Development</h3>
+                <p class="text-gray-400 text-sm">Custom websites and web applications built with Django, Wagtail, and modern frontend technologies.</p>
+            </div>
+            
+            {# Service 2 #}
+            <div class="bg-htb-gray border border-htb-cyan/30 rounded-lg p-6 hover:border-htb-cyan hover:shadow-lg hover:shadow-htb-cyan/20 transition-all transform hover:-translate-y-2">
+                <div class="text-htb-cyan text-3xl mb-4">🔧</div>
+                <h3 class="text-xl font-mono text-htb-cyan mb-3">Infrastructure Support</h3>
+                <p class="text-gray-400 text-sm">Server setup, maintenance, and optimization. From Proxmox to cloud deployments.</p>
+            </div>
+            
+            {# Service 3 #}
+            <div class="bg-htb-gray border border-htb-green/30 rounded-lg p-6 hover:border-htb-green hover:shadow-lg hover:shadow-htb-green/20 transition-all transform hover:-translate-y-2">
+                <div class="text-htb-green text-3xl mb-4">☁️</div>
+                <h3 class="text-xl font-mono text-htb-cyan mb-3">Hosting via Linode</h3>
+                <p class="text-gray-400 text-sm">Reliable hosting solutions with monitoring, backups, and 24/7 uptime.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

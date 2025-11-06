@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Disallow admin areas
+Disallow: /cms-backend-2025/
+Disallow: /secret-django-control/
+Disallow: /documents/
+
+# Sitemap
+Sitemap: {{ request.scheme }}://{{ request.get_host }}/sitemap.xml

@@ -1,0 +1,589 @@
+/* ============================================
+   Portfolio Site - Custom Styles
+   Author: Christian Bergane
+   ============================================ */
+
+/* ========== ANIMATIONS ========== */
+
+/* Terminal cursor animation */
+.cursor-blink {
+    animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+}
+
+/* Glitch effect on hover */
+.glitch:hover {
+    animation: glitch 0.3s ease;
+}
+
+@keyframes glitch {
+    0% { transform: translate(0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(-2px, -2px); }
+    60% { transform: translate(2px, 2px); }
+    80% { transform: translate(2px, -2px); }
+    100% { transform: translate(0); }
+}
+
+/* Fade in animation */
+.fade-in {
+    animation: fadeIn 0.8s ease-in;
+}
+
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(20px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+/* Pulse animation */
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* ========== BLOG SPECIFIC ========== */
+
+/* Reading progress bar */
+#reading-progress {
+    position: fixed;
+    top: 64px;
+    left: 0;
+    width: 0%;
+    height: 3px;
+    background: linear-gradient(90deg, #9fef00, #00d9ff);
+    z-index: 100;
+    transition: width 0.1s ease;
+}
+
+/* Table of contents */
+#toc {
+    position: sticky;
+    top: 100px;
+}
+
+/* Code block styling */
+.code-block {
+    position: relative;
+}
+
+.copy-button {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.code-block:hover .copy-button {
+    opacity: 1;
+}
+
+/* ========== PROSE STYLING ========== */
+
+.prose {
+    color: #e0e0e0;
+}
+
+.prose h2 {
+    color: #00d9ff;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid rgba(159, 239, 0, 0.2);
+    padding-bottom: 0.5rem;
+}
+
+.prose h3 {
+    color: #9fef00;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.prose p {
+    margin-bottom: 1rem;
+    line-height: 1.8;
+}
+
+.prose a {
+    color: #9fef00;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(159, 239, 0, 0.3);
+    transition: all 0.2s;
+}
+
+.prose a:hover {
+    color: #00d9ff;
+    border-bottom-color: #00d9ff;
+}
+
+.prose code {
+    background: #1a1f2e;
+    color: #9fef00;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+}
+
+.prose pre {
+    background: #0a0e14;
+    border: 1px solid rgba(159, 239, 0, 0.2);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+}
+
+.prose pre code {
+    background: transparent;
+    padding: 0;
+}
+
+.prose ul, .prose ol {
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.prose li {
+    margin-bottom: 0.5rem;
+}
+
+.prose blockquote {
+    border-left: 4px solid #9fef00;
+    padding-left: 1rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+    color: #a0a0a0;
+}
+
+/* Line clamp utility */
+.line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ========== UTILITIES ========== */
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Selection color */
+::selection {
+    background: #9fef00;
+    color: #0a0e14;
+}
+
+::-moz-selection {
+    background: #9fef00;
+    color: #0a0e14;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0a0e14;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #1a1f2e;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #9fef00;
+}
+
+/* Focus styles */
+a:focus, button:focus, input:focus, textarea:focus {
+    outline: 2px solid #9fef00;
+    outline-offset: 2px;
+}
+
+/* ========== RESPONSIVE ========== */
+
+@media (max-width: 768px) {
+    #toc {
+        position: static;
+    }
+}
+
+/* ========== STREAMFIELD BLOCKS ========== */
+
+/* Heading block */
+.block-heading {
+    font-size: 1.875rem;
+    font-weight: bold;
+    color: #00d9ff;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid rgba(159, 239, 0, 0.2);
+    padding-bottom: 0.5rem;
+}
+
+/* Paragraph block */
+.block-paragraph {
+    margin-bottom: 1.5rem;
+    line-height: 1.8;
+    color: #e0e0e0;
+}
+
+.block-paragraph p {
+    margin-bottom: 1rem;
+}
+
+/* Rich text lists */
+.block-paragraph ul,
+.block-paragraph ol {
+    margin-left: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.block-paragraph li {
+    margin-bottom: 0.5rem;
+}
+
+.block-paragraph li::marker {
+    color: #9fef00;
+}
+
+/* Rich text links */
+.block-paragraph a {
+    color: #9fef00;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(159, 239, 0, 0.3);
+    transition: all 0.2s;
+}
+
+.block-paragraph a:hover {
+    color: #00d9ff;
+    border-bottom-color: #00d9ff;
+}
+
+/* Rich text inline code */
+.block-paragraph code {
+    background: #1a1f2e;
+    color: #9fef00;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* Rich text bold/italic */
+.block-paragraph strong {
+    color: #00d9ff;
+    font-weight: 600;
+}
+
+.block-paragraph em {
+    color: #9fef00;
+}
+
+/* ========== MARKDOWN STYLING ========== */
+
+.block-markdown {
+    margin-bottom: 1.5rem;
+    line-height: 1.8;
+    color: #e0e0e0;
+}
+
+.block-markdown h2 {
+    font-size: 1.875rem;
+    font-weight: bold;
+    color: #00d9ff;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid rgba(159, 239, 0, 0.2);
+    padding-bottom: 0.5rem;
+}
+
+.block-markdown h3 {
+    font-size: 1.5rem;
+    color: #9fef00;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.block-markdown h4 {
+    font-size: 1.25rem;
+    color: #00d9ff;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.block-markdown p {
+    margin-bottom: 1rem;
+}
+
+.block-markdown strong {
+    color: #00d9ff;
+    font-weight: 600;
+}
+
+.block-markdown em {
+    color: #9fef00;
+    font-style: italic;
+}
+
+.block-markdown a {
+    color: #9fef00;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(159, 239, 0, 0.3);
+    transition: all 0.2s;
+}
+
+.block-markdown a:hover {
+    color: #00d9ff;
+    border-bottom-color: #00d9ff;
+}
+/* Custom list styling with symbols - UPDATED */
+
+/* Remove default list styling completely */
+.block-markdown ul,
+.block-markdown ol {
+    list-style: none;
+    margin-left: 0;
+    padding-left: 0;
+    margin-bottom: 1rem;
+}
+
+/* Unordered lists - Green arrows */
+.block-markdown ul:not(ol ul) > li {
+    position: relative;
+    padding-left: 2rem;
+    margin-bottom: 0.5rem;
+    color: #e0e0e0;
+}
+
+.block-markdown ul:not(ol ul) > li::before {
+    content: "[~] " !important;
+    position: absolute;
+    left: 0;
+    color: #9fef00 !important;
+    font-weight: bold;
+    font-size: 1em;  /* Ändra från 1.2em */
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* Ordered lists - Cyan numbers */
+.block-markdown ol {
+    counter-reset: item;
+}
+
+.block-markdown ol > li {
+    position: relative;
+    padding-left: 2rem;
+    margin-bottom: 0.5rem;
+    color: #e0e0e0;
+    counter-increment: item;
+}
+
+.block-markdown ol > li::before {
+    content: counter(item) ".";
+    position: absolute;
+    left: 0;
+    color: #00d9ff !important;
+    font-weight: bold;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* Nested unordered lists */
+.block-markdown ul ul {
+    margin-top: 0.5rem;
+}
+
+.block-markdown ul ul > li::before {
+    content: "•";
+    color: #00d9ff !important;
+    font-size: 1em;
+}
+
+/* Nested ordered lists */
+.block-markdown ol ol {
+    margin-top: 0.5rem;
+    counter-reset: subitem;
+}
+
+.block-markdown ol ol > li {
+    counter-increment: subitem;
+}
+
+.block-markdown ol ol > li::before {
+    content: counter(subitem) ".";
+    color: #9fef00 !important;
+}
+
+.block-markdown code {
+    background: #1a1f2e;
+    color: #9fef00;
+    padding: 0.2rem 0.4rem;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+.block-markdown pre {
+    background: #0a0e14;
+    border: 1px solid rgba(159, 239, 0, 0.2);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 1.5rem 0;
+}
+
+.block-markdown pre code {
+    background: transparent;
+    padding: 0;
+}
+
+.block-markdown blockquote {
+    border-left: 4px solid #9fef00;
+    padding-left: 1rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+    color: #a0a0a0;
+}
+
+.block-markdown hr {
+    border: none;
+    border-top: 2px solid rgba(159, 239, 0, 0.2);
+    margin: 2rem 0;
+}
+
+.block-markdown table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+}
+
+.block-markdown th,
+.block-markdown td {
+    border: 1px solid rgba(159, 239, 0, 0.2);
+    padding: 0.75rem;
+    text-align: left;
+}
+
+.block-markdown th {
+    background: #1a1f2e;
+    color: #00d9ff;
+    font-weight: 600;
+}
+
+/* ========== PROJECT CARDS ========== */
+
+.project-card {
+    perspective: 1000px;
+}
+
+.project-card:hover {
+    transform: translateY(-8px) rotateX(2deg);
+}
+
+/* Scrollbar for tech pills */
+.scrollbar-thin::-webkit-scrollbar {
+    height: 4px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+    background: #1a1f2e;
+    border-radius: 2px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+    background: #9fef00;
+    border-radius: 2px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: #00d9ff;
+}
+
+/* Reading progress bar */
+#reading-progress{
+  position: fixed;
+  top: 0; left: 0;
+  height: 4px;
+  width: 0;
+  z-index: 100;
+  background: linear-gradient(90deg, #9fef00, #00baff);
+  transition: width 0.1s linear;
+}
+
+/* Make code blocks match your theme a bit better */
+.prose pre {
+  background-color: #1a1f2e; /* htb-gray */
+  border: 1px solid rgba(159,239,0,0.25); /* htb-green/25 */
+  border-radius: 0.5rem;
+  padding: 1rem 1.25rem;
+  position: relative;
+  overflow: auto;
+}
+
+/* Inline code */
+.prose code {
+  background-color: rgba(0,217,255,0.08); /* htb-cyan/8 */
+  padding: 0.15rem 0.35rem;
+  border-radius: 0.35rem;
+  border: 1px solid rgba(0,217,255,0.25);
+}
+
+/* Markdown images inside prose */
+.prose img {
+  border-radius: 0.5rem;
+  border: 1px solid rgba(159,239,0,0.2);
+}
+
+
+/* Kopieraknappen uppe till höger i varje kodblock */
+.prose .copy-btn {
+  position: absolute;
+  top: .5rem;
+  right: .5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 12px;
+  padding: .25rem .5rem;
+  border-radius: .375rem;
+  border: 1px solid rgba(159,239,0,.35);    /* htb-green/35 */
+  background: rgba(10,14,20,.7);            /* htb-dark/70 */
+  color: #9fef00;                            /* htb-green */
+  cursor: pointer;
+  transition: background .15s ease, border-color .15s ease, color .15s ease;
+}
+
+.prose .copy-btn:hover {
+  background: rgba(159,239,0,.1);
+  border-color: rgba(159,239,0,.6);
+  color: #b6ff2b;
+}
+
+.prose .copy-btn.copied {
+  border-color: rgba(0,217,255,.6);          /* htb-cyan/60 */
+  color: #00d9ff;                            /* htb-cyan */
+}
+
+.prose .copy-btn svg { width: 14px; height: 14px; }
+

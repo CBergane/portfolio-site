@@ -1,0 +1,21 @@
+{% load wagtailimages_tags %}
+
+<figure class="my-8 group">
+    {# Image with hover effect #}
+    <div class="relative overflow-hidden rounded-lg border border-htb-green/30 hover:border-htb-green/60 transition-all duration-300">
+        {% image value.image fill-1200x600 class="w-full h-auto transform group-hover:scale-105 transition-transform duration-300" %}
+        
+        {# Overlay gradient on hover #}
+        <div class="absolute inset-0 bg-gradient-to-t from-htb-dark/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+    </div>
+    
+    {# Caption #}
+    {% if value.caption %}
+    <figcaption class="mt-3 text-center text-sm text-gray-400 font-mono">
+        {{ value.caption }}
+        {% if value.attribution %}
+        <span class="text-htb-green"> — {{ value.attribution }}</span>
+        {% endif %}
+    </figcaption>
+    {% endif %}
+</figure>

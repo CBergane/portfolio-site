@@ -1,0 +1,61 @@
+{% load static %}
+
+<div class="code-block relative group my-6">
+    {# Language badge #}
+    <div class="flex items-center justify-between bg-htb-gray border border-htb-green/30 border-b-0 rounded-t-lg px-4 py-2">
+        <span class="text-xs font-mono text-htb-green uppercase">
+            {{ value.language }}
+        </span>
+        
+        {# Copy button #}
+        <button 
+            onclick="copyCode(this)" 
+            class="copy-button flex items-center gap-2 px-3 py-1 bg-htb-dark hover:bg-htb-green/20 border border-htb-green/30 rounded text-xs font-mono text-htb-green transition-all hover:scale-105"
+            data-code="{{ value.code|escapejs }}">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+            </svg>
+            <span class="copy-text">copy</span>
+        </button>
+    </div>
+    
+    {# Code content #}
+    <pre class="bg-htb-dark border border-htb-green/30 rounded-b-lg p-4 overflow-x-auto m-0"><code class="language-{{ value.language }} text-sm text-gray-300 font-mono">{{ value.code }}</code></pre>
+</div>
+
+<script>
+function copyCode(button) {
+    const code = button.getAttribute('data-code');
+    navigator.clipboard.writeText(code).then(() => {
+        const textSpan = button.querySelector('.copy-text');
+        const originalText = textSpan.textContent;
+        textSpan.textContent = 'copied!';
+        button.classList.add('bg-htb-green', 'text-htb-darker');
+        
+        setTimeout(() => {
+            textSpan.textContent = originalText;
+            button.classList.remove('bg-htb-green', 'text-htb-darker');
+        }, 2000);
+    });
+}
+</script>
+
+<style>
+/* Syntax highlighting colors */
+code.language-python { color: #9fef00; }
+code.language-javascript { color: #f7df1e; }
+code.language-bash { color: #00d9ff; }
+code.language-html { color: #e34c26; }
+code.language-css { color: #264de4; }
+code.language-sql { color: #00758f; }
+code.language-json { color: #f0db4f; }
+code.language-yaml { color: #cb171e; }
+code.language-dockerfile { color: #384d54; }
+
+/* Basic syntax highlighting */
+code .comment { color: #6a737d; font-style: italic; }
+code .string { color: #9fef00; }
+code .keyword { color: #00d9ff; font-weight: bold; }
+code .function { color: #79c0ff; }
+code .number { color: #ff7b72; }
+</style>
