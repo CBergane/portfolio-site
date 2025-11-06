@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+
+{# Hero Section #}
+<section class="bg-gradient-to-b from-htb-dark via-htb-darker to-htb-dark py-20 relative overflow-hidden">
+    <div class="absolute inset-0 bg-[linear-gradient(rgba(159,239,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(159,239,0,0.03)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
+    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center space-y-6 fade-in">
+            <div class="font-mono text-htb-green text-sm">
+                <span class="text-gray-500">christian@blog:~$</span> ls -la posts/
+            </div>
+            
+            <h1 class="text-5xl md:text-6xl font-bold">
+                <span class="text-htb-cyan">Technical</span>
+                <span class="text-htb-green"> Blog</span>
+            </h1>
+            
+            {% if page.intro %}
+            <div class="text-xl text-gray-400 max-w-3xl mx-auto">
+                {{ page.intro|richtext }}
+            </div>
+            {% else %}
+            <p class="text-xl text-gray-400 max-w-3xl mx-auto">
+                Write-ups, tutorials, and thoughts on security, infrastructure, and code.
+            </p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+{# Filters Section #}
+<section class="bg-htb-darker border-y border-htb-green/20 sticky top-16 z-40 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div class="flex flex-wrap gap-3 items-center justify-center">
+            <span class="text-gray-500 font-mono text-sm">filter:</span>
+            
+            {# All posts button #}
+            <a href="{% pageurl page %}" 
+               class="px-4 py-2 rounded-lg font-mono text-sm transition-all
+                      {% if not selected_category %}bg-htb-green text-htb-darker{% else %}bg-htb-gray text-gray-400 hover:bg-htb-green/20 hover:text-htb-green{% endif %}">
+                all
+            </a>
+            
+            {# Category filters #}
+            {% for category in categories %}
+            <a href="?category={{ category.slug }}" 
+               class="px-4 py-2 rounded-lg font-mono text-sm transition-all flex items-center gap-2
+                      {% if selected_category == category.slug %}bg-htb-cyan text-htb-darker{% else %}bg-htb-gray text-gray-400 hover:bg-htb-cyan/20 hover:text-htb-cyan{% endif %}">
+                <span>{{ category.icon }}</span>
+                <span>{{ category.name }}</span>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{# Posts Grid #}
+<section class="py-16 bg-htb-darker">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {% if posts %}
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for post in posts %}
+            <article class="bg-htb-dark border border-htb-green/20 rounded-lg overflow-hidden hover:border-htb-green/60 transition-all duration-300 transform hover:-translate-y-2 hover:shadow-xl hover:shadow-htb-green/10 group">
+                {# Date badge #}
+                <div class="p-6 pb-0">
+                    <div class="flex items-center justify-between mb-4">
+                        <time class="text-sm font-mono text-htb-green">
+                            {{ post.date|date:"Y-m-d" }}
+                        </time>
+                        <span class="text-xs font-mono text-gray-500">
+                            {{ post.reading_time }} min read
+                        </span>
+                    </div>
+                    
+                    {# Title #}
+                    <h2 class="text-xl font-bold mb-3 group-hover:text-htb-cyan transition-colors">
+                        <a href="{% pageurl post %}" class="hover:text-htb-green transition-colors">
+                            {{ post.title }}
+                        </a>
+                    </h2>
+                    
+                    {# Intro #}
+                    <p class="text-gray-400 text-sm mb-4 line-clamp-3">
+                        {{ post.intro }}
+                    </p>
+                    
+                    {# Category & Tags #}
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        {% if post.categories %}
+                        <span class="px-3 py-1 bg-htb-gray rounded-full text-xs font-mono text-htb-cyan border border-htb-cyan/30">
+                            {{ post.categories.icon }} {{ post.categories.name }}
+                        </span>
+                        {% endif %}
+                        
+                        {% for tag in post.tags.all|slice:":2" %}
+                        <span class="px-3 py-1 bg-htb-gray rounded-full text-xs font-mono text-gray-400 border border-gray-700">
+                            #{{ tag.name }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                {# Read more link #}
+                <div class="px-6 pb-6">
+                    <a href="{% pageurl post %}" 
+                       class="inline-flex items-center text-sm font-mono text-htb-green group-hover:text-htb-cyan transition-colors">
+                        read_post()
+                        <svg class="w-4 h-4 ml-2 transform group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </a>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        
+        {# Pagination #}
+        {% if posts.has_other_pages %}
+        <div class="mt-12 flex justify-center gap-2">
+            {% if posts.has_previous %}
+            <a href="?page={{ posts.previous_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_tag %}&tag={{ selected_tag }}{% endif %}" 
+               class="px-4 py-2 bg-htb-gray border border-htb-green/30 rounded-lg text-htb-green hover:bg-htb-green/10 transition-colors font-mono">
+                ← prev
+            </a>
+            {% endif %}
+            
+            <span class="px-4 py-2 bg-htb-green text-htb-darker rounded-lg font-mono font-bold">
+                {{ posts.number }}
+            </span>
+            
+            {% if posts.has_next %}
+            <a href="?page={{ posts.next_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_tag %}&tag={{ selected_tag }}{% endif %}" 
+               class="px-4 py-2 bg-htb-gray border border-htb-green/30 rounded-lg text-htb-green hover:bg-htb-green/10 transition-colors font-mono">
+                next →
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        {% else %}
+        {# No posts found #}
+        <div class="text-center py-20">
+            <div class="text-6xl mb-4">🔍</div>
+            <p class="text-gray-400 font-mono">No posts found. Check back soon!</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+{% endblock %}

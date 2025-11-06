@@ -1,0 +1,75 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>500 - Server Error</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'htb-green': '#9fef00',
+                        'htb-cyan': '#00d9ff',
+                        'htb-dark': '#0a0e14',
+                        'htb-darker': '#050810',
+                        'htb-gray': '#1a1f2e',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+</head>
+
+<body class="bg-htb-darker text-gray-100 font-sans antialiased">
+    <section class="min-h-screen flex items-center justify-center relative overflow-hidden">
+        <div class="absolute inset-0 bg-[linear-gradient(rgba(159,239,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(159,239,0,0.03)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
+        
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 fade-in">
+            {# Terminal output #}
+            <div class="bg-htb-dark border border-red-500/30 rounded-lg p-8 mb-8 text-left font-mono text-sm">
+                <div class="text-htb-green mb-2">
+                    <span class="text-gray-500">christian@portfolio:~$</span> systemctl status portfolio
+                </div>
+                <div class="text-red-500">
+                    ● portfolio.service - Portfolio Site<br>
+                    &nbsp;&nbsp;&nbsp;Loaded: loaded<br>
+                    &nbsp;&nbsp;&nbsp;<span class="text-red-500 font-bold">Active: failed</span> (Result: exit-code)<br>
+                    &nbsp;&nbsp;&nbsp;Main PID: crashed<br>
+                </div>
+                <div class="text-htb-green mt-2">
+                    <span class="text-gray-500">christian@portfolio:~$</span> <span class="cursor-blink">█</span>
+                </div>
+            </div>
+            
+            {# Error message #}
+            <div class="text-9xl font-bold text-red-500 mb-4">500</div>
+            <h1 class="text-4xl font-bold text-htb-cyan mb-4">Internal Server Error</h1>
+            <p class="text-xl text-gray-400 mb-8">
+                Something went wrong on our end. The error has been logged and I'll fix it ASAP!
+            </p>
+            
+            {# Actions #}
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="/" class="px-8 py-4 bg-htb-green text-htb-darker font-mono font-bold rounded-lg hover:bg-htb-green/90 transition-all">
+                    ← Go Home
+                </a>
+                <button onclick="window.location.reload()" class="px-8 py-4 bg-transparent border-2 border-htb-cyan text-htb-cyan font-mono font-bold rounded-lg hover:bg-htb-cyan/10 transition-all">
+                    Try Again
+                </button>
+            </div>
+            
+            {# Support info #}
+            <div class="mt-12 text-sm text-gray-500 font-mono">
+                If the problem persists, contact: <a href="mailto:christian@cbergane.se" class="text-htb-green hover:text-htb-cyan transition-colors">christian@cbergane.se</a>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

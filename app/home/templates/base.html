@@ -1,0 +1,218 @@
+{% load static wagtailcore_tags navigation_tags wagtailsettings_tags %}
+{% get_settings %}
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    {# SEO Meta Tags #}
+    <title>{% block title %}{{ page.title }}{% endblock %} | {{ settings.home.SEOSettings.site_name }}</title>
+    <meta name="description" content="{% block meta_description %}{{ settings.home.SEOSettings.meta_description }}{% endblock %}">
+    <meta name="keywords" content="{{ settings.home.SEOSettings.meta_keywords }}">
+    <meta name="author" content="Christian Bergane">
+    
+    {# Open Graph / Facebook #}
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:title" content="{% block og_title %}{{ page.title }} | {{ settings.home.SEOSettings.site_name }}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{{ settings.home.SEOSettings.meta_description }}{% endblock %}">
+    
+    {# Twitter #}
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block twitter_title %}{{ page.title }} | {{ settings.home.SEOSettings.site_name }}{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}{{ settings.home.SEOSettings.meta_description }}{% endblock %}">
+    
+    {# Favicon #}
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+    
+    {# Tailwind CSS - Local Build #}
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    <link rel="stylesheet" href="{% static 'css/output.css' %}">
+    
+    {# HTMX #}
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+
+    
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body class="bg-htb-darker text-gray-100 font-sans antialiased">
+    
+    {# Navigation #}
+    <nav class="fixed w-full top-0 z-50 bg-htb-dark/80 backdrop-blur-md border-b border-htb-green/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-2">
+                    <span class="text-htb-green text-lg font-mono">[<span class="text-htb-cyan">~</span>]</span>
+                    <a href="/" class="text-htb-cyan font-mono font-bold text-lg hover:text-htb-green transition-colors">
+                        cbergane
+                    </a>
+                </div>
+                
+                {# Desktop Navigation - Dynamic #}
+                <div class="hidden md:flex space-x-8">
+                    {% main_navigation %}
+                </div>
+                
+                {# Mobile menu button #}
+                <button class="md:hidden text-htb-green" id="mobile-menu-btn">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        
+        {# Mobile menu - Dynamic #}
+        <div id="mobile-menu" class="hidden md:hidden bg-htb-dark border-t border-htb-green/20">
+            <div class="px-4 py-4 space-y-3">
+                {% main_navigation %}
+            </div>
+        </div>
+    </nav>
+    
+    {# Main Content #}
+    <main class="pt-16">
+        {% block content %}{% endblock %}
+    </main>
+    
+    {# Footer - Dynamic Social Links #}
+    <footer class="bg-htb-dark border-t border-htb-green/20 mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-htb-cyan font-mono font-bold mb-4">Christian Bergane</h3>
+                    <p class="text-gray-400 text-sm">{{ settings.home.SocialMediaSettings.footer_text }}</p>
+                </div>
+                
+                <div>
+                    <h3 class="text-htb-green font-mono font-bold mb-4">Links</h3>
+                    <ul class="space-y-2 text-sm">
+                        {% if settings.home.SocialMediaSettings.github_url %}
+                        <li>
+                            <a href="{{ settings.home.SocialMediaSettings.github_url }}" target="_blank" 
+                               class="text-gray-400 hover:text-htb-green transition-colors">
+                                GitHub
+                            </a>
+                        </li>
+                        {% endif %}
+                        
+                        {% if settings.home.SocialMediaSettings.linkedin_url %}
+                        <li>
+                            <a href="{{ settings.home.SocialMediaSettings.linkedin_url }}" target="_blank" 
+                               class="text-gray-400 hover:text-htb-green transition-colors">
+                                LinkedIn
+                            </a>
+                        </li>
+                        {% endif %}
+                        
+                        {% if settings.home.SocialMediaSettings.email %}
+                        <li>
+                            <a href="mailto:{{ settings.home.SocialMediaSettings.email }}" 
+                               class="text-gray-400 hover:text-htb-green transition-colors">
+                                Email
+                            </a>
+                        </li>
+                        {% endif %}
+                        
+                        {% if settings.home.SocialMediaSettings.hackthebox_url %}
+                        <li>
+                            <a href="{{ settings.home.SocialMediaSettings.hackthebox_url }}" target="_blank" 
+                               class="text-gray-400 hover:text-htb-green transition-colors">
+                                HackTheBox
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-htb-green font-mono font-bold mb-4">Status</h3>
+                    <div class="flex items-center space-x-2 text-sm">
+                        <span class="w-2 h-2 bg-htb-green rounded-full animate-pulse"></span>
+                        <span class="text-gray-400">Currently available for projects</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-8 border-t border-htb-green/20 text-center text-gray-500 text-sm font-mono">
+                <p>Built with Django, Wagtail, Tailwind & HTMX 🟢 | © 2025 Christian Bergane</p>
+            </div>
+        </div>
+    </footer>
+    
+    {# Mobile menu toggle script - samma som innan #}
+    <script>
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+    </script>
+
+    <script>
+(function () {
+  function addCopyButtons(root = document) {
+    const pres = root.querySelectorAll('.prose pre');
+    pres.forEach(pre => {
+      if (pre.querySelector('.copy-btn')) return; // redan gjord
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'copy-btn';
+      btn.setAttribute('aria-label', 'Copy code');
+      btn.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M16 1H4a2 2 0 0 0-2 2v12h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11v14z"/>
+        </svg>
+        <span>Copy</span>
+      `;
+
+      btn.addEventListener('click', async () => {
+        const code = pre.querySelector('code');
+        if (!code) return;
+
+        // Hämta text; textContent bevarar whitespace
+        let text = code.textContent;
+
+        // Ta bort shell-prompts för bash/sh så man får rena kommandon
+        const cls = code.className || '';
+        const isShell = /language-(ba?sh|sh|shell)/.test(cls);
+        if (isShell) {
+          text = text.split('\n').map(line => line.replace(/^\s*[$>#]\s?/, '')).join('\n');
+        }
+
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch (e) {
+          // Fallback för äldre browsers
+          const sel = window.getSelection();
+          const range = document.createRange();
+          range.selectNodeContents(code);
+          sel.removeAllRanges();
+          sel.addRange(range);
+          document.execCommand('copy');
+          sel.removeAllRanges();
+        }
+
+        btn.classList.add('copied');
+        btn.querySelector('span').textContent = 'Copied!';
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          btn.querySelector('span').textContent = 'Copy';
+        }, 1500);
+      });
+
+      pre.appendChild(btn);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => addCopyButtons());
+  // Om du använder HTMX och byter innehåll dynamiskt
+  document.body?.addEventListener?.('htmx:afterSettle', () => addCopyButtons());
+})();
+</script>
+
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

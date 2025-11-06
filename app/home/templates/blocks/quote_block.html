@@ -1,0 +1,17 @@
+<blockquote class="my-8 relative">
+    {# Quote icon #}
+    <div class="absolute -top-4 -left-4 text-6xl text-htb-green/20 font-serif">"</div>
+    
+    <div class="relative bg-htb-gray border-l-4 border-htb-green rounded-r-lg p-6 pl-12">
+        <p class="text-xl text-gray-300 italic leading-relaxed mb-0">
+            {{ value.quote }}
+        </p>
+        
+        {% if value.author %}
+        <footer class="mt-4 flex items-center gap-2">
+            <span class="text-htb-green text-sm font-mono">—</span>
+            <cite class="text-sm text-htb-cyan font-mono not-italic">{{ value.author }}</cite>
+        </footer>
+        {% endif %}
+    </div>
+</blockquote>

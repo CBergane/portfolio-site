@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="min-h-screen flex items-center justify-center bg-htb-darker relative overflow-hidden">
+    <div class="absolute inset-0 bg-[linear-gradient(rgba(159,239,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(159,239,0,0.03)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
+    
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 fade-in">
+        {# Terminal output #}
+        <div class="bg-htb-dark border border-htb-green/30 rounded-lg p-8 mb-8 text-left font-mono text-sm">
+            <div class="text-htb-green mb-2">
+                <span class="text-gray-500">christian@portfolio:~$</span> ls {{ request.path }}
+            </div>
+            <div class="text-red-500">
+                ls: cannot access '{{ request.path }}': No such file or directory
+            </div>
+            <div class="text-htb-green mt-2">
+                <span class="text-gray-500">christian@portfolio:~$</span> <span class="cursor-blink">█</span>
+            </div>
+        </div>
+        
+        {# Error message #}
+        <div class="text-9xl font-bold text-htb-green mb-4 glitch">404</div>
+        <h1 class="text-4xl font-bold text-htb-cyan mb-4">Page Not Found</h1>
+        <p class="text-xl text-gray-400 mb-8">
+            The page you're looking for has been moved, deleted, or never existed.
+        </p>
+        
+        {# Actions #}
+        <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <a href="/" class="px-8 py-4 bg-htb-green text-htb-darker font-mono font-bold rounded-lg hover:bg-htb-green/90 transition-all">
+                ← Go Home
+            </a>
+            <a href="/contact/" class="px-8 py-4 bg-transparent border-2 border-htb-cyan text-htb-cyan font-mono font-bold rounded-lg hover:bg-htb-cyan/10 transition-all">
+                Report Issue
+            </a>
+        </div>
+        
+        {# Fun suggestions #}
+        <div class="mt-12 text-left bg-htb-dark border border-htb-green/20 rounded-lg p-6">
+            <h3 class="text-htb-cyan font-mono mb-4">Try these instead:</h3>
+            <ul class="space-y-2 text-gray-400">
+                <li class="flex items-center gap-2">
+                    <span class="text-htb-green">[~]</span>
+                    <a href="/" class="hover:text-htb-green transition-colors">Home</a>
+                </li>
+                <li class="flex items-center gap-2">
+                    <span class="text-htb-green">[~]</span>
+                    <a href="/blog/" class="hover:text-htb-green transition-colors">Blog</a>
+                </li>
+                <li class="flex items-center gap-2">
+                    <span class="text-htb-green">[~]</span>
+                    <a href="/projects/" class="hover:text-htb-green transition-colors">Projects</a>
+                </li>
+                <li class="flex items-center gap-2">
+                    <span class="text-htb-green">[~]</span>
+                    <a href="/contact/" class="hover:text-htb-green transition-colors">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+{% endblock %}

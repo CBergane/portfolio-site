@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+
+{# Reading progress bar #}
+<div id="reading-progress"></div>
+
+{# Hero Section #}
+<section class="bg-gradient-to-b from-htb-dark to-htb-darker py-20 relative overflow-hidden">
+    <div class="absolute inset-0 bg-[linear-gradient(rgba(159,239,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(159,239,0,0.03)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
+    
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="space-y-6 fade-in">
+            {# Breadcrumb #}
+            <nav class="flex items-center space-x-2 text-sm font-mono text-gray-500">
+                <a href="/" class="hover:text-htb-green transition-colors">home</a>
+                <span>/</span>
+                <a href="{% pageurl page.get_parent %}" class="hover:text-htb-green transition-colors">blog</a>
+                <span>/</span>
+                <span class="text-htb-cyan">{{ page.slug }}</span>
+            </nav>
+            
+            {# Category & Date #}
+            <div class="flex items-center gap-4 flex-wrap">
+                {% if page.categories %}
+                <span class="px-4 py-2 bg-htb-gray rounded-lg text-sm font-mono text-htb-cyan border border-htb-cyan/30">
+                    {{ page.categories.icon }} {{ page.categories.name }}
+                </span>
+                {% endif %}
+                
+                <time class="text-sm font-mono text-htb-green flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    {{ page.date|date:"F d, Y" }}
+                </time>
+                
+                <span class="text-sm font-mono text-gray-500 flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    {{ page.reading_time }} min read
+                </span>
+            </div>
+            
+            {# Title #}
+            <h1 class="text-4xl md:text-5xl font-bold text-htb-cyan leading-tight">
+                {{ page.title }}
+            </h1>
+            
+            {# Intro #}
+            <p class="text-xl text-gray-400 leading-relaxed">
+                {{ page.intro }}
+            </p>
+            
+            {# Tags #}
+            {% if page.tags.all %}
+            <div class="flex flex-wrap gap-2 pt-4">
+                {% for tag in page.tags.all %}
+                <a href="{% pageurl page.get_parent %}?tag={{ tag.slug }}" 
+                   class="px-3 py-1 bg-htb-gray rounded-full text-xs font-mono text-gray-400 border border-gray-700 hover:border-htb-green hover:text-htb-green transition-colors">
+                    #{{ tag.name }}
+                </a>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+{# Content Section #}
+<section class="py-16 bg-htb-darker">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid lg:grid-cols-4 gap-12">
+            {# Table of Contents (sticky sidebar) #}
+            <aside class="hidden lg:block">
+                <div id="toc" class="bg-htb-dark border border-htb-green/20 rounded-lg p-6">
+                    <h3 class="text-sm font-mono text-htb-green mb-4 uppercase">Contents</h3>
+                    <nav class="space-y-2 text-sm" id="toc-nav">
+                        {# Will be populated by JS #}
+                    </nav>
+                </div>
+            </aside>
+            
+            {# Main Content #}
+            <article class="lg:col-span-3 max-w-none">
+                <div class="bg-htb-dark border border-htb-green/20 rounded-lg p-8 md:p-12">
+                    <div class="prose prose-invert max-w-none space-y-6">
+                        {% for block in page.body %}
+                            {% include_block block %}
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                {# Author info #}
+                <div class="mt-12 bg-htb-dark border border-htb-cyan/20 rounded-lg p-8">
+                    <div class="flex items-start gap-6">
+                        <div class="w-20 h-20 bg-htb-gray rounded-full flex items-center justify-center text-3xl">
+                            👨‍💻
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-xl font-mono text-htb-cyan mb-2">Christian Bergane</h3>
+                            <p class="text-gray-400 text-sm mb-4">
+                                Site Reliability Engineer passionate about security, infrastructure, and automation. 
+                                Currently working towards OSCP & CPTS certifications.
+                            </p>
+                            <div class="flex gap-4">
+                                <a href="https://github.com/CBergane" target="_blank" class="text-htb-green hover:text-htb-cyan transition-colors font-mono text-sm">
+                                    GitHub →
+                                </a>
+                                <a href="https://www.linkedin.com/in/christian-bergane" target="_blank" class="text-htb-green hover:text-htb-cyan transition-colors font-mono text-sm">
+                                    LinkedIn →
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Reading progress (robust)
+(function () {
+  const bar = document.getElementById('reading-progress');
+  if (!bar) return;
+
+  function update() {
+    const doc = document.documentElement;
+    const body = document.body;
+    const scrollTop = doc.scrollTop || body.scrollTop || 0;
+    const height = (doc.scrollHeight - doc.clientHeight) || 1; // avoid /0
+    bar.style.width = (scrollTop / height) * 100 + '%';
+  }
+
+  // Draw immediately and on events
+  update();
+  window.addEventListener('scroll', () => requestAnimationFrame(update), { passive: true });
+  window.addEventListener('resize', update);
+})();
+</script>
+
+<script>
+// Table of Contents (H2/H3 från renderad markdown)
+(function () {
+  const tocNav = document.getElementById('toc-nav');
+  if (!tocNav) return;
+
+  const headings = document.querySelectorAll('article h2, article h3');
+  if (!headings.length) return;
+
+  tocNav.innerHTML = '';
+  headings.forEach((h, i) => {
+    const id = h.id || ('heading-' + i);
+    h.id = id;
+
+    const a = document.createElement('a');
+    a.href = '#' + id;
+    a.textContent = h.textContent;
+    a.className =
+      'block text-gray-400 hover:text-htb-green transition-colors ' +
+      (h.tagName === 'H3' ? 'pl-4' : '');
+
+    tocNav.appendChild(a);
+  });
+})();
+</script>
+{% endblock %}

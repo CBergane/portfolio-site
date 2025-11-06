@@ -1,0 +1,4459 @@
+[
+{
+  "model": "home.blogcategory",
+  "pk": 1,
+  "fields": {
+    "name": "Python",
+    "slug": "python",
+    "icon": "🐍",
+    "description": ""
+  }
+},
+{
+  "model": "home.blogcategory",
+  "pk": 2,
+  "fields": {
+    "name": "Security",
+    "slug": "security",
+    "icon": "🔒",
+    "description": ""
+  }
+},
+{
+  "model": "home.blogcategory",
+  "pk": 3,
+  "fields": {
+    "name": "DevOps",
+    "slug": "devops",
+    "icon": "⚙️",
+    "description": ""
+  }
+},
+{
+  "model": "home.blogcategory",
+  "pk": 4,
+  "fields": {
+    "name": "HTB Write-ups",
+    "slug": "htb-writeups",
+    "icon": "🟢",
+    "description": ""
+  }
+},
+{
+  "model": "home.blogpagetag",
+  "pk": 4,
+  "fields": {
+    "tag": 4,
+    "content_object": 7
+  }
+},
+{
+  "model": "home.blogpagetag",
+  "pk": 5,
+  "fields": {
+    "tag": 5,
+    "content_object": 7
+  }
+},
+{
+  "model": "home.blogpagetag",
+  "pk": 6,
+  "fields": {
+    "tag": 6,
+    "content_object": 7
+  }
+},
+{
+  "model": "home.blogpagetag",
+  "pk": 7,
+  "fields": {
+    "tag": 1,
+    "content_object": 6
+  }
+},
+{
+  "model": "home.blogpagetag",
+  "pk": 8,
+  "fields": {
+    "tag": 2,
+    "content_object": 6
+  }
+},
+{
+  "model": "home.blogpagetag",
+  "pk": 9,
+  "fields": {
+    "tag": 3,
+    "content_object": 6
+  }
+},
+{
+  "model": "home.blogpagetag",
+  "pk": 12,
+  "fields": {
+    "tag": 7,
+    "content_object": 8
+  }
+},
+{
+  "model": "home.techstack",
+  "pk": 1,
+  "fields": {
+    "name": "Python",
+    "slug": "python",
+    "icon": "🐍",
+    "color": "#3776AB"
+  }
+},
+{
+  "model": "home.techstack",
+  "pk": 2,
+  "fields": {
+    "name": "Django",
+    "slug": "django",
+    "icon": "🎸",
+    "color": "#092E20"
+  }
+},
+{
+  "model": "home.techstack",
+  "pk": 3,
+  "fields": {
+    "name": "PostgreSQL",
+    "slug": "postgresql",
+    "icon": "🐘",
+    "color": "#336791"
+  }
+},
+{
+  "model": "home.techstack",
+  "pk": 4,
+  "fields": {
+    "name": "Docker",
+    "slug": "docker",
+    "icon": "🐳",
+    "color": "#2496ED"
+  }
+},
+{
+  "model": "home.techstack",
+  "pk": 5,
+  "fields": {
+    "name": "Proxmox",
+    "slug": "proxmox",
+    "icon": "🖥️",
+    "color": "#E57000"
+  }
+},
+{
+  "model": "home.techstack",
+  "pk": 6,
+  "fields": {
+    "name": "Linux",
+    "slug": "linux",
+    "icon": "🐧",
+    "color": "#FCC624"
+  }
+},
+{
+  "model": "home.techstack",
+  "pk": 7,
+  "fields": {
+    "name": "Security",
+    "slug": "security",
+    "icon": "🔒",
+    "color": "#9fef00"
+  }
+},
+{
+  "model": "home.techstack",
+  "pk": 8,
+  "fields": {
+    "name": "HTMX",
+    "slug": "htmx",
+    "icon": "⚡",
+    "color": "#00d9ff"
+  }
+},
+{
+  "model": "home.techstack",
+  "pk": 9,
+  "fields": {
+    "name": "Tailwind",
+    "slug": "tailwind",
+    "icon": "🎨",
+    "color": "#06B6D4"
+  }
+},
+{
+  "model": "home.projectcategory",
+  "pk": 1,
+  "fields": {
+    "name": "Web Development",
+    "slug": "web-development",
+    "icon": "🌐",
+    "description": ""
+  }
+},
+{
+  "model": "home.projectcategory",
+  "pk": 2,
+  "fields": {
+    "name": "Infrastructure",
+    "slug": "infrastructure",
+    "icon": "⚙️",
+    "description": ""
+  }
+},
+{
+  "model": "home.projectcategory",
+  "pk": 3,
+  "fields": {
+    "name": "Security",
+    "slug": "security",
+    "icon": "🔒",
+    "description": ""
+  }
+},
+{
+  "model": "home.projectcategory",
+  "pk": 4,
+  "fields": {
+    "name": "Automation",
+    "slug": "automation",
+    "icon": "🤖",
+    "description": ""
+  }
+},
+{
+  "model": "home.contactsubmission",
+  "pk": 1,
+  "fields": {
+    "name": "test",
+    "email": "christian.bergane@gmail.com",
+    "subject": "test",
+    "message": "test test test test",
+    "submitted_at": "2025-11-03T10:27:00.808Z",
+    "ip_address": "127.0.0.1",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 OPR/122.0.0.0",
+    "read": false,
+    "replied": false
+  }
+},
+{
+  "model": "home.contactsubmission",
+  "pk": 2,
+  "fields": {
+    "name": "Python",
+    "email": "christian.bergane@gmail.com",
+    "subject": "test",
+    "message": "testtesttesttesttesttesttesttesttest",
+    "submitted_at": "2025-11-04T09:14:25.321Z",
+    "ip_address": "127.0.0.1",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 OPR/122.0.0.0",
+    "read": false,
+    "replied": false
+  }
+},
+{
+  "model": "home.contactsubmission",
+  "pk": 3,
+  "fields": {
+    "name": "Security",
+    "email": "christian.bergane@gmail.com",
+    "subject": "test",
+    "message": "testtesttesttesttesttesttest",
+    "submitted_at": "2025-11-04T09:14:39.540Z",
+    "ip_address": "127.0.0.1",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 OPR/122.0.0.0",
+    "read": false,
+    "replied": false
+  }
+},
+{
+  "model": "home.contactsubmission",
+  "pk": 4,
+  "fields": {
+    "name": "Python",
+    "email": "christian.bergane@gmail.com",
+    "subject": "test",
+    "message": "testtesttesttesttesttesttesttesttesttesttest",
+    "submitted_at": "2025-11-04T09:14:53.121Z",
+    "ip_address": "127.0.0.1",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 OPR/122.0.0.0",
+    "read": false,
+    "replied": false
+  }
+},
+{
+  "model": "home.contactsubmission",
+  "pk": 5,
+  "fields": {
+    "name": "PostgreSQL",
+    "email": "christian@cbergane.se",
+    "subject": "test",
+    "message": "testtesttesttesttesttesttesttest",
+    "submitted_at": "2025-11-04T09:15:06.709Z",
+    "ip_address": "127.0.0.1",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 OPR/122.0.0.0",
+    "read": false,
+    "replied": false
+  }
+},
+{
+  "model": "home.contactsubmission",
+  "pk": 6,
+  "fields": {
+    "name": "PostgreSQL",
+    "email": "christian.bergane@gmail.com",
+    "subject": "test",
+    "message": "testtesttesttesttesttesttesttesttest",
+    "submitted_at": "2025-11-04T09:15:18.748Z",
+    "ip_address": "127.0.0.1",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 OPR/122.0.0.0",
+    "read": false,
+    "replied": false
+  }
+},
+{
+  "model": "home.contactsubmission",
+  "pk": 7,
+  "fields": {
+    "name": "PostgreSQL",
+    "email": "christian@cbergane.se",
+    "subject": "test",
+    "message": "testtesttesttesttesttesttest",
+    "submitted_at": "2025-11-04T09:15:31.327Z",
+    "ip_address": "127.0.0.1",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 OPR/122.0.0.0",
+    "read": false,
+    "replied": false
+  }
+},
+{
+  "model": "home.contactsubmission",
+  "pk": 8,
+  "fields": {
+    "name": "Security",
+    "email": "christian@cbergane.se",
+    "subject": "test",
+    "message": "testtesttesttesttesttesttesttest",
+    "submitted_at": "2025-11-04T09:15:43.013Z",
+    "ip_address": "127.0.0.1",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 OPR/122.0.0.0",
+    "read": false,
+    "replied": false
+  }
+},
+{
+  "model": "home.contactsubmission",
+  "pk": 9,
+  "fields": {
+    "name": "PostgreSQL",
+    "email": "christian@cbergane.se",
+    "subject": "test",
+    "message": "testtesttesttesttesttest",
+    "submitted_at": "2025-11-04T09:15:54.436Z",
+    "ip_address": "127.0.0.1",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 OPR/122.0.0.0",
+    "read": false,
+    "replied": false
+  }
+},
+{
+  "model": "home.contactsubmission",
+  "pk": 10,
+  "fields": {
+    "name": "Python",
+    "email": "christian@cbergane.se",
+    "subject": "test",
+    "message": "testtesttesttesttesttesttesttest",
+    "submitted_at": "2025-11-04T09:16:06.483Z",
+    "ip_address": "127.0.0.1",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 OPR/122.0.0.0",
+    "read": false,
+    "replied": false
+  }
+},
+{
+  "model": "home.contactsubmission",
+  "pk": 11,
+  "fields": {
+    "name": "Security",
+    "email": "christian@cbergane.se",
+    "subject": "test",
+    "message": "testtesttesttesttesttesttesttest",
+    "submitted_at": "2025-11-04T09:16:19.157Z",
+    "ip_address": "127.0.0.1",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 OPR/122.0.0.0",
+    "read": false,
+    "replied": false
+  }
+},
+{
+  "model": "home.contactsubmission",
+  "pk": 12,
+  "fields": {
+    "name": "Security",
+    "email": "christian@cbergane.se",
+    "subject": "test",
+    "message": "testtesttesttesttesttest",
+    "submitted_at": "2025-11-04T10:22:04.591Z",
+    "ip_address": "127.0.0.1",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 OPR/122.0.0.0",
+    "read": false,
+    "replied": false
+  }
+},
+{
+  "model": "home.contactsubmission",
+  "pk": 13,
+  "fields": {
+    "name": "Security",
+    "email": "christian.bergane@gmail.com",
+    "subject": "test",
+    "message": "testtesttesttesttesttest",
+    "submitted_at": "2025-11-04T10:22:17.986Z",
+    "ip_address": "127.0.0.1",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 OPR/122.0.0.0",
+    "read": false,
+    "replied": false
+  }
+},
+{
+  "model": "home.contactsubmission",
+  "pk": 14,
+  "fields": {
+    "name": "PostgreSQL",
+    "email": "christian.bergane@gmail.com",
+    "subject": "test",
+    "message": "testtesttesttesttesttesttest",
+    "submitted_at": "2025-11-04T10:22:31.145Z",
+    "ip_address": "127.0.0.1",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 OPR/122.0.0.0",
+    "read": false,
+    "replied": false
+  }
+},
+{
+  "model": "home.contactsubmission",
+  "pk": 15,
+  "fields": {
+    "name": "Security",
+    "email": "christian@cbergane.se",
+    "subject": "test",
+    "message": "testtesttesttesttesttesttest",
+    "submitted_at": "2025-11-04T10:22:42.980Z",
+    "ip_address": "127.0.0.1",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 OPR/122.0.0.0",
+    "read": false,
+    "replied": false
+  }
+},
+{
+  "model": "home.contactsubmission",
+  "pk": 16,
+  "fields": {
+    "name": "PostgreSQL",
+    "email": "christian.bergane@gmail.com",
+    "subject": "test",
+    "message": "testtesttesttesttesttesttest",
+    "submitted_at": "2025-11-04T10:23:47.227Z",
+    "ip_address": "127.0.0.1",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 OPR/122.0.0.0",
+    "read": false,
+    "replied": false
+  }
+},
+{
+  "model": "home.contactsubmission",
+  "pk": 17,
+  "fields": {
+    "name": "Python",
+    "email": "christian@cbergane.se",
+    "subject": "test",
+    "message": "testtesttesttesttesttesttest",
+    "submitted_at": "2025-11-04T10:24:00.194Z",
+    "ip_address": "127.0.0.1",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 OPR/122.0.0.0",
+    "read": false,
+    "replied": false
+  }
+},
+{
+  "model": "home.contactsubmission",
+  "pk": 18,
+  "fields": {
+    "name": "PostgreSQL",
+    "email": "christian.bergane@gmail.com",
+    "subject": "test",
+    "message": "testtesttesttesttesttest",
+    "submitted_at": "2025-11-04T10:24:10.816Z",
+    "ip_address": "127.0.0.1",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 OPR/122.0.0.0",
+    "read": false,
+    "replied": false
+  }
+},
+{
+  "model": "home.contactsubmission",
+  "pk": 19,
+  "fields": {
+    "name": "DevOps",
+    "email": "christian.bergane@me.com",
+    "subject": "test",
+    "message": "testtesttesttesttesttesttest",
+    "submitted_at": "2025-11-04T10:24:23.388Z",
+    "ip_address": "127.0.0.1",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 OPR/122.0.0.0",
+    "read": false,
+    "replied": false
+  }
+},
+{
+  "model": "home.contactsubmission",
+  "pk": 20,
+  "fields": {
+    "name": "Christian Bergane",
+    "email": "christian.bergane@gmail.com",
+    "subject": "test",
+    "message": "testtesttesttesttest",
+    "submitted_at": "2025-11-04T10:25:05.964Z",
+    "ip_address": "127.0.0.1",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+    "read": false,
+    "replied": false
+  }
+},
+{
+  "model": "home.contactsubmission",
+  "pk": 21,
+  "fields": {
+    "name": "Christian Bergane",
+    "email": "christian@cbergane.se",
+    "subject": "test",
+    "message": "testtesttesttesttesttest",
+    "submitted_at": "2025-11-04T10:25:17.986Z",
+    "ip_address": "127.0.0.1",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+    "read": false,
+    "replied": false
+  }
+},
+{
+  "model": "home.contactsubmission",
+  "pk": 22,
+  "fields": {
+    "name": "Christian Bergane",
+    "email": "christian@cbergane.se",
+    "subject": "Test",
+    "message": "testtesttesttesttesttest",
+    "submitted_at": "2025-11-04T10:25:29.642Z",
+    "ip_address": "127.0.0.1",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+    "read": false,
+    "replied": false
+  }
+},
+{
+  "model": "home.contactsubmission",
+  "pk": 23,
+  "fields": {
+    "name": "Christian Bergane",
+    "email": "christian@cbergane.se",
+    "subject": "test",
+    "message": "testtesttesttesttesttest",
+    "submitted_at": "2025-11-04T10:25:39.999Z",
+    "ip_address": "127.0.0.1",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36",
+    "read": false,
+    "replied": false
+  }
+},
+{
+  "model": "home.contactsubmission",
+  "pk": 24,
+  "fields": {
+    "name": "Security",
+    "email": "christian.bergane@gmail.com",
+    "subject": "test",
+    "message": "testtesttesttesttesttesttesttest",
+    "submitted_at": "2025-11-04T10:45:18.250Z",
+    "ip_address": "127.0.0.1",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 OPR/122.0.0.0",
+    "read": false,
+    "replied": false
+  }
+},
+{
+  "model": "home.contactsubmission",
+  "pk": 25,
+  "fields": {
+    "name": "DevOps",
+    "email": "christian@cbergane.se",
+    "subject": "test",
+    "message": "testtesttesttesttesttesttesttest",
+    "submitted_at": "2025-11-04T10:45:29.712Z",
+    "ip_address": "127.0.0.1",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 OPR/122.0.0.0",
+    "read": false,
+    "replied": false
+  }
+},
+{
+  "model": "home.contactsubmission",
+  "pk": 26,
+  "fields": {
+    "name": "HTB Write-ups",
+    "email": "christian.bergane@me.com",
+    "subject": "test",
+    "message": "testtesttesttesttesttest",
+    "submitted_at": "2025-11-04T10:45:41.873Z",
+    "ip_address": "127.0.0.1",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 OPR/122.0.0.0",
+    "read": false,
+    "replied": false
+  }
+},
+{
+  "model": "home.contactsubmission",
+  "pk": 27,
+  "fields": {
+    "name": "DevOps",
+    "email": "christian.bergane@gmail.com",
+    "subject": "test",
+    "message": "testtesttesttesttesttesttest",
+    "submitted_at": "2025-11-04T10:45:54.133Z",
+    "ip_address": "127.0.0.1",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 OPR/122.0.0.0",
+    "read": false,
+    "replied": false
+  }
+},
+{
+  "model": "home.contactsubmission",
+  "pk": 28,
+  "fields": {
+    "name": "Security",
+    "email": "christian.bergane@gmail.com",
+    "subject": "test",
+    "message": "testtesttesttesttest",
+    "submitted_at": "2025-11-04T10:57:30.354Z",
+    "ip_address": "127.0.0.1",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 OPR/122.0.0.0",
+    "read": false,
+    "replied": false
+  }
+},
+{
+  "model": "wagtailsearch.indexentry",
+  "pk": 1,
+  "fields": {
+    "content_type": [
+      "wagtailcore",
+      "page"
+    ],
+    "object_id": "1",
+    "title_norm": 1.5,
+    "autocomplete": "'root':1",
+    "title": "'root':1B",
+    "body": ""
+  }
+},
+{
+  "model": "wagtailsearch.indexentry",
+  "pk": 2,
+  "fields": {
+    "content_type": [
+      "home",
+      "homepage"
+    ],
+    "object_id": "3",
+    "title_norm": 1.5,
+    "autocomplete": "'home':1",
+    "title": "'home':1B",
+    "body": ""
+  }
+},
+{
+  "model": "wagtailsearch.indexentry",
+  "pk": 9,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogindexpage"
+    ],
+    "object_id": "5",
+    "title_norm": 1.4444444444444444,
+    "autocomplete": "'blog':1",
+    "title": "'blog':1B",
+    "body": ""
+  }
+},
+{
+  "model": "wagtailsearch.indexentry",
+  "pk": 12,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "object_id": "6",
+    "title_norm": 0.5333333333333333,
+    "autocomplete": "'blogg':3 'first':2 'my':1 'post':4",
+    "title": "'blogg':3B 'first':2B 'post':4B",
+    "body": "'entri':6 'featur':20 'first':5 'ital':21 'last':10 'markdown':19 'new':18 'post':14 'product':16 'style':22 'test':17"
+  }
+},
+{
+  "model": "wagtailsearch.indexentry",
+  "pk": 15,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "object_id": "7",
+    "title_norm": 0.8,
+    "autocomplete": "'post':2 'test':1",
+    "title": "'post':2B 'test':1B",
+    "body": "'25':33 '3':36 'api':28 'box':31 'confucius':12 'def':14 'detta':25 'du':21 'endpoint':20 'featur':6 'head':34 'htb':15,27 'htmx':19 'jsonrespons':30 'kan':22 'koppla':24 'new':5 'nr':35 'python':13 'quot':11 'request':17 'return':29 'root':32 'senar':23 'show':4 'simpl':18 'singl':10 'stat':16 'style':8 'test':2,7 'till':26"
+  }
+},
+{
+  "model": "wagtailsearch.indexentry",
+  "pk": 20,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "object_id": "8",
+    "title_norm": 0.7222222222222222,
+    "autocomplete": "'markdown':2 'testing':1",
+    "title": "'markdown':2B 'test':1B",
+    "body": "'1':6 'bold':2 'hello':5 'ital':3 'link':9 'list':4,8 'number':7 'test':1 'www.google.com':10"
+  }
+},
+{
+  "model": "wagtailsearch.indexentry",
+  "pk": 25,
+  "fields": {
+    "content_type": [
+      "home",
+      "projectindexpage"
+    ],
+    "object_id": "9",
+    "title_norm": 1.4444444444444444,
+    "autocomplete": "'projects':1",
+    "title": "'project':1B",
+    "body": ""
+  }
+},
+{
+  "model": "wagtailsearch.indexentry",
+  "pk": 28,
+  "fields": {
+    "content_type": [
+      "home",
+      "projectpage"
+    ],
+    "object_id": "10",
+    "title_norm": 1.5,
+    "autocomplete": "'test':1",
+    "title": "'test':1B",
+    "body": "'ad':5 'good':12 'hop':8 'info':7 'look':11,16 'project':4 'start':2 'test':1"
+  }
+},
+{
+  "model": "wagtailsearch.indexentry",
+  "pk": 35,
+  "fields": {
+    "content_type": [
+      "home",
+      "contactpage"
+    ],
+    "object_id": "11",
+    "title_norm": 1.4444444444444444,
+    "autocomplete": "'contact':1",
+    "title": "'contact':1B",
+    "body": ""
+  }
+},
+{
+  "model": "wagtailcore.locale",
+  "pk": 1,
+  "fields": {
+    "language_code": "en"
+  }
+},
+{
+  "model": "wagtailcore.site",
+  "fields": {
+    "hostname": "localhost",
+    "port": 8001,
+    "site_name": "Christian Bergane Portfolio",
+    "root_page": 3,
+    "is_default_site": true
+  }
+},
+{
+  "model": "wagtailcore.collection",
+  "pk": 1,
+  "fields": {
+    "path": "0001",
+    "depth": 1,
+    "numchild": 0,
+    "name": "Root"
+  }
+},
+{
+  "model": "wagtailcore.workflow",
+  "pk": 1,
+  "fields": {
+    "name": "Moderators approval",
+    "active": true
+  }
+},
+{
+  "model": "wagtailcore.workflowtask",
+  "pk": 1,
+  "fields": {
+    "sort_order": 0,
+    "workflow": 1,
+    "task": 1
+  }
+},
+{
+  "model": "wagtailcore.task",
+  "pk": 1,
+  "fields": {
+    "name": "Moderators approval",
+    "content_type": [
+      "wagtailcore",
+      "groupapprovaltask"
+    ],
+    "active": true
+  }
+},
+{
+  "model": "wagtailcore.workflowpage",
+  "pk": 1,
+  "fields": {
+    "workflow": 1
+  }
+},
+{
+  "model": "wagtailcore.referenceindex",
+  "pk": 4,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "base_content_type": [
+      "wagtailcore",
+      "page"
+    ],
+    "object_id": "6",
+    "to_content_type": [
+      "home",
+      "blogcategory"
+    ],
+    "to_object_id": "3",
+    "model_path": "categories",
+    "content_path": "categories",
+    "content_path_hash": "f345e7de-9c6a-56a3-9164-8cccc365b5f2"
+  }
+},
+{
+  "model": "wagtailcore.referenceindex",
+  "pk": 10,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "base_content_type": [
+      "wagtailcore",
+      "page"
+    ],
+    "object_id": "7",
+    "to_content_type": [
+      "home",
+      "blogcategory"
+    ],
+    "to_object_id": "3",
+    "model_path": "categories",
+    "content_path": "categories",
+    "content_path_hash": "f345e7de-9c6a-56a3-9164-8cccc365b5f2"
+  }
+},
+{
+  "model": "wagtailcore.referenceindex",
+  "pk": 12,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "base_content_type": [
+      "wagtailcore",
+      "page"
+    ],
+    "object_id": "7",
+    "to_content_type": [
+      "taggit",
+      "tag"
+    ],
+    "to_object_id": "6",
+    "model_path": "tagged_items.item.tag",
+    "content_path": "tagged_items.6.tag",
+    "content_path_hash": "a5f5907a-6cc6-50d1-bdd7-41a35ef79ab0"
+  }
+},
+{
+  "model": "wagtailcore.referenceindex",
+  "pk": 13,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "base_content_type": [
+      "wagtailcore",
+      "page"
+    ],
+    "object_id": "7",
+    "to_content_type": [
+      "taggit",
+      "tag"
+    ],
+    "to_object_id": "5",
+    "model_path": "tagged_items.item.tag",
+    "content_path": "tagged_items.5.tag",
+    "content_path_hash": "d680323b-4169-5aff-9d07-d41818c67436"
+  }
+},
+{
+  "model": "wagtailcore.referenceindex",
+  "pk": 14,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "base_content_type": [
+      "wagtailcore",
+      "page"
+    ],
+    "object_id": "7",
+    "to_content_type": [
+      "taggit",
+      "tag"
+    ],
+    "to_object_id": "4",
+    "model_path": "tagged_items.item.tag",
+    "content_path": "tagged_items.4.tag",
+    "content_path_hash": "29866ef1-63db-5c6e-bc0a-27ed379ad913"
+  }
+},
+{
+  "model": "wagtailcore.referenceindex",
+  "pk": 15,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "base_content_type": [
+      "wagtailcore",
+      "page"
+    ],
+    "object_id": "6",
+    "to_content_type": [
+      "taggit",
+      "tag"
+    ],
+    "to_object_id": "3",
+    "model_path": "tagged_items.item.tag",
+    "content_path": "tagged_items.9.tag",
+    "content_path_hash": "6192591c-068e-5695-9ce2-96b9b1848275"
+  }
+},
+{
+  "model": "wagtailcore.referenceindex",
+  "pk": 16,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "base_content_type": [
+      "wagtailcore",
+      "page"
+    ],
+    "object_id": "6",
+    "to_content_type": [
+      "taggit",
+      "tag"
+    ],
+    "to_object_id": "1",
+    "model_path": "tagged_items.item.tag",
+    "content_path": "tagged_items.7.tag",
+    "content_path_hash": "a4245cab-1223-5258-8e09-836cdc37835a"
+  }
+},
+{
+  "model": "wagtailcore.referenceindex",
+  "pk": 17,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "base_content_type": [
+      "wagtailcore",
+      "page"
+    ],
+    "object_id": "6",
+    "to_content_type": [
+      "taggit",
+      "tag"
+    ],
+    "to_object_id": "2",
+    "model_path": "tagged_items.item.tag",
+    "content_path": "tagged_items.8.tag",
+    "content_path_hash": "cc756bbf-cf49-5f28-aed2-1244b0e04866"
+  }
+},
+{
+  "model": "wagtailcore.referenceindex",
+  "pk": 19,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "base_content_type": [
+      "wagtailcore",
+      "page"
+    ],
+    "object_id": "8",
+    "to_content_type": [
+      "home",
+      "blogcategory"
+    ],
+    "to_object_id": "1",
+    "model_path": "categories",
+    "content_path": "categories",
+    "content_path_hash": "f345e7de-9c6a-56a3-9164-8cccc365b5f2"
+  }
+},
+{
+  "model": "wagtailcore.referenceindex",
+  "pk": 21,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "base_content_type": [
+      "wagtailcore",
+      "page"
+    ],
+    "object_id": "8",
+    "to_content_type": [
+      "taggit",
+      "tag"
+    ],
+    "to_object_id": "7",
+    "model_path": "tagged_items.item.tag",
+    "content_path": "tagged_items.12.tag",
+    "content_path_hash": "f20410c7-a795-5a86-a6ee-f72f2ba927e0"
+  }
+},
+{
+  "model": "taggit.tag",
+  "pk": 1,
+  "fields": {
+    "name": "blogg",
+    "slug": "blogg"
+  }
+},
+{
+  "model": "taggit.tag",
+  "pk": 2,
+  "fields": {
+    "name": "django",
+    "slug": "django"
+  }
+},
+{
+  "model": "taggit.tag",
+  "pk": 3,
+  "fields": {
+    "name": "tech",
+    "slug": "tech"
+  }
+},
+{
+  "model": "taggit.tag",
+  "pk": 4,
+  "fields": {
+    "name": "devops",
+    "slug": "devops"
+  }
+},
+{
+  "model": "taggit.tag",
+  "pk": 5,
+  "fields": {
+    "name": "css",
+    "slug": "css"
+  }
+},
+{
+  "model": "taggit.tag",
+  "pk": 6,
+  "fields": {
+    "name": "styling",
+    "slug": "styling"
+  }
+},
+{
+  "model": "taggit.tag",
+  "pk": 7,
+  "fields": {
+    "name": "markdown",
+    "slug": "markdown"
+  }
+},
+{
+  "model": "auth.group",
+  "fields": {
+    "name": "Moderators",
+    "permissions": [
+      [
+        "access_admin",
+        "wagtailadmin",
+        "admin"
+      ],
+      [
+        "add_document",
+        "wagtaildocs",
+        "document"
+      ],
+      [
+        "change_document",
+        "wagtaildocs",
+        "document"
+      ],
+      [
+        "choose_document",
+        "wagtaildocs",
+        "document"
+      ],
+      [
+        "delete_document",
+        "wagtaildocs",
+        "document"
+      ],
+      [
+        "add_image",
+        "wagtailimages",
+        "image"
+      ],
+      [
+        "change_image",
+        "wagtailimages",
+        "image"
+      ],
+      [
+        "choose_image",
+        "wagtailimages",
+        "image"
+      ],
+      [
+        "delete_image",
+        "wagtailimages",
+        "image"
+      ]
+    ]
+  }
+},
+{
+  "model": "auth.group",
+  "fields": {
+    "name": "Editors",
+    "permissions": [
+      [
+        "access_admin",
+        "wagtailadmin",
+        "admin"
+      ],
+      [
+        "add_document",
+        "wagtaildocs",
+        "document"
+      ],
+      [
+        "change_document",
+        "wagtaildocs",
+        "document"
+      ],
+      [
+        "choose_document",
+        "wagtaildocs",
+        "document"
+      ],
+      [
+        "delete_document",
+        "wagtaildocs",
+        "document"
+      ],
+      [
+        "add_image",
+        "wagtailimages",
+        "image"
+      ],
+      [
+        "change_image",
+        "wagtailimages",
+        "image"
+      ],
+      [
+        "choose_image",
+        "wagtailimages",
+        "image"
+      ],
+      [
+        "delete_image",
+        "wagtailimages",
+        "image"
+      ]
+    ]
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$720000$Ml8ZcRzkVTYxVt8hHRKNJQ$TMIBlQ9GBnuGPtSLi6hGmsoul2hpjPuMfPe3MD2JFH8=",
+    "last_login": "2025-11-04T09:12:00.618Z",
+    "is_superuser": true,
+    "username": "cleo",
+    "first_name": "",
+    "last_name": "",
+    "email": "",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2025-10-30T23:21:17.151Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "wagtailcore.pagesubscription",
+  "pk": 2,
+  "fields": {
+    "user": [
+      "cleo"
+    ],
+    "page": 5,
+    "comment_notifications": true
+  }
+},
+{
+  "model": "wagtailcore.pagesubscription",
+  "pk": 3,
+  "fields": {
+    "user": [
+      "cleo"
+    ],
+    "page": 6,
+    "comment_notifications": true
+  }
+},
+{
+  "model": "wagtailcore.pagesubscription",
+  "pk": 4,
+  "fields": {
+    "user": [
+      "cleo"
+    ],
+    "page": 7,
+    "comment_notifications": true
+  }
+},
+{
+  "model": "wagtailcore.pagesubscription",
+  "pk": 5,
+  "fields": {
+    "user": [
+      "cleo"
+    ],
+    "page": 8,
+    "comment_notifications": true
+  }
+},
+{
+  "model": "wagtailcore.pagesubscription",
+  "pk": 6,
+  "fields": {
+    "user": [
+      "cleo"
+    ],
+    "page": 10,
+    "comment_notifications": true
+  }
+},
+{
+  "model": "wagtailcore.pagesubscription",
+  "pk": 7,
+  "fields": {
+    "user": [
+      "cleo"
+    ],
+    "page": 9,
+    "comment_notifications": false
+  }
+},
+{
+  "model": "wagtailcore.pagesubscription",
+  "pk": 8,
+  "fields": {
+    "user": [
+      "cleo"
+    ],
+    "page": 11,
+    "comment_notifications": false
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 1,
+  "fields": {
+    "content_type": [
+      "home",
+      "homepage"
+    ],
+    "label": "Home",
+    "action": "wagtail.create",
+    "data": {},
+    "timestamp": "2025-10-30T23:41:10.323Z",
+    "uuid": null,
+    "user": null,
+    "revision": null,
+    "content_changed": true,
+    "deleted": false,
+    "page": 3
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 2,
+  "fields": {
+    "content_type": [
+      "home",
+      "homepage"
+    ],
+    "label": "My page",
+    "action": "wagtail.create",
+    "data": {},
+    "timestamp": "2025-10-31T00:14:04.070Z",
+    "uuid": "0162f3d5-20c7-46fa-ba95-a44084033497",
+    "user": [
+      "cleo"
+    ],
+    "revision": null,
+    "content_changed": true,
+    "deleted": false,
+    "page": 4
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 3,
+  "fields": {
+    "content_type": [
+      "home",
+      "homepage"
+    ],
+    "label": "My page",
+    "action": "wagtail.edit",
+    "data": {},
+    "timestamp": "2025-10-31T00:14:04.100Z",
+    "uuid": "0162f3d5-20c7-46fa-ba95-a44084033497",
+    "user": [
+      "cleo"
+    ],
+    "revision": 1,
+    "content_changed": true,
+    "deleted": false,
+    "page": 4
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 4,
+  "fields": {
+    "content_type": [
+      "home",
+      "homepage"
+    ],
+    "label": "My page",
+    "action": "wagtail.publish",
+    "data": {},
+    "timestamp": "2025-10-31T00:14:04.143Z",
+    "uuid": "0162f3d5-20c7-46fa-ba95-a44084033497",
+    "user": [
+      "cleo"
+    ],
+    "revision": 1,
+    "content_changed": true,
+    "deleted": false,
+    "page": 4
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 5,
+  "fields": {
+    "content_type": [
+      "home",
+      "homepage"
+    ],
+    "label": "My page",
+    "action": "wagtail.edit",
+    "data": {},
+    "timestamp": "2025-10-31T00:14:42.217Z",
+    "uuid": "0f888329-9146-4e96-a0ca-933d09b15cc6",
+    "user": [
+      "cleo"
+    ],
+    "revision": 2,
+    "content_changed": true,
+    "deleted": false,
+    "page": 4
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 6,
+  "fields": {
+    "content_type": [
+      "home",
+      "homepage"
+    ],
+    "label": "Home",
+    "action": "wagtail.rename",
+    "data": {
+      "title": {
+        "new": "Home",
+        "old": "My page"
+      }
+    },
+    "timestamp": "2025-10-31T00:14:42.263Z",
+    "uuid": "0f888329-9146-4e96-a0ca-933d09b15cc6",
+    "user": [
+      "cleo"
+    ],
+    "revision": 2,
+    "content_changed": false,
+    "deleted": false,
+    "page": 4
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 7,
+  "fields": {
+    "content_type": [
+      "home",
+      "homepage"
+    ],
+    "label": "Home",
+    "action": "wagtail.publish",
+    "data": {
+      "title": {
+        "new": "Home",
+        "old": "My page"
+      }
+    },
+    "timestamp": "2025-10-31T00:14:42.267Z",
+    "uuid": "0f888329-9146-4e96-a0ca-933d09b15cc6",
+    "user": [
+      "cleo"
+    ],
+    "revision": 2,
+    "content_changed": true,
+    "deleted": false,
+    "page": 4
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 8,
+  "fields": {
+    "content_type": [
+      "home",
+      "homepage"
+    ],
+    "label": "Home",
+    "action": "wagtail.delete",
+    "data": {},
+    "timestamp": "2025-10-31T00:17:16.931Z",
+    "uuid": null,
+    "user": null,
+    "revision": null,
+    "content_changed": false,
+    "deleted": true,
+    "page": 4
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 9,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogindexpage"
+    ],
+    "label": "Blog",
+    "action": "wagtail.create",
+    "data": {},
+    "timestamp": "2025-10-31T08:21:47.675Z",
+    "uuid": "03f10bce-1106-4cef-aa79-4b17c7c9e1e2",
+    "user": [
+      "cleo"
+    ],
+    "revision": null,
+    "content_changed": true,
+    "deleted": false,
+    "page": 5
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 10,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogindexpage"
+    ],
+    "label": "Blog",
+    "action": "wagtail.edit",
+    "data": {},
+    "timestamp": "2025-10-31T08:21:47.703Z",
+    "uuid": "03f10bce-1106-4cef-aa79-4b17c7c9e1e2",
+    "user": [
+      "cleo"
+    ],
+    "revision": 3,
+    "content_changed": true,
+    "deleted": false,
+    "page": 5
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 11,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogindexpage"
+    ],
+    "label": "Blog",
+    "action": "wagtail.publish",
+    "data": {},
+    "timestamp": "2025-10-31T08:21:47.742Z",
+    "uuid": "03f10bce-1106-4cef-aa79-4b17c7c9e1e2",
+    "user": [
+      "cleo"
+    ],
+    "revision": 3,
+    "content_changed": true,
+    "deleted": false,
+    "page": 5
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 12,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "label": "My first blogg post",
+    "action": "wagtail.create",
+    "data": {},
+    "timestamp": "2025-10-31T08:34:11.727Z",
+    "uuid": "9388b24a-d618-4c3a-aaa7-b86707e08ea2",
+    "user": [
+      "cleo"
+    ],
+    "revision": null,
+    "content_changed": true,
+    "deleted": false,
+    "page": 6
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 13,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "label": "My first blogg post",
+    "action": "wagtail.edit",
+    "data": {},
+    "timestamp": "2025-10-31T08:34:11.767Z",
+    "uuid": "9388b24a-d618-4c3a-aaa7-b86707e08ea2",
+    "user": [
+      "cleo"
+    ],
+    "revision": 4,
+    "content_changed": true,
+    "deleted": false,
+    "page": 6
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 14,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "label": "My first blogg post",
+    "action": "wagtail.publish",
+    "data": {},
+    "timestamp": "2025-10-31T08:34:11.848Z",
+    "uuid": "9388b24a-d618-4c3a-aaa7-b86707e08ea2",
+    "user": [
+      "cleo"
+    ],
+    "revision": 4,
+    "content_changed": true,
+    "deleted": false,
+    "page": 6
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 15,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "label": "Test post",
+    "action": "wagtail.create",
+    "data": {},
+    "timestamp": "2025-10-31T09:15:37.675Z",
+    "uuid": "edbf96b8-9fa1-474b-a01a-b722aaabf0fb",
+    "user": [
+      "cleo"
+    ],
+    "revision": null,
+    "content_changed": true,
+    "deleted": false,
+    "page": 7
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 16,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "label": "Test post",
+    "action": "wagtail.edit",
+    "data": {},
+    "timestamp": "2025-10-31T09:15:37.706Z",
+    "uuid": "edbf96b8-9fa1-474b-a01a-b722aaabf0fb",
+    "user": [
+      "cleo"
+    ],
+    "revision": 5,
+    "content_changed": true,
+    "deleted": false,
+    "page": 7
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 17,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "label": "Test post",
+    "action": "wagtail.publish",
+    "data": {},
+    "timestamp": "2025-10-31T09:15:37.755Z",
+    "uuid": "edbf96b8-9fa1-474b-a01a-b722aaabf0fb",
+    "user": [
+      "cleo"
+    ],
+    "revision": 5,
+    "content_changed": true,
+    "deleted": false,
+    "page": 7
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 18,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "label": "My first blogg post",
+    "action": "wagtail.edit",
+    "data": {},
+    "timestamp": "2025-10-31T11:37:27.514Z",
+    "uuid": "9c10fa16-af13-46ad-8f87-066922069c6c",
+    "user": [
+      "cleo"
+    ],
+    "revision": 6,
+    "content_changed": true,
+    "deleted": false,
+    "page": 6
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 19,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "label": "My first blogg post",
+    "action": "wagtail.publish",
+    "data": {},
+    "timestamp": "2025-10-31T11:37:27.571Z",
+    "uuid": "9c10fa16-af13-46ad-8f87-066922069c6c",
+    "user": [
+      "cleo"
+    ],
+    "revision": 6,
+    "content_changed": true,
+    "deleted": false,
+    "page": 6
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 20,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "label": "testing markdown",
+    "action": "wagtail.create",
+    "data": {},
+    "timestamp": "2025-10-31T11:45:37.801Z",
+    "uuid": "92aa80a5-52c2-458a-a9d3-5c278b580200",
+    "user": [
+      "cleo"
+    ],
+    "revision": null,
+    "content_changed": true,
+    "deleted": false,
+    "page": 8
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 21,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "label": "testing markdown",
+    "action": "wagtail.edit",
+    "data": {},
+    "timestamp": "2025-10-31T11:45:37.895Z",
+    "uuid": "92aa80a5-52c2-458a-a9d3-5c278b580200",
+    "user": [
+      "cleo"
+    ],
+    "revision": 7,
+    "content_changed": true,
+    "deleted": false,
+    "page": 8
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 22,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "label": "testing markdown",
+    "action": "wagtail.publish",
+    "data": {},
+    "timestamp": "2025-10-31T11:45:37.977Z",
+    "uuid": "92aa80a5-52c2-458a-a9d3-5c278b580200",
+    "user": [
+      "cleo"
+    ],
+    "revision": 7,
+    "content_changed": true,
+    "deleted": false,
+    "page": 8
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 23,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "label": "testing markdown",
+    "action": "wagtail.edit",
+    "data": {},
+    "timestamp": "2025-10-31T11:46:09.134Z",
+    "uuid": "2c84bdc6-a741-4c63-b9c1-b836974ad989",
+    "user": [
+      "cleo"
+    ],
+    "revision": 8,
+    "content_changed": true,
+    "deleted": false,
+    "page": 8
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 24,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "label": "testing markdown",
+    "action": "wagtail.publish",
+    "data": {},
+    "timestamp": "2025-10-31T11:46:09.205Z",
+    "uuid": "2c84bdc6-a741-4c63-b9c1-b836974ad989",
+    "user": [
+      "cleo"
+    ],
+    "revision": 8,
+    "content_changed": true,
+    "deleted": false,
+    "page": 8
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 25,
+  "fields": {
+    "content_type": [
+      "home",
+      "projectindexpage"
+    ],
+    "label": "Projects",
+    "action": "wagtail.create",
+    "data": {},
+    "timestamp": "2025-10-31T15:23:41.454Z",
+    "uuid": null,
+    "user": null,
+    "revision": null,
+    "content_changed": true,
+    "deleted": false,
+    "page": 9
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 26,
+  "fields": {
+    "content_type": [
+      "home",
+      "projectindexpage"
+    ],
+    "label": "Projects",
+    "action": "wagtail.publish",
+    "data": {},
+    "timestamp": "2025-10-31T15:23:41.548Z",
+    "uuid": null,
+    "user": null,
+    "revision": 9,
+    "content_changed": true,
+    "deleted": false,
+    "page": 9
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 27,
+  "fields": {
+    "content_type": [
+      "home",
+      "projectpage"
+    ],
+    "label": "Test",
+    "action": "wagtail.create",
+    "data": {},
+    "timestamp": "2025-10-31T15:25:54.515Z",
+    "uuid": "de5c3a4b-0fb0-4132-9675-a8a7ef0128c9",
+    "user": [
+      "cleo"
+    ],
+    "revision": null,
+    "content_changed": true,
+    "deleted": false,
+    "page": 10
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 28,
+  "fields": {
+    "content_type": [
+      "home",
+      "projectpage"
+    ],
+    "label": "Test",
+    "action": "wagtail.edit",
+    "data": {},
+    "timestamp": "2025-10-31T15:25:54.585Z",
+    "uuid": "de5c3a4b-0fb0-4132-9675-a8a7ef0128c9",
+    "user": [
+      "cleo"
+    ],
+    "revision": 10,
+    "content_changed": true,
+    "deleted": false,
+    "page": 10
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 29,
+  "fields": {
+    "content_type": [
+      "home",
+      "projectpage"
+    ],
+    "label": "Test",
+    "action": "wagtail.edit",
+    "data": {},
+    "timestamp": "2025-10-31T15:29:30.793Z",
+    "uuid": "35319173-f6cf-4984-92fc-c652890fcf73",
+    "user": [
+      "cleo"
+    ],
+    "revision": 11,
+    "content_changed": true,
+    "deleted": false,
+    "page": 10
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 30,
+  "fields": {
+    "content_type": [
+      "home",
+      "projectpage"
+    ],
+    "label": "Test",
+    "action": "wagtail.edit",
+    "data": {},
+    "timestamp": "2025-10-31T15:31:43.931Z",
+    "uuid": "a48547cc-1ffa-48bd-b4d9-27dcbd273166",
+    "user": [
+      "cleo"
+    ],
+    "revision": 12,
+    "content_changed": true,
+    "deleted": false,
+    "page": 10
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 31,
+  "fields": {
+    "content_type": [
+      "home",
+      "projectpage"
+    ],
+    "label": "Test",
+    "action": "wagtail.publish",
+    "data": {},
+    "timestamp": "2025-10-31T15:31:43.975Z",
+    "uuid": "a48547cc-1ffa-48bd-b4d9-27dcbd273166",
+    "user": [
+      "cleo"
+    ],
+    "revision": 12,
+    "content_changed": true,
+    "deleted": false,
+    "page": 10
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 32,
+  "fields": {
+    "content_type": [
+      "home",
+      "contactpage"
+    ],
+    "label": "Contact",
+    "action": "wagtail.create",
+    "data": {},
+    "timestamp": "2025-11-03T10:11:52.808Z",
+    "uuid": null,
+    "user": null,
+    "revision": null,
+    "content_changed": true,
+    "deleted": false,
+    "page": 11
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 33,
+  "fields": {
+    "content_type": [
+      "home",
+      "contactpage"
+    ],
+    "label": "Contact",
+    "action": "wagtail.publish",
+    "data": {},
+    "timestamp": "2025-11-03T10:11:52.901Z",
+    "uuid": null,
+    "user": null,
+    "revision": 13,
+    "content_changed": true,
+    "deleted": false,
+    "page": 11
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 34,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogindexpage"
+    ],
+    "label": "Blog",
+    "action": "wagtail.edit",
+    "data": {},
+    "timestamp": "2025-11-03T11:45:47.537Z",
+    "uuid": "82ed5acf-0cf5-4915-a151-48219836058d",
+    "user": [
+      "cleo"
+    ],
+    "revision": 14,
+    "content_changed": true,
+    "deleted": false,
+    "page": 5
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 35,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogindexpage"
+    ],
+    "label": "Blog",
+    "action": "wagtail.edit",
+    "data": {},
+    "timestamp": "2025-11-03T11:45:50.171Z",
+    "uuid": "1c80c652-12e4-4c99-a005-d1c752832d13",
+    "user": [
+      "cleo"
+    ],
+    "revision": 15,
+    "content_changed": true,
+    "deleted": false,
+    "page": 5
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 36,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogindexpage"
+    ],
+    "label": "Blog",
+    "action": "wagtail.publish",
+    "data": {},
+    "timestamp": "2025-11-03T11:45:50.227Z",
+    "uuid": "1c80c652-12e4-4c99-a005-d1c752832d13",
+    "user": [
+      "cleo"
+    ],
+    "revision": 15,
+    "content_changed": false,
+    "deleted": false,
+    "page": 5
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 37,
+  "fields": {
+    "content_type": [
+      "home",
+      "contactpage"
+    ],
+    "label": "Contact",
+    "action": "wagtail.edit",
+    "data": {},
+    "timestamp": "2025-11-03T11:46:04.372Z",
+    "uuid": "19d01560-a08c-42e8-946b-0ae5adb12077",
+    "user": [
+      "cleo"
+    ],
+    "revision": 16,
+    "content_changed": true,
+    "deleted": false,
+    "page": 11
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 38,
+  "fields": {
+    "content_type": [
+      "home",
+      "contactpage"
+    ],
+    "label": "Contact",
+    "action": "wagtail.publish",
+    "data": {},
+    "timestamp": "2025-11-03T11:46:04.418Z",
+    "uuid": "19d01560-a08c-42e8-946b-0ae5adb12077",
+    "user": [
+      "cleo"
+    ],
+    "revision": 16,
+    "content_changed": true,
+    "deleted": false,
+    "page": 11
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 39,
+  "fields": {
+    "content_type": [
+      "home",
+      "projectindexpage"
+    ],
+    "label": "Projects",
+    "action": "wagtail.edit",
+    "data": {},
+    "timestamp": "2025-11-03T11:46:13.540Z",
+    "uuid": "1ece40ae-60a6-4db7-b855-a88e1933cf0f",
+    "user": [
+      "cleo"
+    ],
+    "revision": 17,
+    "content_changed": true,
+    "deleted": false,
+    "page": 9
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 40,
+  "fields": {
+    "content_type": [
+      "home",
+      "projectindexpage"
+    ],
+    "label": "Projects",
+    "action": "wagtail.publish",
+    "data": {},
+    "timestamp": "2025-11-03T11:46:13.604Z",
+    "uuid": "1ece40ae-60a6-4db7-b855-a88e1933cf0f",
+    "user": [
+      "cleo"
+    ],
+    "revision": 17,
+    "content_changed": true,
+    "deleted": false,
+    "page": 9
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 41,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "label": "testing markdown",
+    "action": "wagtail.edit",
+    "data": {},
+    "timestamp": "2025-11-03T12:40:59.121Z",
+    "uuid": "4ebc2fc1-a7c9-47d0-812d-d516f6ca6052",
+    "user": [
+      "cleo"
+    ],
+    "revision": 18,
+    "content_changed": true,
+    "deleted": false,
+    "page": 8
+  }
+},
+{
+  "model": "wagtailcore.pagelogentry",
+  "pk": 42,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "label": "testing markdown",
+    "action": "wagtail.publish",
+    "data": {},
+    "timestamp": "2025-11-03T12:40:59.189Z",
+    "uuid": "4ebc2fc1-a7c9-47d0-812d-d516f6ca6052",
+    "user": [
+      "cleo"
+    ],
+    "revision": 18,
+    "content_changed": true,
+    "deleted": false,
+    "page": 8
+  }
+},
+{
+  "model": "wagtailcore.grouppagepermission",
+  "pk": 1,
+  "fields": {
+    "group": [
+      "Moderators"
+    ],
+    "page": 1,
+    "permission": [
+      "add_page",
+      "wagtailcore",
+      "page"
+    ]
+  }
+},
+{
+  "model": "wagtailcore.grouppagepermission",
+  "pk": 2,
+  "fields": {
+    "group": [
+      "Moderators"
+    ],
+    "page": 1,
+    "permission": [
+      "change_page",
+      "wagtailcore",
+      "page"
+    ]
+  }
+},
+{
+  "model": "wagtailcore.grouppagepermission",
+  "pk": 3,
+  "fields": {
+    "group": [
+      "Moderators"
+    ],
+    "page": 1,
+    "permission": [
+      "publish_page",
+      "wagtailcore",
+      "page"
+    ]
+  }
+},
+{
+  "model": "wagtailcore.grouppagepermission",
+  "pk": 4,
+  "fields": {
+    "group": [
+      "Editors"
+    ],
+    "page": 1,
+    "permission": [
+      "add_page",
+      "wagtailcore",
+      "page"
+    ]
+  }
+},
+{
+  "model": "wagtailcore.grouppagepermission",
+  "pk": 5,
+  "fields": {
+    "group": [
+      "Editors"
+    ],
+    "page": 1,
+    "permission": [
+      "change_page",
+      "wagtailcore",
+      "page"
+    ]
+  }
+},
+{
+  "model": "wagtailcore.grouppagepermission",
+  "pk": 6,
+  "fields": {
+    "group": [
+      "Moderators"
+    ],
+    "page": 1,
+    "permission": [
+      "lock_page",
+      "wagtailcore",
+      "page"
+    ]
+  }
+},
+{
+  "model": "wagtailcore.grouppagepermission",
+  "pk": 7,
+  "fields": {
+    "group": [
+      "Moderators"
+    ],
+    "page": 1,
+    "permission": [
+      "unlock_page",
+      "wagtailcore",
+      "page"
+    ]
+  }
+},
+{
+  "model": "wagtailcore.page",
+  "pk": 1,
+  "fields": {
+    "path": "0001",
+    "depth": 1,
+    "numchild": 1,
+    "translation_key": "3a0cbc7c-011b-4f6b-9244-e60054b7327a",
+    "locale": 1,
+    "latest_revision": null,
+    "live": true,
+    "has_unpublished_changes": false,
+    "first_published_at": null,
+    "last_published_at": null,
+    "live_revision": null,
+    "go_live_at": null,
+    "expire_at": null,
+    "expired": false,
+    "locked": false,
+    "locked_at": null,
+    "locked_by": null,
+    "title": "Root",
+    "draft_title": "Root",
+    "slug": "root",
+    "content_type": [
+      "wagtailcore",
+      "page"
+    ],
+    "url_path": "/",
+    "owner": null,
+    "seo_title": "",
+    "show_in_menus": false,
+    "search_description": "",
+    "latest_revision_created_at": null,
+    "alias_of": null
+  }
+},
+{
+  "model": "wagtailcore.page",
+  "pk": 3,
+  "fields": {
+    "path": "00010001",
+    "depth": 2,
+    "numchild": 3,
+    "translation_key": "fad3f16b-5603-4ba4-b452-e5ffedbcdc82",
+    "locale": 1,
+    "latest_revision": null,
+    "live": true,
+    "has_unpublished_changes": false,
+    "first_published_at": null,
+    "last_published_at": null,
+    "live_revision": null,
+    "go_live_at": null,
+    "expire_at": null,
+    "expired": false,
+    "locked": false,
+    "locked_at": null,
+    "locked_by": null,
+    "title": "Home",
+    "draft_title": "Home",
+    "slug": "home",
+    "content_type": [
+      "home",
+      "homepage"
+    ],
+    "url_path": "/home/",
+    "owner": null,
+    "seo_title": "",
+    "show_in_menus": false,
+    "search_description": "",
+    "latest_revision_created_at": null,
+    "alias_of": null
+  }
+},
+{
+  "model": "wagtailcore.page",
+  "pk": 5,
+  "fields": {
+    "path": "000100010001",
+    "depth": 3,
+    "numchild": 3,
+    "translation_key": "5a31e5a4-4897-4012-a5dc-948c40b496be",
+    "locale": 1,
+    "latest_revision": 15,
+    "live": true,
+    "has_unpublished_changes": false,
+    "first_published_at": "2025-10-31T08:21:47.719Z",
+    "last_published_at": "2025-11-03T11:45:50.189Z",
+    "live_revision": 15,
+    "go_live_at": null,
+    "expire_at": null,
+    "expired": false,
+    "locked": false,
+    "locked_at": null,
+    "locked_by": null,
+    "title": "Blog",
+    "draft_title": "Blog",
+    "slug": "blog",
+    "content_type": [
+      "home",
+      "blogindexpage"
+    ],
+    "url_path": "/home/blog/",
+    "owner": [
+      "cleo"
+    ],
+    "seo_title": "",
+    "show_in_menus": true,
+    "search_description": "",
+    "latest_revision_created_at": "2025-11-03T11:45:50.137Z",
+    "alias_of": null
+  }
+},
+{
+  "model": "wagtailcore.page",
+  "pk": 6,
+  "fields": {
+    "path": "0001000100010001",
+    "depth": 4,
+    "numchild": 0,
+    "translation_key": "4862d185-a1fa-4656-bc3a-8a78d8a385e9",
+    "locale": 1,
+    "latest_revision": 6,
+    "live": true,
+    "has_unpublished_changes": false,
+    "first_published_at": "2025-10-31T08:34:11.802Z",
+    "last_published_at": "2025-10-31T11:37:27.536Z",
+    "live_revision": 6,
+    "go_live_at": null,
+    "expire_at": null,
+    "expired": false,
+    "locked": false,
+    "locked_at": null,
+    "locked_by": null,
+    "title": "My first blogg post",
+    "draft_title": "My first blogg post",
+    "slug": "my-first-blogg-post",
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "url_path": "/home/blog/my-first-blogg-post/",
+    "owner": [
+      "cleo"
+    ],
+    "seo_title": "",
+    "show_in_menus": false,
+    "search_description": "",
+    "latest_revision_created_at": "2025-10-31T11:37:27.484Z",
+    "alias_of": null
+  }
+},
+{
+  "model": "wagtailcore.page",
+  "pk": 7,
+  "fields": {
+    "path": "0001000100010002",
+    "depth": 4,
+    "numchild": 0,
+    "translation_key": "18abd38b-8632-44c1-88fc-f0a5f7f38561",
+    "locale": 1,
+    "latest_revision": 5,
+    "live": true,
+    "has_unpublished_changes": false,
+    "first_published_at": "2025-10-31T09:15:37.727Z",
+    "last_published_at": "2025-10-31T09:15:37.727Z",
+    "live_revision": 5,
+    "go_live_at": null,
+    "expire_at": null,
+    "expired": false,
+    "locked": false,
+    "locked_at": null,
+    "locked_by": null,
+    "title": "Test post",
+    "draft_title": "Test post",
+    "slug": "test-post",
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "url_path": "/home/blog/test-post/",
+    "owner": [
+      "cleo"
+    ],
+    "seo_title": "",
+    "show_in_menus": false,
+    "search_description": "",
+    "latest_revision_created_at": "2025-10-31T09:15:37.689Z",
+    "alias_of": null
+  }
+},
+{
+  "model": "wagtailcore.page",
+  "pk": 8,
+  "fields": {
+    "path": "0001000100010003",
+    "depth": 4,
+    "numchild": 0,
+    "translation_key": "22b767a2-7719-4b47-acde-aa0eee3a1aa7",
+    "locale": 1,
+    "latest_revision": 18,
+    "live": true,
+    "has_unpublished_changes": false,
+    "first_published_at": "2025-10-31T11:45:37.929Z",
+    "last_published_at": "2025-11-03T12:40:59.143Z",
+    "live_revision": 18,
+    "go_live_at": null,
+    "expire_at": null,
+    "expired": false,
+    "locked": false,
+    "locked_at": null,
+    "locked_by": null,
+    "title": "testing markdown",
+    "draft_title": "testing markdown",
+    "slug": "testing-markdown",
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "url_path": "/home/blog/testing-markdown/",
+    "owner": [
+      "cleo"
+    ],
+    "seo_title": "",
+    "show_in_menus": false,
+    "search_description": "",
+    "latest_revision_created_at": "2025-11-03T12:40:59.093Z",
+    "alias_of": null
+  }
+},
+{
+  "model": "wagtailcore.page",
+  "pk": 9,
+  "fields": {
+    "path": "000100010002",
+    "depth": 3,
+    "numchild": 1,
+    "translation_key": "9f8ab979-7723-43a0-93ae-1d568bd1edec",
+    "locale": 1,
+    "latest_revision": 17,
+    "live": true,
+    "has_unpublished_changes": false,
+    "first_published_at": "2025-10-31T15:23:41.511Z",
+    "last_published_at": "2025-11-03T11:46:13.559Z",
+    "live_revision": 17,
+    "go_live_at": null,
+    "expire_at": null,
+    "expired": false,
+    "locked": false,
+    "locked_at": null,
+    "locked_by": null,
+    "title": "Projects",
+    "draft_title": "Projects",
+    "slug": "projects",
+    "content_type": [
+      "home",
+      "projectindexpage"
+    ],
+    "url_path": "/home/projects/",
+    "owner": null,
+    "seo_title": "",
+    "show_in_menus": true,
+    "search_description": "",
+    "latest_revision_created_at": "2025-11-03T11:46:13.497Z",
+    "alias_of": null
+  }
+},
+{
+  "model": "wagtailcore.page",
+  "pk": 10,
+  "fields": {
+    "path": "0001000100020001",
+    "depth": 4,
+    "numchild": 0,
+    "translation_key": "7dbdeedc-3dbb-4096-92bb-fb408f274502",
+    "locale": 1,
+    "latest_revision": 12,
+    "live": true,
+    "has_unpublished_changes": false,
+    "first_published_at": "2025-10-31T15:31:43.943Z",
+    "last_published_at": "2025-10-31T15:31:43.943Z",
+    "live_revision": 12,
+    "go_live_at": null,
+    "expire_at": null,
+    "expired": false,
+    "locked": false,
+    "locked_at": null,
+    "locked_by": null,
+    "title": "Test",
+    "draft_title": "Test",
+    "slug": "test",
+    "content_type": [
+      "home",
+      "projectpage"
+    ],
+    "url_path": "/home/projects/test/",
+    "owner": [
+      "cleo"
+    ],
+    "seo_title": "",
+    "show_in_menus": false,
+    "search_description": "",
+    "latest_revision_created_at": "2025-10-31T15:31:43.909Z",
+    "alias_of": null
+  }
+},
+{
+  "model": "wagtailcore.page",
+  "pk": 11,
+  "fields": {
+    "path": "000100010003",
+    "depth": 3,
+    "numchild": 0,
+    "translation_key": "1069243e-47f1-4f6f-8299-1d93a6fb5188",
+    "locale": 1,
+    "latest_revision": 16,
+    "live": true,
+    "has_unpublished_changes": false,
+    "first_published_at": "2025-11-03T10:11:52.875Z",
+    "last_published_at": "2025-11-03T11:46:04.386Z",
+    "live_revision": 16,
+    "go_live_at": null,
+    "expire_at": null,
+    "expired": false,
+    "locked": false,
+    "locked_at": null,
+    "locked_by": null,
+    "title": "Contact",
+    "draft_title": "Contact",
+    "slug": "contact",
+    "content_type": [
+      "home",
+      "contactpage"
+    ],
+    "url_path": "/home/contact/",
+    "owner": null,
+    "seo_title": "",
+    "show_in_menus": true,
+    "search_description": "",
+    "latest_revision_created_at": "2025-11-03T11:46:04.348Z",
+    "alias_of": null
+  }
+},
+{
+  "model": "wagtailcore.groupapprovaltask",
+  "pk": 1,
+  "fields": {
+    "task_ptr": 1,
+    "groups": [
+      [
+        "Moderators"
+      ]
+    ]
+  }
+},
+{
+  "model": "wagtailcore.groupcollectionpermission",
+  "fields": {
+    "group": [
+      "Moderators"
+    ],
+    "collection": 1,
+    "permission": [
+      "add_document",
+      "wagtaildocs",
+      "document"
+    ]
+  }
+},
+{
+  "model": "wagtailcore.groupcollectionpermission",
+  "fields": {
+    "group": [
+      "Editors"
+    ],
+    "collection": 1,
+    "permission": [
+      "add_document",
+      "wagtaildocs",
+      "document"
+    ]
+  }
+},
+{
+  "model": "wagtailcore.groupcollectionpermission",
+  "fields": {
+    "group": [
+      "Moderators"
+    ],
+    "collection": 1,
+    "permission": [
+      "change_document",
+      "wagtaildocs",
+      "document"
+    ]
+  }
+},
+{
+  "model": "wagtailcore.groupcollectionpermission",
+  "fields": {
+    "group": [
+      "Editors"
+    ],
+    "collection": 1,
+    "permission": [
+      "change_document",
+      "wagtaildocs",
+      "document"
+    ]
+  }
+},
+{
+  "model": "wagtailcore.groupcollectionpermission",
+  "fields": {
+    "group": [
+      "Moderators"
+    ],
+    "collection": 1,
+    "permission": [
+      "choose_document",
+      "wagtaildocs",
+      "document"
+    ]
+  }
+},
+{
+  "model": "wagtailcore.groupcollectionpermission",
+  "fields": {
+    "group": [
+      "Editors"
+    ],
+    "collection": 1,
+    "permission": [
+      "choose_document",
+      "wagtaildocs",
+      "document"
+    ]
+  }
+},
+{
+  "model": "wagtailcore.groupcollectionpermission",
+  "fields": {
+    "group": [
+      "Moderators"
+    ],
+    "collection": 1,
+    "permission": [
+      "add_image",
+      "wagtailimages",
+      "image"
+    ]
+  }
+},
+{
+  "model": "wagtailcore.groupcollectionpermission",
+  "fields": {
+    "group": [
+      "Editors"
+    ],
+    "collection": 1,
+    "permission": [
+      "add_image",
+      "wagtailimages",
+      "image"
+    ]
+  }
+},
+{
+  "model": "wagtailcore.groupcollectionpermission",
+  "fields": {
+    "group": [
+      "Moderators"
+    ],
+    "collection": 1,
+    "permission": [
+      "change_image",
+      "wagtailimages",
+      "image"
+    ]
+  }
+},
+{
+  "model": "wagtailcore.groupcollectionpermission",
+  "fields": {
+    "group": [
+      "Editors"
+    ],
+    "collection": 1,
+    "permission": [
+      "change_image",
+      "wagtailimages",
+      "image"
+    ]
+  }
+},
+{
+  "model": "wagtailcore.groupcollectionpermission",
+  "fields": {
+    "group": [
+      "Moderators"
+    ],
+    "collection": 1,
+    "permission": [
+      "choose_image",
+      "wagtailimages",
+      "image"
+    ]
+  }
+},
+{
+  "model": "wagtailcore.groupcollectionpermission",
+  "fields": {
+    "group": [
+      "Editors"
+    ],
+    "collection": 1,
+    "permission": [
+      "choose_image",
+      "wagtailimages",
+      "image"
+    ]
+  }
+},
+{
+  "model": "wagtailcore.revision",
+  "pk": 3,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogindexpage"
+    ],
+    "base_content_type": [
+      "wagtailcore",
+      "page"
+    ],
+    "object_id": "5",
+    "created_at": "2025-10-31T08:21:47.688Z",
+    "user": [
+      "cleo"
+    ],
+    "object_str": "Blog",
+    "content": {
+      "pk": 5,
+      "live": true,
+      "path": "000100010001",
+      "slug": "blog",
+      "depth": 3,
+      "intro": "<h2 data-block-key=\"jkeux\">My blog to showcase</h2>",
+      "owner": 1,
+      "title": "Blog",
+      "locale": 1,
+      "locked": false,
+      "expired": false,
+      "alias_of": null,
+      "numchild": 0,
+      "url_path": "/home/blog/",
+      "expire_at": null,
+      "locked_at": null,
+      "locked_by": null,
+      "seo_title": "",
+      "go_live_at": null,
+      "draft_title": "Blog",
+      "content_type": 46,
+      "live_revision": null,
+      "show_in_menus": false,
+      "latest_revision": null,
+      "translation_key": "5a31e5a4-4897-4012-a5dc-948c40b496be",
+      "last_published_at": null,
+      "first_published_at": null,
+      "search_description": "",
+      "wagtail_admin_comments": [],
+      "has_unpublished_changes": false,
+      "latest_revision_created_at": null
+    },
+    "approved_go_live_at": null
+  }
+},
+{
+  "model": "wagtailcore.revision",
+  "pk": 4,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "base_content_type": [
+      "wagtailcore",
+      "page"
+    ],
+    "object_id": "6",
+    "created_at": "2025-10-31T08:34:11.748Z",
+    "user": [
+      "cleo"
+    ],
+    "object_str": "My first blogg post",
+    "content": {
+      "pk": 6,
+      "body": "[{\"type\": \"heading\", \"value\": \"This is a post in production!\", \"id\": \"16c2df64-0116-4d34-85b3-15cdaae08b55\"}, {\"type\": \"paragraph\", \"value\": \"<h3 data-block-key=\\\"gcv15\\\">How will this behave?</h3>\", \"id\": \"35cc18ba-0a54-4b56-accf-3fce62f30f00\"}, {\"type\": \"paragraph\", \"value\": \"<p data-block-key=\\\"gcv15\\\">Hope that I will continue to add more and more content to this.</p>\", \"id\": \"6ceea2f2-9074-44ae-9e88-239d4ea93662\"}]",
+      "date": "2025-10-31",
+      "live": true,
+      "path": "0001000100010001",
+      "slug": "my-first-blogg-post",
+      "depth": 4,
+      "intro": "This will be my first entry, but not my last",
+      "owner": 1,
+      "title": "My first blogg post",
+      "locale": 1,
+      "locked": false,
+      "expired": false,
+      "alias_of": null,
+      "numchild": 0,
+      "url_path": "/home/blog/my-first-blogg-post/",
+      "expire_at": null,
+      "locked_at": null,
+      "locked_by": null,
+      "seo_title": "",
+      "categories": 3,
+      "go_live_at": null,
+      "draft_title": "My first blogg post",
+      "content_type": 47,
+      "reading_time": 1,
+      "tagged_items": [
+        {
+          "pk": 1,
+          "tag": 1,
+          "content_object": 6
+        },
+        {
+          "pk": 2,
+          "tag": 2,
+          "content_object": 6
+        },
+        {
+          "pk": 3,
+          "tag": 3,
+          "content_object": 6
+        }
+      ],
+      "live_revision": null,
+      "show_in_menus": false,
+      "latest_revision": null,
+      "translation_key": "4862d185-a1fa-4656-bc3a-8a78d8a385e9",
+      "last_published_at": null,
+      "first_published_at": null,
+      "search_description": "",
+      "wagtail_admin_comments": [],
+      "has_unpublished_changes": false,
+      "latest_revision_created_at": null
+    },
+    "approved_go_live_at": null
+  }
+},
+{
+  "model": "wagtailcore.revision",
+  "pk": 5,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "base_content_type": [
+      "wagtailcore",
+      "page"
+    ],
+    "object_id": "7",
+    "created_at": "2025-10-31T09:15:37.689Z",
+    "user": [
+      "cleo"
+    ],
+    "object_str": "Test post",
+    "content": {
+      "pk": 7,
+      "body": "[{\"type\": \"heading\", \"value\": \"Testing style\", \"id\": \"0452ee40-d5e0-4741-9340-204e5535fefc\"}, {\"type\": \"quote\", \"value\": {\"quote\": \"A single quote\", \"author\": \"Confucius\"}, \"id\": \"46aeb7f9-4e64-4e89-901a-ac863e7eb2ee\"}, {\"type\": \"code\", \"value\": {\"language\": \"python\", \"code\": \"def htb_stats(request):\\r\\n    \\\"\\\"\\\"\\r\\n    Simple HTMX endpoint - du kan senare koppla detta till HTB API\\r\\n    \\\"\\\"\\\"\\r\\n    return JsonResponse({\\r\\n        'boxes_rooted': '25+'\\r\\n    })\"}, \"id\": \"87575773-1c9f-41f6-b720-2709c88ad39a\"}, {\"type\": \"paragraph\", \"value\": \"<h3 data-block-key=\\\"wscas\\\">Heading nr 3</h3>\", \"id\": \"6701278c-0ae1-489a-9c32-1a8cc453f6a2\"}]",
+      "date": "2025-10-31",
+      "live": true,
+      "path": "0001000100010002",
+      "slug": "test-post",
+      "depth": 4,
+      "intro": "A test to show new feature",
+      "owner": 1,
+      "title": "Test post",
+      "locale": 1,
+      "locked": false,
+      "expired": false,
+      "alias_of": null,
+      "numchild": 0,
+      "url_path": "/home/blog/test-post/",
+      "expire_at": null,
+      "locked_at": null,
+      "locked_by": null,
+      "seo_title": "",
+      "categories": 3,
+      "go_live_at": null,
+      "draft_title": "Test post",
+      "content_type": 47,
+      "reading_time": 1,
+      "tagged_items": [
+        {
+          "pk": 4,
+          "tag": 4,
+          "content_object": 7
+        },
+        {
+          "pk": 5,
+          "tag": 5,
+          "content_object": 7
+        },
+        {
+          "pk": 6,
+          "tag": 6,
+          "content_object": 7
+        }
+      ],
+      "live_revision": null,
+      "show_in_menus": false,
+      "latest_revision": null,
+      "translation_key": "18abd38b-8632-44c1-88fc-f0a5f7f38561",
+      "last_published_at": null,
+      "first_published_at": null,
+      "search_description": "",
+      "wagtail_admin_comments": [],
+      "has_unpublished_changes": false,
+      "latest_revision_created_at": null
+    },
+    "approved_go_live_at": null
+  }
+},
+{
+  "model": "wagtailcore.revision",
+  "pk": 6,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "base_content_type": [
+      "wagtailcore",
+      "page"
+    ],
+    "object_id": "6",
+    "created_at": "2025-10-31T11:37:27.484Z",
+    "user": [
+      "cleo"
+    ],
+    "object_str": "My first blogg post",
+    "content": {
+      "pk": 6,
+      "body": "[{\"type\": \"heading\", \"value\": \"This is a post in production!\", \"id\": \"16c2df64-0116-4d34-85b3-15cdaae08b55\"}, {\"type\": \"markdown\", \"value\": \"**Testing new markdown feature**\\r\\n*Italic style*\", \"id\": \"bcac3af8-3737-451b-951b-8ebeff34dd75\"}]",
+      "date": "2025-10-31",
+      "live": true,
+      "path": "0001000100010001",
+      "slug": "my-first-blogg-post",
+      "depth": 4,
+      "intro": "This will be my first entry, but not my last",
+      "owner": 1,
+      "title": "My first blogg post",
+      "locale": 1,
+      "locked": false,
+      "expired": false,
+      "alias_of": null,
+      "numchild": 0,
+      "url_path": "/home/blog/my-first-blogg-post/",
+      "expire_at": null,
+      "locked_at": null,
+      "locked_by": null,
+      "seo_title": "",
+      "categories": 3,
+      "go_live_at": null,
+      "draft_title": "My first blogg post",
+      "content_type": 47,
+      "reading_time": 1,
+      "tagged_items": [
+        {
+          "pk": null,
+          "tag": 1,
+          "content_object": 6
+        },
+        {
+          "pk": null,
+          "tag": 2,
+          "content_object": 6
+        },
+        {
+          "pk": null,
+          "tag": 3,
+          "content_object": 6
+        }
+      ],
+      "live_revision": 4,
+      "show_in_menus": false,
+      "latest_revision": 4,
+      "translation_key": "4862d185-a1fa-4656-bc3a-8a78d8a385e9",
+      "last_published_at": "2025-10-31T08:34:11.802Z",
+      "first_published_at": "2025-10-31T08:34:11.802Z",
+      "search_description": "",
+      "wagtail_admin_comments": [],
+      "has_unpublished_changes": false,
+      "latest_revision_created_at": "2025-10-31T08:34:11.748Z"
+    },
+    "approved_go_live_at": null
+  }
+},
+{
+  "model": "wagtailcore.revision",
+  "pk": 7,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "base_content_type": [
+      "wagtailcore",
+      "page"
+    ],
+    "object_id": "8",
+    "created_at": "2025-10-31T11:45:37.851Z",
+    "user": [
+      "cleo"
+    ],
+    "object_str": "testing markdown",
+    "content": {
+      "pk": 8,
+      "body": "[{\"type\": \"markdown\", \"value\": \"**Bold**\\r\\n*Italic*\\r\\n* list\\r\\n\\r\\n1. number list\\r\\n\\r\\n[link](https://www.google.com)\", \"id\": \"10144da7-de70-4834-9272-25452aceae11\"}]",
+      "date": "2025-10-31",
+      "live": true,
+      "path": "0001000100010003",
+      "slug": "testing-markdown",
+      "depth": 4,
+      "intro": "test",
+      "owner": 1,
+      "title": "testing markdown",
+      "locale": 1,
+      "locked": false,
+      "expired": false,
+      "alias_of": null,
+      "numchild": 0,
+      "url_path": "/home/blog/testing-markdown/",
+      "expire_at": null,
+      "locked_at": null,
+      "locked_by": null,
+      "seo_title": "",
+      "categories": 1,
+      "go_live_at": null,
+      "draft_title": "testing markdown",
+      "content_type": 47,
+      "reading_time": 1,
+      "tagged_items": [
+        {
+          "pk": 10,
+          "tag": 7,
+          "content_object": 8
+        }
+      ],
+      "live_revision": null,
+      "show_in_menus": false,
+      "latest_revision": null,
+      "translation_key": "22b767a2-7719-4b47-acde-aa0eee3a1aa7",
+      "last_published_at": null,
+      "first_published_at": null,
+      "search_description": "",
+      "wagtail_admin_comments": [],
+      "has_unpublished_changes": false,
+      "latest_revision_created_at": null
+    },
+    "approved_go_live_at": null
+  }
+},
+{
+  "model": "wagtailcore.revision",
+  "pk": 8,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "base_content_type": [
+      "wagtailcore",
+      "page"
+    ],
+    "object_id": "8",
+    "created_at": "2025-10-31T11:46:09.088Z",
+    "user": [
+      "cleo"
+    ],
+    "object_str": "testing markdown",
+    "content": {
+      "pk": 8,
+      "body": "[{\"type\": \"markdown\", \"value\": \"**Bold**\\r\\n\\r\\n*Italic*\\r\\n\\r\\n* list\\r\\n\\r\\n1. number list\\r\\n\\r\\n[link](https://www.google.com)\", \"id\": \"10144da7-de70-4834-9272-25452aceae11\"}]",
+      "date": "2025-10-31",
+      "live": true,
+      "path": "0001000100010003",
+      "slug": "testing-markdown",
+      "depth": 4,
+      "intro": "test",
+      "owner": 1,
+      "title": "testing markdown",
+      "locale": 1,
+      "locked": false,
+      "expired": false,
+      "alias_of": null,
+      "numchild": 0,
+      "url_path": "/home/blog/testing-markdown/",
+      "expire_at": null,
+      "locked_at": null,
+      "locked_by": null,
+      "seo_title": "",
+      "categories": 1,
+      "go_live_at": null,
+      "draft_title": "testing markdown",
+      "content_type": 47,
+      "reading_time": 1,
+      "tagged_items": [
+        {
+          "pk": null,
+          "tag": 7,
+          "content_object": 8
+        }
+      ],
+      "live_revision": 7,
+      "show_in_menus": false,
+      "latest_revision": 7,
+      "translation_key": "22b767a2-7719-4b47-acde-aa0eee3a1aa7",
+      "last_published_at": "2025-10-31T11:45:37.929Z",
+      "first_published_at": "2025-10-31T11:45:37.929Z",
+      "search_description": "",
+      "wagtail_admin_comments": [],
+      "has_unpublished_changes": false,
+      "latest_revision_created_at": "2025-10-31T11:45:37.851Z"
+    },
+    "approved_go_live_at": null
+  }
+},
+{
+  "model": "wagtailcore.revision",
+  "pk": 9,
+  "fields": {
+    "content_type": [
+      "home",
+      "projectindexpage"
+    ],
+    "base_content_type": [
+      "wagtailcore",
+      "page"
+    ],
+    "object_id": "9",
+    "created_at": "2025-10-31T15:23:41.483Z",
+    "user": null,
+    "object_str": "Projects",
+    "content": {
+      "pk": 9,
+      "live": true,
+      "path": "000100010002",
+      "slug": "projects",
+      "depth": 3,
+      "intro": "A collection of my infrastructure projects, automation tools, and security experiments.",
+      "owner": null,
+      "title": "Projects",
+      "locale": 1,
+      "locked": false,
+      "expired": false,
+      "alias_of": null,
+      "numchild": 0,
+      "url_path": "/home/projects/",
+      "expire_at": null,
+      "locked_at": null,
+      "locked_by": null,
+      "seo_title": "",
+      "go_live_at": null,
+      "draft_title": "Projects",
+      "content_type": 49,
+      "live_revision": null,
+      "show_in_menus": false,
+      "latest_revision": null,
+      "translation_key": "9f8ab979-7723-43a0-93ae-1d568bd1edec",
+      "last_published_at": null,
+      "first_published_at": null,
+      "search_description": "",
+      "wagtail_admin_comments": [],
+      "has_unpublished_changes": false,
+      "latest_revision_created_at": null
+    },
+    "approved_go_live_at": null
+  }
+},
+{
+  "model": "wagtailcore.revision",
+  "pk": 10,
+  "fields": {
+    "content_type": [
+      "home",
+      "projectpage"
+    ],
+    "base_content_type": [
+      "wagtailcore",
+      "page"
+    ],
+    "object_id": "10",
+    "created_at": "2025-10-31T15:25:54.555Z",
+    "user": [
+      "cleo"
+    ],
+    "object_str": "Test",
+    "content": {
+      "pk": 10,
+      "body": "[{\"type\": \"heading\", \"value\": \"Start of project\", \"id\": \"82a48407-658d-48ab-bb9a-94fa7c745c88\"}]",
+      "date": "2025-10-31",
+      "live": false,
+      "path": "0001000100020001",
+      "slug": "test",
+      "depth": 4,
+      "intro": "testing",
+      "owner": 1,
+      "title": "Test",
+      "locale": 1,
+      "locked": false,
+      "status": "in_progress",
+      "expired": false,
+      "problem": "",
+      "alias_of": null,
+      "category": null,
+      "duration": "2 weeks",
+      "live_url": "",
+      "numchild": 0,
+      "solution": "",
+      "url_path": "/home/projects/test/",
+      "expire_at": null,
+      "locked_at": null,
+      "locked_by": null,
+      "seo_title": "",
+      "github_url": "",
+      "go_live_at": null,
+      "hero_image": null,
+      "draft_title": "Test",
+      "content_type": 51,
+      "live_revision": null,
+      "show_in_menus": false,
+      "latest_revision": null,
+      "translation_key": "7dbdeedc-3dbb-4096-92bb-fb408f274502",
+      "last_published_at": null,
+      "first_published_at": null,
+      "search_description": "",
+      "wagtail_admin_comments": [],
+      "has_unpublished_changes": false,
+      "latest_revision_created_at": null
+    },
+    "approved_go_live_at": null
+  }
+},
+{
+  "model": "wagtailcore.revision",
+  "pk": 11,
+  "fields": {
+    "content_type": [
+      "home",
+      "projectpage"
+    ],
+    "base_content_type": [
+      "wagtailcore",
+      "page"
+    ],
+    "object_id": "10",
+    "created_at": "2025-10-31T15:29:30.758Z",
+    "user": [
+      "cleo"
+    ],
+    "object_str": "Test",
+    "content": {
+      "pk": 10,
+      "body": "[{\"type\": \"heading\", \"value\": \"Start of project\", \"id\": \"82a48407-658d-48ab-bb9a-94fa7c745c88\"}, {\"type\": \"markdown\", \"value\": \"Adding some info\\r\\n\\r\\n**Hopping it will look good**\\r\\n\\r\\n> How will this look?\", \"id\": \"28657440-06be-40a9-966c-9c1777e06129\"}]",
+      "date": "2025-10-31",
+      "live": false,
+      "path": "0001000100020001",
+      "slug": "test",
+      "depth": 4,
+      "intro": "testing",
+      "owner": 1,
+      "title": "Test",
+      "locale": 1,
+      "locked": false,
+      "status": "in_progress",
+      "expired": false,
+      "problem": "<h3 data-block-key=\"vrpbm\">Problem section</h3>",
+      "alias_of": null,
+      "category": null,
+      "duration": "2 weeks",
+      "live_url": "",
+      "numchild": 0,
+      "solution": "<h4 data-block-key=\"z7472\">Solution</h4><p data-block-key=\"534id\"></p><hr/><p data-block-key=\"6c6ul\">Some info</p>",
+      "url_path": "/home/projects/test/",
+      "expire_at": null,
+      "locked_at": null,
+      "locked_by": null,
+      "seo_title": "",
+      "github_url": "",
+      "go_live_at": null,
+      "hero_image": null,
+      "draft_title": "Test",
+      "content_type": 51,
+      "live_revision": null,
+      "show_in_menus": false,
+      "latest_revision": 10,
+      "translation_key": "7dbdeedc-3dbb-4096-92bb-fb408f274502",
+      "last_published_at": null,
+      "first_published_at": null,
+      "search_description": "",
+      "wagtail_admin_comments": [],
+      "has_unpublished_changes": true,
+      "latest_revision_created_at": "2025-10-31T15:25:54.555Z"
+    },
+    "approved_go_live_at": null
+  }
+},
+{
+  "model": "wagtailcore.revision",
+  "pk": 12,
+  "fields": {
+    "content_type": [
+      "home",
+      "projectpage"
+    ],
+    "base_content_type": [
+      "wagtailcore",
+      "page"
+    ],
+    "object_id": "10",
+    "created_at": "2025-10-31T15:31:43.909Z",
+    "user": [
+      "cleo"
+    ],
+    "object_str": "Test",
+    "content": {
+      "pk": 10,
+      "body": "[{\"type\": \"heading\", \"value\": \"Start of project\", \"id\": \"82a48407-658d-48ab-bb9a-94fa7c745c88\"}, {\"type\": \"markdown\", \"value\": \"Adding some info\\r\\n\\r\\n**Hopping it will look good**\\r\\n\\r\\n> How will this look?\", \"id\": \"28657440-06be-40a9-966c-9c1777e06129\"}]",
+      "date": "2025-10-31",
+      "live": false,
+      "path": "0001000100020001",
+      "slug": "test",
+      "depth": 4,
+      "intro": "testing",
+      "owner": 1,
+      "title": "Test",
+      "locale": 1,
+      "locked": false,
+      "status": "in_progress",
+      "expired": false,
+      "problem": "<h3 data-block-key=\"vrpbm\">Problem section</h3>",
+      "alias_of": null,
+      "category": null,
+      "duration": "2 weeks",
+      "live_url": "",
+      "numchild": 0,
+      "solution": "<h4 data-block-key=\"z7472\">Solution</h4><p data-block-key=\"534id\"></p><hr/><p data-block-key=\"6c6ul\">Some info</p>",
+      "url_path": "/home/projects/test/",
+      "expire_at": null,
+      "locked_at": null,
+      "locked_by": null,
+      "seo_title": "",
+      "github_url": "",
+      "go_live_at": null,
+      "hero_image": null,
+      "draft_title": "Test",
+      "content_type": 51,
+      "live_revision": null,
+      "show_in_menus": false,
+      "latest_revision": 11,
+      "translation_key": "7dbdeedc-3dbb-4096-92bb-fb408f274502",
+      "last_published_at": null,
+      "first_published_at": null,
+      "search_description": "",
+      "wagtail_admin_comments": [],
+      "has_unpublished_changes": true,
+      "latest_revision_created_at": "2025-10-31T15:29:30.758Z"
+    },
+    "approved_go_live_at": null
+  }
+},
+{
+  "model": "wagtailcore.revision",
+  "pk": 13,
+  "fields": {
+    "content_type": [
+      "home",
+      "contactpage"
+    ],
+    "base_content_type": [
+      "wagtailcore",
+      "page"
+    ],
+    "object_id": "11",
+    "created_at": "2025-11-03T10:11:52.852Z",
+    "user": null,
+    "object_str": "Contact",
+    "content": {
+      "pk": 11,
+      "live": true,
+      "path": "000100010003",
+      "slug": "contact",
+      "depth": 3,
+      "intro": "<p>Have a project in mind? Need help with infrastructure, web development, or security? I'd love to hear from you!</p>",
+      "owner": null,
+      "title": "Contact",
+      "locale": 1,
+      "locked": false,
+      "expired": false,
+      "alias_of": null,
+      "numchild": 0,
+      "url_path": "/home/contact/",
+      "expire_at": null,
+      "locked_at": null,
+      "locked_by": null,
+      "seo_title": "",
+      "go_live_at": null,
+      "draft_title": "Contact",
+      "content_type": 53,
+      "live_revision": null,
+      "show_in_menus": false,
+      "thank_you_text": "<p>Your message has been successfully delivered. I'll get back to you within 24 hours!</p>",
+      "latest_revision": null,
+      "translation_key": "1069243e-47f1-4f6f-8299-1d93a6fb5188",
+      "last_published_at": null,
+      "first_published_at": null,
+      "search_description": "",
+      "wagtail_admin_comments": [],
+      "has_unpublished_changes": false,
+      "latest_revision_created_at": null
+    },
+    "approved_go_live_at": null
+  }
+},
+{
+  "model": "wagtailcore.revision",
+  "pk": 14,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogindexpage"
+    ],
+    "base_content_type": [
+      "wagtailcore",
+      "page"
+    ],
+    "object_id": "5",
+    "created_at": "2025-11-03T11:45:47.503Z",
+    "user": [
+      "cleo"
+    ],
+    "object_str": "Blog",
+    "content": {
+      "pk": 5,
+      "live": true,
+      "path": "000100010001",
+      "slug": "blog",
+      "depth": 3,
+      "intro": "<h2 data-block-key=\"jkeux\">My blog to showcase</h2>",
+      "owner": 1,
+      "title": "Blog",
+      "locale": 1,
+      "locked": false,
+      "expired": false,
+      "alias_of": null,
+      "numchild": 3,
+      "url_path": "/home/blog/",
+      "expire_at": null,
+      "locked_at": null,
+      "locked_by": null,
+      "seo_title": "",
+      "go_live_at": null,
+      "draft_title": "Blog",
+      "content_type": 46,
+      "live_revision": 3,
+      "show_in_menus": true,
+      "latest_revision": 3,
+      "translation_key": "5a31e5a4-4897-4012-a5dc-948c40b496be",
+      "last_published_at": "2025-10-31T08:21:47.719Z",
+      "first_published_at": "2025-10-31T08:21:47.719Z",
+      "search_description": "",
+      "wagtail_admin_comments": [],
+      "has_unpublished_changes": false,
+      "latest_revision_created_at": "2025-10-31T08:21:47.688Z"
+    },
+    "approved_go_live_at": null
+  }
+},
+{
+  "model": "wagtailcore.revision",
+  "pk": 15,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogindexpage"
+    ],
+    "base_content_type": [
+      "wagtailcore",
+      "page"
+    ],
+    "object_id": "5",
+    "created_at": "2025-11-03T11:45:50.137Z",
+    "user": [
+      "cleo"
+    ],
+    "object_str": "Blog",
+    "content": {
+      "pk": 5,
+      "live": true,
+      "path": "000100010001",
+      "slug": "blog",
+      "depth": 3,
+      "intro": "<h2 data-block-key=\"jkeux\">My blog to showcase</h2>",
+      "owner": 1,
+      "title": "Blog",
+      "locale": 1,
+      "locked": false,
+      "expired": false,
+      "alias_of": null,
+      "numchild": 3,
+      "url_path": "/home/blog/",
+      "expire_at": null,
+      "locked_at": null,
+      "locked_by": null,
+      "seo_title": "",
+      "go_live_at": null,
+      "draft_title": "Blog",
+      "content_type": 46,
+      "live_revision": 3,
+      "show_in_menus": true,
+      "latest_revision": 14,
+      "translation_key": "5a31e5a4-4897-4012-a5dc-948c40b496be",
+      "last_published_at": "2025-10-31T08:21:47.719Z",
+      "first_published_at": "2025-10-31T08:21:47.719Z",
+      "search_description": "",
+      "wagtail_admin_comments": [],
+      "has_unpublished_changes": true,
+      "latest_revision_created_at": "2025-11-03T11:45:47.503Z"
+    },
+    "approved_go_live_at": null
+  }
+},
+{
+  "model": "wagtailcore.revision",
+  "pk": 16,
+  "fields": {
+    "content_type": [
+      "home",
+      "contactpage"
+    ],
+    "base_content_type": [
+      "wagtailcore",
+      "page"
+    ],
+    "object_id": "11",
+    "created_at": "2025-11-03T11:46:04.348Z",
+    "user": [
+      "cleo"
+    ],
+    "object_str": "Contact",
+    "content": {
+      "pk": 11,
+      "live": true,
+      "path": "000100010003",
+      "slug": "contact",
+      "depth": 3,
+      "intro": "<p data-block-key=\"zh8na\">Have a project in mind? Need help with infrastructure, web development, or security? I'd love to hear from you!</p>",
+      "owner": null,
+      "title": "Contact",
+      "locale": 1,
+      "locked": false,
+      "expired": false,
+      "alias_of": null,
+      "numchild": 0,
+      "url_path": "/home/contact/",
+      "expire_at": null,
+      "locked_at": null,
+      "locked_by": null,
+      "seo_title": "",
+      "go_live_at": null,
+      "draft_title": "Contact",
+      "content_type": 53,
+      "live_revision": 13,
+      "show_in_menus": true,
+      "thank_you_text": "<p data-block-key=\"q2ycy\">Your message has been successfully delivered. I'll get back to you within 24 hours!</p>",
+      "latest_revision": 13,
+      "translation_key": "1069243e-47f1-4f6f-8299-1d93a6fb5188",
+      "last_published_at": "2025-11-03T10:11:52.875Z",
+      "first_published_at": "2025-11-03T10:11:52.875Z",
+      "search_description": "",
+      "wagtail_admin_comments": [],
+      "has_unpublished_changes": false,
+      "latest_revision_created_at": "2025-11-03T10:11:52.852Z"
+    },
+    "approved_go_live_at": null
+  }
+},
+{
+  "model": "wagtailcore.revision",
+  "pk": 17,
+  "fields": {
+    "content_type": [
+      "home",
+      "projectindexpage"
+    ],
+    "base_content_type": [
+      "wagtailcore",
+      "page"
+    ],
+    "object_id": "9",
+    "created_at": "2025-11-03T11:46:13.497Z",
+    "user": [
+      "cleo"
+    ],
+    "object_str": "Projects",
+    "content": {
+      "pk": 9,
+      "live": true,
+      "path": "000100010002",
+      "slug": "projects",
+      "depth": 3,
+      "intro": "<p data-block-key=\"yoo2y\">A collection of my infrastructure projects, automation tools, and security experiments.</p>",
+      "owner": null,
+      "title": "Projects",
+      "locale": 1,
+      "locked": false,
+      "expired": false,
+      "alias_of": null,
+      "numchild": 1,
+      "url_path": "/home/projects/",
+      "expire_at": null,
+      "locked_at": null,
+      "locked_by": null,
+      "seo_title": "",
+      "go_live_at": null,
+      "draft_title": "Projects",
+      "content_type": 49,
+      "live_revision": 9,
+      "show_in_menus": true,
+      "latest_revision": 9,
+      "translation_key": "9f8ab979-7723-43a0-93ae-1d568bd1edec",
+      "last_published_at": "2025-10-31T15:23:41.511Z",
+      "first_published_at": "2025-10-31T15:23:41.511Z",
+      "search_description": "",
+      "wagtail_admin_comments": [],
+      "has_unpublished_changes": false,
+      "latest_revision_created_at": "2025-10-31T15:23:41.483Z"
+    },
+    "approved_go_live_at": null
+  }
+},
+{
+  "model": "wagtailcore.revision",
+  "pk": 18,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogpage"
+    ],
+    "base_content_type": [
+      "wagtailcore",
+      "page"
+    ],
+    "object_id": "8",
+    "created_at": "2025-11-03T12:40:59.093Z",
+    "user": [
+      "cleo"
+    ],
+    "object_str": "testing markdown",
+    "content": {
+      "pk": 8,
+      "body": "[{\"type\": \"markdown\", \"value\": \"**Bold**\\r\\n\\r\\n*Italic*\\r\\n\\r\\n* list\\r\\n* Hello\\r\\n\\r\\n1. number list\\r\\n\\r\\n[link](https://www.google.com)\", \"id\": \"10144da7-de70-4834-9272-25452aceae11\"}]",
+      "date": "2025-10-31",
+      "live": true,
+      "path": "0001000100010003",
+      "slug": "testing-markdown",
+      "depth": 4,
+      "intro": "test",
+      "owner": 1,
+      "title": "testing markdown",
+      "locale": 1,
+      "locked": false,
+      "expired": false,
+      "alias_of": null,
+      "numchild": 0,
+      "url_path": "/home/blog/testing-markdown/",
+      "expire_at": null,
+      "locked_at": null,
+      "locked_by": null,
+      "seo_title": "",
+      "categories": 1,
+      "go_live_at": null,
+      "draft_title": "testing markdown",
+      "content_type": 47,
+      "reading_time": 1,
+      "tagged_items": [
+        {
+          "pk": null,
+          "tag": 7,
+          "content_object": 8
+        }
+      ],
+      "live_revision": 8,
+      "show_in_menus": false,
+      "latest_revision": 8,
+      "translation_key": "22b767a2-7719-4b47-acde-aa0eee3a1aa7",
+      "last_published_at": "2025-10-31T11:46:09.155Z",
+      "first_published_at": "2025-10-31T11:45:37.929Z",
+      "search_description": "",
+      "wagtail_admin_comments": [],
+      "has_unpublished_changes": false,
+      "latest_revision_created_at": "2025-10-31T11:46:09.088Z"
+    },
+    "approved_go_live_at": null
+  }
+},
+{
+  "model": "wagtailcore.modellogentry",
+  "pk": 1,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogcategory"
+    ],
+    "label": "Python",
+    "action": "wagtail.create",
+    "data": {},
+    "timestamp": "2025-10-31T08:29:04.209Z",
+    "uuid": "a01b0943-d8de-4396-aa64-f2b35ba7eb0b",
+    "user": [
+      "cleo"
+    ],
+    "revision": null,
+    "content_changed": true,
+    "deleted": false,
+    "object_id": "1"
+  }
+},
+{
+  "model": "wagtailcore.modellogentry",
+  "pk": 2,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogcategory"
+    ],
+    "label": "Security",
+    "action": "wagtail.create",
+    "data": {},
+    "timestamp": "2025-10-31T08:29:47.521Z",
+    "uuid": "3b389e5a-700d-4623-997a-8561c88e7369",
+    "user": [
+      "cleo"
+    ],
+    "revision": null,
+    "content_changed": true,
+    "deleted": false,
+    "object_id": "2"
+  }
+},
+{
+  "model": "wagtailcore.modellogentry",
+  "pk": 3,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogcategory"
+    ],
+    "label": "DevOps",
+    "action": "wagtail.create",
+    "data": {},
+    "timestamp": "2025-10-31T08:30:12.147Z",
+    "uuid": "1da2b954-8535-4458-9bcb-32185feeee14",
+    "user": [
+      "cleo"
+    ],
+    "revision": null,
+    "content_changed": true,
+    "deleted": false,
+    "object_id": "3"
+  }
+},
+{
+  "model": "wagtailcore.modellogentry",
+  "pk": 4,
+  "fields": {
+    "content_type": [
+      "home",
+      "blogcategory"
+    ],
+    "label": "HTB Write-ups",
+    "action": "wagtail.create",
+    "data": {},
+    "timestamp": "2025-10-31T08:30:47.120Z",
+    "uuid": "fc3a9d18-7187-453d-aa1f-1cc62c3e2348",
+    "user": [
+      "cleo"
+    ],
+    "revision": null,
+    "content_changed": true,
+    "deleted": false,
+    "object_id": "4"
+  }
+},
+{
+  "model": "wagtailcore.modellogentry",
+  "pk": 5,
+  "fields": {
+    "content_type": [
+      "home",
+      "techstack"
+    ],
+    "label": "Python",
+    "action": "wagtail.create",
+    "data": {},
+    "timestamp": "2025-10-31T13:12:56.644Z",
+    "uuid": "de2577f8-3364-4fed-ae44-34ba1be3adc4",
+    "user": [
+      "cleo"
+    ],
+    "revision": null,
+    "content_changed": true,
+    "deleted": false,
+    "object_id": "1"
+  }
+},
+{
+  "model": "wagtailcore.modellogentry",
+  "pk": 6,
+  "fields": {
+    "content_type": [
+      "home",
+      "techstack"
+    ],
+    "label": "Django",
+    "action": "wagtail.create",
+    "data": {},
+    "timestamp": "2025-10-31T13:13:35.227Z",
+    "uuid": "dbd6a5b7-46d9-4e48-b54f-dd27d41c0ed9",
+    "user": [
+      "cleo"
+    ],
+    "revision": null,
+    "content_changed": true,
+    "deleted": false,
+    "object_id": "2"
+  }
+},
+{
+  "model": "wagtailcore.modellogentry",
+  "pk": 7,
+  "fields": {
+    "content_type": [
+      "home",
+      "techstack"
+    ],
+    "label": "PostgreSQL",
+    "action": "wagtail.create",
+    "data": {},
+    "timestamp": "2025-10-31T13:20:37.178Z",
+    "uuid": "5236b7d7-dd3c-4b2b-9001-b2792435e0c9",
+    "user": [
+      "cleo"
+    ],
+    "revision": null,
+    "content_changed": true,
+    "deleted": false,
+    "object_id": "3"
+  }
+},
+{
+  "model": "wagtailcore.modellogentry",
+  "pk": 8,
+  "fields": {
+    "content_type": [
+      "home",
+      "techstack"
+    ],
+    "label": "Docker",
+    "action": "wagtail.create",
+    "data": {},
+    "timestamp": "2025-10-31T13:28:43.041Z",
+    "uuid": "39b8b345-8533-4c54-bb02-bda442bec36e",
+    "user": [
+      "cleo"
+    ],
+    "revision": null,
+    "content_changed": true,
+    "deleted": false,
+    "object_id": "4"
+  }
+},
+{
+  "model": "wagtailcore.modellogentry",
+  "pk": 9,
+  "fields": {
+    "content_type": [
+      "home",
+      "techstack"
+    ],
+    "label": "Proxmox",
+    "action": "wagtail.create",
+    "data": {},
+    "timestamp": "2025-10-31T13:46:21.399Z",
+    "uuid": "d872af6e-2fdb-44d5-9093-3ca948d568e5",
+    "user": [
+      "cleo"
+    ],
+    "revision": null,
+    "content_changed": true,
+    "deleted": false,
+    "object_id": "5"
+  }
+},
+{
+  "model": "wagtailcore.modellogentry",
+  "pk": 10,
+  "fields": {
+    "content_type": [
+      "home",
+      "techstack"
+    ],
+    "label": "Linux",
+    "action": "wagtail.create",
+    "data": {},
+    "timestamp": "2025-10-31T13:46:55.858Z",
+    "uuid": "aa913472-9e10-4f7c-bb2a-bcef742d2b99",
+    "user": [
+      "cleo"
+    ],
+    "revision": null,
+    "content_changed": true,
+    "deleted": false,
+    "object_id": "6"
+  }
+},
+{
+  "model": "wagtailcore.modellogentry",
+  "pk": 11,
+  "fields": {
+    "content_type": [
+      "home",
+      "techstack"
+    ],
+    "label": "Security",
+    "action": "wagtail.create",
+    "data": {},
+    "timestamp": "2025-10-31T13:47:29.524Z",
+    "uuid": "1a34cee2-5ac7-41b5-a7be-2f4d06442f7e",
+    "user": [
+      "cleo"
+    ],
+    "revision": null,
+    "content_changed": true,
+    "deleted": false,
+    "object_id": "7"
+  }
+},
+{
+  "model": "wagtailcore.modellogentry",
+  "pk": 12,
+  "fields": {
+    "content_type": [
+      "home",
+      "projectcategory"
+    ],
+    "label": "Web Development",
+    "action": "wagtail.create",
+    "data": {},
+    "timestamp": "2025-10-31T13:50:38.060Z",
+    "uuid": "1e49f82a-c9e0-43c0-89e5-593e609510f1",
+    "user": [
+      "cleo"
+    ],
+    "revision": null,
+    "content_changed": true,
+    "deleted": false,
+    "object_id": "1"
+  }
+},
+{
+  "model": "wagtailcore.modellogentry",
+  "pk": 13,
+  "fields": {
+    "content_type": [
+      "home",
+      "projectcategory"
+    ],
+    "label": "Infrastructure",
+    "action": "wagtail.create",
+    "data": {},
+    "timestamp": "2025-10-31T13:51:08.092Z",
+    "uuid": "43f0f772-30e4-4552-b9d8-8269f359708b",
+    "user": [
+      "cleo"
+    ],
+    "revision": null,
+    "content_changed": true,
+    "deleted": false,
+    "object_id": "2"
+  }
+},
+{
+  "model": "wagtailcore.modellogentry",
+  "pk": 14,
+  "fields": {
+    "content_type": [
+      "home",
+      "projectcategory"
+    ],
+    "label": "Security",
+    "action": "wagtail.create",
+    "data": {},
+    "timestamp": "2025-10-31T13:51:40.165Z",
+    "uuid": "8d89debd-1572-4546-9e27-bad7b0d9d6f6",
+    "user": [
+      "cleo"
+    ],
+    "revision": null,
+    "content_changed": true,
+    "deleted": false,
+    "object_id": "3"
+  }
+},
+{
+  "model": "wagtailcore.modellogentry",
+  "pk": 15,
+  "fields": {
+    "content_type": [
+      "home",
+      "projectcategory"
+    ],
+    "label": "Automation",
+    "action": "wagtail.create",
+    "data": {},
+    "timestamp": "2025-10-31T13:51:57.485Z",
+    "uuid": "968b4911-452e-4d90-853f-06af21d0f2e9",
+    "user": [
+      "cleo"
+    ],
+    "revision": null,
+    "content_changed": true,
+    "deleted": false,
+    "object_id": "4"
+  }
+},
+{
+  "model": "wagtailcore.modellogentry",
+  "pk": 16,
+  "fields": {
+    "content_type": [
+      "home",
+      "techstack"
+    ],
+    "label": "HTMX",
+    "action": "wagtail.create",
+    "data": {},
+    "timestamp": "2025-10-31T13:52:33.100Z",
+    "uuid": "fdaa2622-c9e8-48a2-926a-7c7506b9e001",
+    "user": [
+      "cleo"
+    ],
+    "revision": null,
+    "content_changed": true,
+    "deleted": false,
+    "object_id": "8"
+  }
+},
+{
+  "model": "wagtailcore.modellogentry",
+  "pk": 17,
+  "fields": {
+    "content_type": [
+      "home",
+      "techstack"
+    ],
+    "label": "Tailwind",
+    "action": "wagtail.create",
+    "data": {},
+    "timestamp": "2025-10-31T13:53:05.555Z",
+    "uuid": "68f39f4f-11db-4e4f-9806-cf157ef7f444",
+    "user": [
+      "cleo"
+    ],
+    "revision": null,
+    "content_changed": true,
+    "deleted": false,
+    "object_id": "9"
+  }
+},
+{
+  "model": "wagtailcore.modellogentry",
+  "pk": 18,
+  "fields": {
+    "content_type": [
+      "home",
+      "socialmediasettings"
+    ],
+    "label": "Social Media Settings for Christian Bergane Portfolio [default]",
+    "action": "wagtail.edit",
+    "data": {},
+    "timestamp": "2025-11-03T11:39:50.779Z",
+    "uuid": "e547522a-09c2-4cc4-8a9f-f12b7fabd7c9",
+    "user": [
+      "cleo"
+    ],
+    "revision": null,
+    "content_changed": true,
+    "deleted": false,
+    "object_id": "1"
+  }
+},
+{
+  "model": "wagtailcore.modellogentry",
+  "pk": 19,
+  "fields": {
+    "content_type": [
+      "home",
+      "socialmediasettings"
+    ],
+    "label": "Social Media Settings for Christian Bergane Portfolio [default]",
+    "action": "wagtail.edit",
+    "data": {},
+    "timestamp": "2025-11-04T08:24:10.590Z",
+    "uuid": "d6996dd9-fe0f-4778-8634-e12c510656a9",
+    "user": [
+      "cleo"
+    ],
+    "revision": null,
+    "content_changed": true,
+    "deleted": false,
+    "object_id": "1"
+  }
+},
+{
+  "model": "wagtailcore.modellogentry",
+  "pk": 20,
+  "fields": {
+    "content_type": [
+      "home",
+      "socialmediasettings"
+    ],
+    "label": "Social Media Settings for Christian Bergane Portfolio [default]",
+    "action": "wagtail.edit",
+    "data": {},
+    "timestamp": "2025-11-04T09:03:39.249Z",
+    "uuid": "b2e64884-ee12-4b9a-b956-d4bdb126b6e8",
+    "user": [
+      "cleo"
+    ],
+    "revision": null,
+    "content_changed": true,
+    "deleted": false,
+    "object_id": "1"
+  }
+},
+{
+  "model": "wagtailcore.modellogentry",
+  "pk": 21,
+  "fields": {
+    "content_type": [
+      "home",
+      "seosettings"
+    ],
+    "label": "SEO Settings for Christian Bergane Portfolio [default]",
+    "action": "wagtail.edit",
+    "data": {},
+    "timestamp": "2025-11-04T10:40:50.800Z",
+    "uuid": "0fb99d6c-ac5c-4841-b9b3-7d3d1f2b1324",
+    "user": [
+      "cleo"
+    ],
+    "revision": null,
+    "content_changed": false,
+    "deleted": false,
+    "object_id": "1"
+  }
+},
+{
+  "model": "home.contactpage",
+  "pk": 11,
+  "fields": {
+    "page_ptr": 11,
+    "intro": "<p data-block-key=\"zh8na\">Have a project in mind? Need help with infrastructure, web development, or security? I'd love to hear from you!</p>",
+    "thank_you_text": "<p data-block-key=\"q2ycy\">Your message has been successfully delivered. I'll get back to you within 24 hours!</p>"
+  }
+},
+{
+  "model": "home.projectpage",
+  "pk": 10,
+  "fields": {
+    "page_ptr": 10,
+    "date": "2025-10-31",
+    "intro": "testing",
+    "hero_image": null,
+    "category": null,
+    "status": "in_progress",
+    "github_url": "",
+    "live_url": "",
+    "body": "[{\"id\": \"82a48407-658d-48ab-bb9a-94fa7c745c88\", \"type\": \"heading\", \"value\": \"Start of project\"}, {\"id\": \"28657440-06be-40a9-966c-9c1777e06129\", \"type\": \"markdown\", \"value\": \"Adding some info\\r\\n\\r\\n**Hopping it will look good**\\r\\n\\r\\n> How will this look?\"}]",
+    "problem": "<h3 data-block-key=\"vrpbm\">Problem section</h3>",
+    "solution": "<h4 data-block-key=\"z7472\">Solution</h4><p data-block-key=\"534id\"></p><hr/><p data-block-key=\"6c6ul\">Some info</p>",
+    "duration": "2 weeks",
+    "tech_stack": []
+  }
+},
+{
+  "model": "home.projectindexpage",
+  "pk": 9,
+  "fields": {
+    "page_ptr": 9,
+    "intro": "<p data-block-key=\"yoo2y\">A collection of my infrastructure projects, automation tools, and security experiments.</p>"
+  }
+},
+{
+  "model": "home.blogpage",
+  "pk": 6,
+  "fields": {
+    "page_ptr": 6,
+    "date": "2025-10-31",
+    "intro": "This will be my first entry, but not my last",
+    "body": "[{\"id\": \"16c2df64-0116-4d34-85b3-15cdaae08b55\", \"type\": \"heading\", \"value\": \"This is a post in production!\"}, {\"id\": \"bcac3af8-3737-451b-951b-8ebeff34dd75\", \"type\": \"markdown\", \"value\": \"**Testing new markdown feature**\\r\\n*Italic style*\"}]",
+    "categories": 3,
+    "reading_time": 1
+  }
+},
+{
+  "model": "home.blogpage",
+  "pk": 7,
+  "fields": {
+    "page_ptr": 7,
+    "date": "2025-10-31",
+    "intro": "A test to show new feature",
+    "body": "[{\"id\": \"0452ee40-d5e0-4741-9340-204e5535fefc\", \"type\": \"heading\", \"value\": \"Testing style\"}, {\"id\": \"46aeb7f9-4e64-4e89-901a-ac863e7eb2ee\", \"type\": \"quote\", \"value\": {\"quote\": \"A single quote\", \"author\": \"Confucius\"}}, {\"id\": \"87575773-1c9f-41f6-b720-2709c88ad39a\", \"type\": \"code\", \"value\": {\"code\": \"def htb_stats(request):\\r\\n    \\\"\\\"\\\"\\r\\n    Simple HTMX endpoint - du kan senare koppla detta till HTB API\\r\\n    \\\"\\\"\\\"\\r\\n    return JsonResponse({\\r\\n        'boxes_rooted': '25+'\\r\\n    })\", \"language\": \"python\"}}]",
+    "categories": 3,
+    "reading_time": 1
+  }
+},
+{
+  "model": "home.blogpage",
+  "pk": 8,
+  "fields": {
+    "page_ptr": 8,
+    "date": "2025-10-31",
+    "intro": "test",
+    "body": "[{\"id\": \"10144da7-de70-4834-9272-25452aceae11\", \"type\": \"markdown\", \"value\": \"**Bold**\\r\\n\\r\\n*Italic*\\r\\n\\r\\n* list\\r\\n* Hello\\r\\n\\r\\n1. number list\\r\\n\\r\\n[link](https://www.google.com)\"}]",
+    "categories": 1,
+    "reading_time": 1
+  }
+},
+{
+  "model": "home.blogindexpage",
+  "pk": 5,
+  "fields": {
+    "page_ptr": 5,
+    "intro": "<h2 data-block-key=\"jkeux\">My blog to showcase</h2>"
+  }
+},
+{
+  "model": "home.homepage",
+  "pk": 3,
+  "fields": {
+    "page_ptr": 3,
+    "body": "Welcome to Christian Bergane's Portfolio"
+  }
+},
+{
+  "model": "home.seosettings",
+  "pk": 1,
+  "fields": {
+    "site": [
+      "localhost",
+      8001
+    ],
+    "site_name": "Christian Bergane - Portfolio",
+    "meta_description": "Site Reliability Engineer specializing in infrastructure, security, and automation. Based in Stockholm, Sweden.",
+    "meta_keywords": "SRE, DevOps, Security, Infrastructure, Django, Python, Proxmox",
+    "og_image": null,
+    "google_analytics_id": ""
+  }
+},
+{
+  "model": "home.socialmediasettings",
+  "pk": 1,
+  "fields": {
+    "site": [
+      "localhost",
+      8001
+    ],
+    "github_url": "https://github.com/CBergane",
+    "linkedin_url": "https://www.linkedin.com/in/christian-bergane",
+    "twitter_url": "",
+    "email": "christian@cbergane.se",
+    "phone": "0703220972",
+    "location": "Stockholm, Sweden",
+    "hackthebox_url": "https://app.hackthebox.com/profile/2050214",
+    "tryhackme_url": "",
+    "htb_rank": "Noob",
+    "htb_boxes_owned": 0,
+    "htb_user_owns": 2,
+    "htb_system_owns": 1,
+    "htb_challenges": 0,
+    "footer_text": "Site Reliability Engineer | Security Enthusiast | HTB Player"
+  }
+}
+]
