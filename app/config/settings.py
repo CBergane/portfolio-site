@@ -1,4 +1,4 @@
-import os
+import os, dj_database_url
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -126,16 +126,25 @@ WSGI_APPLICATION = "config.wsgi.application"
 # -------------------------------------------------
 # Database (PostgreSQL via env)
 # -------------------------------------------------
+#DATABASES = {
+#    "default": {
+#        "ENGINE": "django.db.backends.postgresql",
+#        "NAME": os.getenv("POSTGRES_DB"),
+#        "USER": os.getenv("POSTGRES_USER"),
+#        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
+#        "HOST": os.getenv("POSTGRES_HOST", "localhost"),  # 'db' i docker
+#        "PORT": os.getenv("POSTGRES_PORT", "5432"),
+#    }
+#}
+import os, dj_database_url
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("POSTGRES_DB"),
-        "USER": os.getenv("POSTGRES_USER"),
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
-        "HOST": os.getenv("POSTGRES_HOST", "localhost"),  # 'db' i docker
-        "PORT": os.getenv("POSTGRES_PORT", "5432"),
-    }
+    "default": dj_database_url.config(
+        default=os.getenv("DATABASE_URL", "postgres://portfolio_user:@db:5432/portfolio_db"),
+        conn_max_age=600,
+    )
 }
+
+
 
 # -------------------------------------------------
 # Auth validators
