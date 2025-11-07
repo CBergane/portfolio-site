@@ -1,5 +1,5 @@
 from django import template
-from wagtail.models import Page
+from wagtail.models import Page, Site
 
 register = template.Library()
 
@@ -12,20 +12,29 @@ def get_site_root():
     return Page.objects.filter(depth=2).first()
 
 
-@register.inclusion_tag('tags/main_navigation.html', takes_context=True)
+@register.inclusion_tag('home/tags/main_navigation.html', takes_context=True)
 def main_navigation(context):
     """
-    Get main navigation pages (direct children of home page)
+    Hämta alla publicerade pages som ska visas i menyn
     """
     request = context['request']
-    site_root = get_site_root()
     
-    if site_root:
-        pages = site_root.get_children().live().in_menu()
-    else:
-        pages = []
+    # Hämta site via Wagtail Site-modellen
+    try:
+        site = Site.find_for_request(request)
+    except:
+        # Fallback till default site
+        site = Site.objects.filter(is_default_site=True).first()
+    
+    if not site:
+        return {'menu_pages': [], 'request': request}
+    
+    root_page = site.root_page
+    
+    # Hämta alla direkta barn till root som är publicerade och ska visas i menyn
+    menu_pages = root_page.get_children().live().in_menu()
     
     return {
-        'pages': pages,
+        'menu_pages': menu_pages,
         'request': request,
     }

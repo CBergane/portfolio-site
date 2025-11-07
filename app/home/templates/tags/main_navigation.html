@@ -1,9 +1,0 @@
-{% load wagtailcore_tags %}
-
-{% for page in pages %}
-<a href="{% pageurl page %}" 
-   class="text-gray-300 hover:text-htb-green transition-colors font-mono
-          {% if request.path == page.url %}text-htb-green{% endif %}">
-    {{ page.title|lower }}
-</a>
-{% endfor %}
