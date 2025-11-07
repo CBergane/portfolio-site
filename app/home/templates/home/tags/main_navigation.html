@@ -1,0 +1,9 @@
+{% load wagtailcore_tags %}
+
+{% for page in menu_pages %}
+<a href="{% pageurl page %}" 
+   class="block py-3 md:py-0 md:inline-block text-gray-300 hover:text-htb-green transition-colors font-mono
+          {% if request.path == page.url %}text-htb-green font-bold{% endif %}">
+    {{ page.title }}
+</a>
+{% endfor %}
