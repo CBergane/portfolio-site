@@ -40,7 +40,7 @@ sqlparse==0.5.3
 telepath==0.3.1
 typing_extensions==4.15.0
 urllib3==2.5.0
-wagtail==7.1.2
+wagtail==7.2
 wagtail-markdown==0.13.0
 webencodings==0.5.1
 whitenoise==6.7.0
