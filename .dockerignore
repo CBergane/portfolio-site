@@ -1,0 +1,11 @@
+.git
+.gitignore
+.env
+*.env
+postgres_data
+media
+app/media
+app/staticfiles
+*.tar
+*.gz
+*.zip
