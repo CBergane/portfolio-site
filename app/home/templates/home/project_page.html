@@ -128,11 +128,13 @@
 {% endif %}
 
 {# Main Content #}
-<section class="py-12 sm:py-16 bg-htb-darker overflow-x-hidden">
+<section class="py-12 sm:py-16 bg-htb-darker">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid lg:grid-cols-3 gap-8 lg:gap-12">
+        {# På mobil: vanlig vertikal layout. På desktop: grid. #}
+        <div class="lg:grid lg:grid-cols-3 lg:gap-12 space-y-12 lg:space-y-0">
+            
             {# Main Content Column #}
-            <div class="lg:col-span-2 space-y-12 min-w-0">
+            <div class="lg:col-span-2 space-y-12 min-w-0 w-full">
                 {# Problem/Solution (if exists) #}
                 {% if page.problem or page.solution %}
                 <div class="grid md:grid-cols-2 gap-6">
@@ -171,7 +173,7 @@
                 {# Main Body Content #}
                 {% if page.body %}
                 <div class="bg-htb-dark border border-htb-green/20 rounded-lg p-6 sm:p-8 md:p-12 overflow-x-auto">
-                    <div class="prose prose-invert max-w-none
+                    <div class="prose prose-invert max-w-none break-words
                                 prose-headings:scroll-mt-24
                                 prose-h2:text-htb-cyan prose-h3:text-htb-green
                                 prose-a:text-htb-cyan hover:prose-a:text-htb-green
@@ -186,7 +188,7 @@
             </div>
 
             {# Sidebar #}
-            <aside class="space-y-6 min-w-0">
+            <aside class="space-y-6 min-w-0 w-full lg:w-auto">
                 {# Quick Info Card #}
                 <div class="bg-htb-dark border border-htb-cyan/20 rounded-lg p-6 lg:sticky lg:top-24">
                     <h3 class="text-lg font-mono text-htb-cyan mb-4">Project Info</h3>
@@ -253,5 +255,6 @@
         </div>
     </div>
 </section>
+
 
 {% endblock %}
