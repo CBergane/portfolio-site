@@ -19,14 +19,13 @@
     
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 relative z-10 w-full fade-in">
         {# Breadcrumb #}
-        <nav class="flex items-center space-x-2 text-sm font-mono text-gray-500 mb-8">
+        <nav class="flex flex-wrap items-center gap-2 text-xs sm:text-sm font-mono text-gray-500 mb-6">
             <a href="/" class="hover:text-htb-green transition-colors">home</a>
             <span>/</span>
             <a href="{% pageurl page.get_parent %}" class="hover:text-htb-green transition-colors">projects</a>
             <span>/</span>
-            <span class="text-htb-cyan">{{ page.slug }}</span>
+            <span class="text-htb-cyan break-all">{{ page.slug }}</span>
         </nav>
-        
         <div class="max-w-4xl">
             {# Status & Category #}
             <div class="flex items-center gap-3 mb-6 flex-wrap">
@@ -129,11 +128,11 @@
 {% endif %}
 
 {# Main Content #}
-<section class="py-16 bg-htb-darker">
+<section class="py-12 sm:py-16 bg-htb-darker overflow-x-hidden">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid lg:grid-cols-3 gap-12">
+        <div class="grid lg:grid-cols-3 gap-8 lg:gap-12">
             {# Main Content Column #}
-            <div class="lg:col-span-2 space-y-12">
+            <div class="lg:col-span-2 space-y-12 min-w-0">
                 {# Problem/Solution (if exists) #}
                 {% if page.problem or page.solution %}
                 <div class="grid md:grid-cols-2 gap-6">
@@ -141,7 +140,8 @@
                     <div class="bg-htb-dark border border-red-500/30 rounded-lg p-6">
                         <h3 class="text-xl font-mono text-red-400 mb-4 flex items-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                             Problem
                         </h3>
@@ -155,7 +155,8 @@
                     <div class="bg-htb-dark border border-htb-green/30 rounded-lg p-6">
                         <h3 class="text-xl font-mono text-htb-green mb-4 flex items-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                             Solution
                         </h3>
@@ -169,24 +170,25 @@
                 
                 {# Main Body Content #}
                 {% if page.body %}
-                <div class="bg-htb-dark border border-htb-green/20 rounded-lg p-8 md:p-12">
-                <div class="prose prose-invert max-w-none
-                            prose-headings:scroll-mt-24
-                            prose-h2:text-htb-cyan prose-h3:text-htb-green
-                            prose-a:text-htb-cyan hover:prose-a:text-htb-green
-                            prose-strong:text-white
-                            prose-li:marker:text-htb-green">
-                    {% for block in page.body %}
-                    {% include_block block %}
-                    {% endfor %}
-                </div>
+                <div class="bg-htb-dark border border-htb-green/20 rounded-lg p-6 sm:p-8 md:p-12 overflow-x-auto">
+                    <div class="prose prose-invert max-w-none
+                                prose-headings:scroll-mt-24
+                                prose-h2:text-htb-cyan prose-h3:text-htb-green
+                                prose-a:text-htb-cyan hover:prose-a:text-htb-green
+                                prose-strong:text-white
+                                prose-li:marker:text-htb-green">
+                        {% for block in page.body %}
+                            {% include_block block %}
+                        {% endfor %}
+                    </div>
                 </div>
                 {% endif %}
             </div>
+
             {# Sidebar #}
-            <aside class="space-y-6">
+            <aside class="space-y-6 min-w-0">
                 {# Quick Info Card #}
-                <div class="bg-htb-dark border border-htb-cyan/20 rounded-lg p-6 sticky top-24">
+                <div class="bg-htb-dark border border-htb-cyan/20 rounded-lg p-6 lg:sticky lg:top-24">
                     <h3 class="text-lg font-mono text-htb-cyan mb-4">Project Info</h3>
                     
                     <div class="space-y-4 text-sm">
