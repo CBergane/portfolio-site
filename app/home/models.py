@@ -6,7 +6,7 @@ from modelcluster.models import ClusterableModel
 from django import forms
 from wagtail.models import Orderable
 from wagtail.admin.panels import InlinePanel
-from wagtail.snippets.panels import SnippetChooserPanel
+from wagtail.admin.panels import FieldPanel
 
 from wagtail.models import Page
 from wagtail.fields import RichTextField, StreamField
@@ -358,7 +358,6 @@ class BlogPage(Page):
 
     def save(self, *args, **kwargs):
         # Calculate reading time (average 200 words per minute)
-        # Calculate reading time (average 200 wpm) from markdown blocks
         word_count = 0
         for block in self.body:
             if block.block_type == 'markdown' and hasattr(block.value, 'source'):
@@ -462,7 +461,7 @@ class ProjectPageTechStack(Orderable):
     is_primary = models.BooleanField(default=False, blank=True)
 
     panels = [
-        SnippetChooserPanel("tech"),
+        FieldPanel("tech"),
         FieldPanel("is_primary"),
     ]
 
