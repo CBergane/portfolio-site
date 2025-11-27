@@ -111,21 +111,27 @@
 </section>
 
 {# Tech Stack Section #}
-{% if page.tech_stack.all %}
-<section class="py-8 bg-htb-dark border-y border-htb-green/20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex flex-wrap items-center gap-3">
-            <span class="text-gray-400 font-mono text-sm">Built with:</span>
-            {% for tech in page.tech_stack.all %}
-            <span class="px-4 py-2 rounded-lg text-sm font-mono font-bold border-2 transition-all hover:scale-110" 
-                  style="border-color: {{ tech.color }}; color: {{ tech.color }};">
-                {{ tech.icon }} {{ tech.name }}
-            </span>
-            {% endfor %}
-        </div>
-    </div>
-</section>
-{% endif %}
+{% with items=page.tech_stack_items.all %}
+  {% if items %}
+  <section class="py-8 bg-htb-dark border-y border-htb-green/20">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex flex-wrap items-center gap-3">
+              <span class="text-gray-400 font-mono text-sm">Built with:</span>
+
+              {% for item in items %}
+              <span class="px-4 py-2 rounded-lg text-sm font-mono font-bold border-2 transition-all hover:scale-110
+                           {% if item.is_primary %}ring-2 ring-htb-green/40{% endif %}"
+                    style="border-color: {{ item.tech.color }}; color: {{ item.tech.color }};">
+                  {{ item.tech.icon }} {{ item.tech.name }}{% if item.is_primary %} ⭐{% endif %}
+              </span>
+              {% endfor %}
+
+          </div>
+      </div>
+  </section>
+  {% endif %}
+{% endwith %}
+
 
 {# Main Content #}
 <section class="py-12 sm:py-16 bg-htb-darker">
