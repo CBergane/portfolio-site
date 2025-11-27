@@ -1,6 +1,12 @@
 from django.db import models
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils import timezone
+from modelcluster.fields import ParentalManyToManyField
+from modelcluster.models import ClusterableModel
+from django import forms
+from wagtail.models import Orderable
+from wagtail.admin.panels import InlinePanel
+from wagtail.snippets.panels import SnippetChooserPanel
 
 from wagtail.models import Page
 from wagtail.fields import RichTextField, StreamField
@@ -440,6 +446,30 @@ class ProjectCategory(models.Model):
 
 # ============= PROJECT PAGES =============
 
+class ProjectPageTechStack(Orderable):
+    page = ParentalKey(
+        "home.ProjectPage",
+        related_name="tech_stack_items",
+        on_delete=models.CASCADE,
+    )
+
+    tech = models.ForeignKey(
+        "home.TechStack",
+        on_delete=models.CASCADE,
+        related_name="+",  # inget baklänges-relationsbrus
+    )
+
+    is_primary = models.BooleanField(default=False, blank=True)
+
+    panels = [
+        SnippetChooserPanel("tech"),
+        FieldPanel("is_primary"),
+    ]
+
+    def __str__(self):
+        return f"{self.tech.name}"
+
+
 class ProjectIndexPage(Page):
     """
     Projects listing page
@@ -464,7 +494,7 @@ class ProjectIndexPage(Page):
         # Filter by tech if provided
         tech = request.GET.get('tech')
         if tech:
-            all_projects = all_projects.filter(tech_stack__slug=tech)
+            all_projects = all_projects.filter(tech_stack_items__tech__slug=tech).distinct()
         
         # Filter by status if provided
         status = request.GET.get('status')
@@ -522,12 +552,6 @@ class ProjectPage(Page):
         default='completed'
     )
     
-    tech_stack = models.ManyToManyField(
-        'home.TechStack',
-        blank=True,
-        related_name='projects'
-    )
-    
     # Links
     github_url = models.URLField(blank=True, help_text="GitHub repository URL")
     live_url = models.URLField(blank=True, help_text="Live demo URL")
@@ -573,7 +597,7 @@ class ProjectPage(Page):
         MultiFieldPanel([
             FieldPanel('category'),
             FieldPanel('status'),
-            FieldPanel('tech_stack'),
+            InlinePanel("tech_stack_items", label="Tech stack"),
             FieldPanel('duration'),
         ], heading="Project Details"),
         
