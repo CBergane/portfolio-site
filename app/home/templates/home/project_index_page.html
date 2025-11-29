@@ -35,11 +35,8 @@
 <section class="bg-htb-darker border-y border-htb-green/20 sticky top-16 z-40 backdrop-blur-md">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
 
-    {# =========================
-       Mobile: collapsible
-       ========================= #}
     <details class="md:hidden group" {% if selected_category or selected_tech or selected_status %}open{% endif %}>
-      <summary class="list-none flex items-center justify-between cursor-pointer select-none font-mono text-sm text-gray-300">
+      <summary class="list-none [&::-webkit-details-marker]:hidden flex items-center justify-between cursor-pointer select-none font-mono text-sm text-gray-300">
         <span class="flex items-center gap-2">
           <span class="text-gray-500">filter:</span>
           {% if selected_category or selected_tech or selected_status %}
@@ -50,12 +47,11 @@
         </span>
 
         <span class="px-3 py-1 rounded-lg bg-htb-gray text-gray-300 border border-htb-green/20 group-open:hidden">Show</span>
-        <span class="px-3 py-1 rounded-lg bg-htb-green text-htb-darker font-bold group-open:inline hidden">Hide</span>
+        <span class="px-3 py-1 rounded-lg bg-htb-green text-htb-darker font-bold hidden group-open:inline">Hide</span>
       </summary>
 
       <div class="pt-3 space-y-3">
 
-        {# Quick buttons: All + Status #}
         <div class="flex flex-wrap gap-2 items-center">
           <a href="{% pageurl page %}"
              class="px-3 py-2 rounded-lg font-mono text-xs transition-all
@@ -88,7 +84,6 @@
           </a>
         </div>
 
-        {# Categories #}
         <div class="flex flex-wrap gap-2">
           {% for category in categories %}
           <a href="?category={{ category.slug }}{% if selected_tech %}&tech={{ selected_tech }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}"
@@ -99,7 +94,6 @@
           {% endfor %}
         </div>
 
-        {# Tech #}
         {% if tech_stacks %}
         <div class="flex flex-wrap gap-2">
           {% for tech in tech_stacks %}
@@ -120,21 +114,16 @@
       </div>
     </details>
 
-    {# =========================
-       Desktop: your original layout
-       ========================= #}
     <div class="hidden md:block">
       <div class="flex flex-wrap gap-3 items-center justify-center">
         <span class="text-gray-500 font-mono text-sm">filter:</span>
 
-        {# All projects #}
         <a href="{% pageurl page %}"
            class="px-4 py-2 rounded-lg font-mono text-sm transition-all
                   {% if not selected_category and not selected_tech and not selected_status %}bg-htb-green text-htb-darker{% else %}bg-htb-gray text-gray-400 hover:bg-htb-green/20 hover:text-htb-green{% endif %}">
           all
         </a>
 
-        {# Status filters #}
         <a href="?{% if selected_category %}category={{ selected_category }}&{% endif %}{% if selected_tech %}tech={{ selected_tech }}&{% endif %}status=completed"
            class="px-4 py-2 rounded-lg font-mono text-sm transition-all
                   {% if selected_status == 'completed' %}bg-htb-cyan text-htb-darker{% else %}bg-htb-gray text-gray-400 hover:bg-htb-cyan/20 hover:text-htb-cyan{% endif %}">
@@ -159,7 +148,6 @@
           📦 archived
         </a>
 
-        {# Category filters #}
         {% for category in categories %}
         <a href="?category={{ category.slug }}{% if selected_tech %}&tech={{ selected_tech }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}"
            class="px-4 py-2 rounded-lg font-mono text-sm transition-all flex items-center gap-2 border"
@@ -170,7 +158,6 @@
         {% endfor %}
       </div>
 
-      {# Tech stack pills #}
       {% if tech_stacks %}
       <div class="mt-4">
         <div class="flex flex-wrap items-center justify-center gap-2">
