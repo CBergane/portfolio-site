@@ -120,30 +120,38 @@
                 <span class="text-3xl">🟢</span>
                 <div>
                     <h3 class="text-lg font-mono font-bold text-htb-green">HackTheBox</h3>
-                    <p class="text-xs text-gray-500 font-mono">{{ settings.home.SocialMediaSettings.htb_rank }}</p>
+                    <p class="text-xs text-gray-500 font-mono">{{ htb_profile.rank|default_if_none:"Noob" }}</p>
                 </div>
             </div>
             <svg class="w-5 h-5 text-htb-green transform group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
             </svg>
         </div>
-        
+
         <div class="grid grid-cols-2 gap-3 text-sm">
             <div class="bg-htb-gray/50 rounded p-2">
-                <p class="text-gray-500 text-xs mb-1">Boxes Owned</p>
-                <p class="text-htb-green font-mono font-bold">{{ settings.home.SocialMediaSettings.htb_boxes_owned }}</p>
+                <p class="text-gray-500 text-xs mb-1">Ownership</p>
+                <p class="text-htb-green font-mono font-bold">{{ htb_profile.ownership|default_if_none:"—" }}</p>
             </div>
             <div class="bg-htb-gray/50 rounded p-2">
-                <p class="text-gray-500 text-xs mb-1">User Owns</p>
-                <p class="text-htb-cyan font-mono font-bold">{{ settings.home.SocialMediaSettings.htb_user_owns }}</p>
+                <p class="text-gray-500 text-xs mb-1">Ranking</p>
+                <p class="text-htb-cyan font-mono font-bold">{{ htb_profile.ranking|default_if_none:"—" }}</p>
             </div>
             <div class="bg-htb-gray/50 rounded p-2">
-                <p class="text-gray-500 text-xs mb-1">System Owns</p>
-                <p class="text-htb-cyan font-mono font-bold">{{ settings.home.SocialMediaSettings.htb_system_owns }}</p>
+                <p class="text-gray-500 text-xs mb-1">Points</p>
+                <p class="text-htb-cyan font-mono font-bold">{{ htb_profile.points|default_if_none:"—" }}</p>
             </div>
             <div class="bg-htb-gray/50 rounded p-2">
-                <p class="text-gray-500 text-xs mb-1">Challenges</p>
-                <p class="text-htb-green font-mono font-bold">{{ settings.home.SocialMediaSettings.htb_challenges }}</p>
+                <p class="text-gray-500 text-xs mb-1">Flags</p>
+                <p class="text-htb-green font-mono font-bold">{{ htb_profile.flags|default_if_none:"—" }}</p>
+            </div>
+            <div class="bg-htb-gray/50 rounded p-2">
+                <p class="text-gray-500 text-xs mb-1">Machines</p>
+                <p class="text-htb-green font-mono font-bold">{{ htb_profile.machines|default_if_none:"—" }}</p>
+            </div>
+            <div class="bg-htb-gray/50 rounded p-2">
+                <p class="text-gray-500 text-xs mb-1">Bloods</p>
+                <p class="text-htb-cyan font-mono font-bold">{{ htb_profile.bloods|default_if_none:"—" }}</p>
             </div>
         </div>
     </a>

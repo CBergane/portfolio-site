@@ -17,9 +17,16 @@ db.sqlite3-journal
 /media
 /staticfiles
 
+# Local database / volumes
+database/data/
+database/
+**/data/
+
 # Environment variables
 .env
 .env.local
+ANGENT.*
+BACKLOG.*
 
 # IDE
 .vscode/

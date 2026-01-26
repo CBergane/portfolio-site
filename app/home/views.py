@@ -1,9 +1,10 @@
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
-from django.conf import settings
 from django_ratelimit.decorators import ratelimit
 import requests
 import os
+
+from .htb import get_htb_profile
 
 
 @require_http_methods(["GET"])
@@ -11,9 +12,7 @@ def htb_stats(request):
     """
     Simple HTMX endpoint
     """
-    return JsonResponse({
-        'boxes_rooted': '25+'
-    })
+    return JsonResponse(get_htb_profile(request))
 
 
 def send_discord_notification(submission):

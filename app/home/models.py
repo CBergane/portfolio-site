@@ -267,8 +267,10 @@ class HomePage(Page):
     
     def get_context(self, request, *args, **kwargs):
         from .models import ProjectPage
+        from .htb import get_htb_profile
         context = super().get_context(request, *args, **kwargs)
         context['total_projects'] = ProjectPage.objects.live().count()
+        context['htb_profile'] = get_htb_profile(request)
         return context
 
     class Meta:

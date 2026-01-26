@@ -259,64 +259,98 @@
 
 {% block extra_js %}
 <script>
-    // Handle HTMX form response
-    document.body.addEventListener('htmx:afterRequest', function(event) {
-        if (event.detail.target.id === 'form-response') {
+    (function () {
+        function buildInlineAlert(text, accentClass = 'text-red-400', borderClass = 'border-red-500', bgClass = 'bg-red-500/20') {
+            return `
+                <div class="p-4 ${bgClass} border ${borderClass} rounded-lg">
+                    <p class="${accentClass} font-mono text-sm flex items-center gap-2">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        ${text}
+                    </p>
+                </div>
+            `;
+        }
+
+        function parseJsonResponse(xhr) {
+            const contentType = (xhr.getResponseHeader('Content-Type') || '').toLowerCase();
+            if (!contentType.includes('application/json')) {
+                return null;
+            }
+
+            try {
+                return JSON.parse(xhr.responseText);
+            } catch (error) {
+                console.warn('Unable to parse JSON response', error);
+                return null;
+            }
+        }
+
+        function renderProxyError(statusCode) {
+            const status = statusCode ? ` (HTTP ${statusCode})` : '';
+            return buildInlineAlert(
+                `Something blocked the request${status}. Please reload the page over HTTPS and try again, or email <a class="underline text-htb-green" href="mailto:christian@cbergane.se">christian@cbergane.se</a>.`
+            );
+        }
+
+        document.body.addEventListener('htmx:afterRequest', function(event) {
+            if (!event.detail || event.detail.target.id !== 'form-response') {
+                return;
+            }
+
+            const target = event.detail.target;
             const xhr = event.detail.xhr;
-            
-            if (xhr.status === 200) {
-                const response = JSON.parse(xhr.responseText);
-                
-                if (response.success) {
-                    // Show success message
-                    event.detail.target.innerHTML = `
-                        <div class="p-4 bg-htb-green/20 border border-htb-green rounded-lg fade-in">
-                            <p class="text-htb-green font-mono text-sm flex items-center gap-2">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                                ${response.message}
-                            </p>
-                        </div>
-                    `;
-                    
-                    // Reset form
-                    document.getElementById('contact-form').reset();
-                    
-                    // Redirect after 2 seconds
-                    setTimeout(() => {
-                        window.location.href = '{% pageurl page %}?submitted=true';
-                    }, 2000);
-                }
-            } else if (xhr.status === 429) {
-                // Rate limited
-                const response = JSON.parse(xhr.responseText);
-                event.detail.target.innerHTML = `
-                    <div class="p-4 bg-yellow-500/20 border border-yellow-500 rounded-lg">
-                        <p class="text-yellow-500 font-mono text-sm flex items-center gap-2">
+            const response = parseJsonResponse(xhr);
+
+            if (xhr.status === 200 && response && response.success) {
+                target.innerHTML = `
+                    <div class="p-4 bg-htb-green/20 border border-htb-green rounded-lg fade-in">
+                        <p class="text-htb-green font-mono text-sm flex items-center gap-2">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
-                            ${response.errors.__all__[0]}
+                            ${response.message}
                         </p>
                     </div>
                 `;
-            } else {
-                const response = JSON.parse(xhr.responseText);
-                
-                // Show error message
+
+                document.getElementById('contact-form').reset();
+                setTimeout(() => {
+                    window.location.href = '{% pageurl page %}?submitted=true';
+                }, 2000);
+                return;
+            }
+
+            if (xhr.status === 429 && response && response.errors) {
+                target.innerHTML = buildInlineAlert(
+                    response.errors.__all__ ? response.errors.__all__[0] : 'Please wait a moment before trying again.',
+                    'text-yellow-500',
+                    'border-yellow-500',
+                    'bg-yellow-500/20'
+                );
+                return;
+            }
+
+            if (!response) {
+                target.innerHTML = renderProxyError(xhr.status);
+                return;
+            }
+
+            if (response.errors) {
                 let errorHtml = '<div class="p-4 bg-red-500/20 border border-red-500 rounded-lg"><ul class="text-red-400 text-sm space-y-1">';
-                
-                for (const [field, errors] of Object.entries(response.errors)) {
+                for (const [, errors] of Object.entries(response.errors)) {
                     errors.forEach(error => {
                         errorHtml += `<li>• ${error}</li>`;
                     });
                 }
-                
                 errorHtml += '</ul></div>';
-                event.detail.target.innerHTML = errorHtml;
+                target.innerHTML = errorHtml;
+                return;
             }
-        }
-    });
+
+            target.innerHTML = renderProxyError(xhr.status);
+        });
+    })();
 </script>
 {% endblock %}
