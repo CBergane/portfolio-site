@@ -32,6 +32,38 @@
     
     {# HTMX #}
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script>
+        (function () {
+            function getCookie(name) {
+                const cookies = document.cookie ? document.cookie.split(';') : [];
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        return decodeURIComponent(cookie.substring(name.length + 1));
+                    }
+                }
+                return null;
+            }
+
+            document.addEventListener('htmx:configRequest', function(event) {
+                if (!event.detail) {
+                    return;
+                }
+
+                if (!event.detail.headers) {
+                    event.detail.headers = {};
+                }
+
+                const method = (event.detail.verb || '').toUpperCase();
+                if (method && method !== 'GET' && method !== 'HEAD') {
+                    const csrfToken = getCookie('csrftoken');
+                    if (csrfToken) {
+                        event.detail.headers['X-CSRFToken'] = csrfToken;
+                    }
+                }
+            });
+        })();
+    </script>
 
     
     {% block extra_css %}{% endblock %}
