@@ -1,5 +1,7 @@
 import logging
 import os
+
+import hashlib
 from typing import Any, Dict, Optional
 
 import requests
@@ -21,6 +23,14 @@ def _safe_int(value: Any) -> Optional[int]:
         return int(value)
     except (TypeError, ValueError):
         return None
+    
+def _safe_float(value: Any) -> Optional[float]:
+    try:
+        if value is None:
+            return None
+        return float(value)
+    except (TypeError, ValueError):
+        return None
 
 
 def _pick(data: Dict[str, Any], *keys: str) -> Optional[Any]:
@@ -39,11 +49,11 @@ def _build_fallback(settings_obj: SocialMediaSettings) -> Dict[str, Any]:
 
     return {
         "rank": settings_obj.htb_rank or "Noob",
-        "ownership": flags,
+        "ownership": None,
         "ranking": None,
         "points": None,
         "flags": flags,
-        "machines": _safe_int(settings_obj.htb_boxes_owned),
+        "machines": system_owns if system_owns is not None else _safe_int(settings_obj.htb_boxes_owned),
         "bloods": _safe_int(settings_obj.htb_challenges),
         "source": "fallback",
     }
@@ -72,20 +82,22 @@ def _extract_profile_stats(payload: Dict[str, Any]) -> Dict[str, Any]:
     if user_owns is not None or system_owns is not None:
         flags = (user_owns or 0) + (system_owns or 0)
 
-    machines = _safe_int(
-        _pick(
-            data,
-            "machine_owns",
-            "machine_owns_total",
-            "machines_owns",
-            "boxes_owned",
-            "box_owns",
+    # I HTB "profile/basic" är "Machines" i praktiken system_owns i din UI
+    machines = system_owns
+    if machines is None:
+        machines = _safe_int(
+            _pick(
+                data,
+                "machine_owns",
+                "machine_owns_total",
+                "machines_owns",
+                "boxes_owned",
+                "box_owns",
+            )
         )
-    )
 
-    ownership = _safe_int(_pick(data, "ownership", "owns", "own_total"))
-    if ownership is None:
-        ownership = flags if flags is not None else machines
+    # HTB skickar rank_ownership (t.ex 6.15)
+    ownership = _safe_float(_pick(data, "rank_ownership", "rankOwnership", "ownership"))
 
     bloods = _safe_int(_pick(data, "bloods", "bloods_total"))
     if bloods is None:
@@ -98,7 +110,7 @@ def _extract_profile_stats(payload: Dict[str, Any]) -> Dict[str, Any]:
 
     return {
         "rank": rank,
-        "ownership": _safe_int(ownership),
+        "ownership": ownership,
         "ranking": _safe_int(ranking),
         "points": _safe_int(points),
         "flags": _safe_int(flags),
@@ -116,7 +128,9 @@ def get_htb_profile(request) -> Dict[str, Any]:
     if not token or not user_id:
         return fallback
 
-    cache_key = f"htb:profile_basic:{user_id}"
+     # Token-fingerprint i cache key så gamla fallback-cache inte lever kvar efter token-ändring
+    token_fp = hashlib.sha256(token.encode("utf-8")).hexdigest()[:10]
+    cache_key = f"htb:profile_basic:{user_id}:{token_fp}"
     cached = cache.get(cache_key)
     if isinstance(cached, dict):
         return cached
@@ -125,10 +139,16 @@ def get_htb_profile(request) -> Dict[str, Any]:
     headers = {
         "Authorization": f"Bearer {token}",
         "Accept": "application/json",
+        "User-Agent": "curl/8.0.0",
     }
 
     try:
-        response = requests.get(url, headers=headers, timeout=6)
+        response = requests.get(
+            url,
+            headers=headers,
+            timeout=20,
+            proxies={"http": None, "https": None},
+        )
         response.raise_for_status()
         payload = response.json()
     except requests.RequestException as exc:
