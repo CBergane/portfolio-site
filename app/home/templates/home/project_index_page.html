@@ -36,7 +36,7 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
 
     {# Active filters (subtil, alla storlekar) #}
-    {% if active_count > 0 %}
+    {% if active_count %}
       <div class="mb-3 flex flex-wrap items-center justify-center gap-2 text-xs font-mono">
         <span class="text-gray-500">active:</span>
 
@@ -55,11 +55,11 @@
     {% endif %}
 
     {# Mobile (collapsible) #}
-    <details class="md:hidden group" {% if active_count > 0 %}open{% endif %}>
+    <details class="md:hidden group" {% if active_count %}open{% endif %}>
       <summary class="list-none [&::-webkit-details-marker]:hidden flex items-center justify-between cursor-pointer select-none font-mono text-sm text-gray-300">
         <span class="flex items-center gap-2">
           <span class="text-gray-500">filters</span>
-          {% if active_count > 0 %}
+          {% if active_count %}
             <span class="text-htb-green">active ({{ active_count }})</span>
           {% else %}
             <span class="text-gray-500">none</span>
@@ -96,7 +96,6 @@
                     {{ s.label }}
                   </a>
                 {% endfor %}
-            {% endfor %}
           </div>
         </div>
 
