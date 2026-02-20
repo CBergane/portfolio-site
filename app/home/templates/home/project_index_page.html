@@ -35,12 +35,32 @@
 <section class="bg-htb-darker border-y border-htb-green/20 sticky top-16 z-40 backdrop-blur-md">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
 
-    <details class="md:hidden group" {% if selected_category or selected_tech or selected_status %}open{% endif %}>
+    {# Active filters (subtil, alla storlekar) #}
+    {% if active_count > 0 %}
+      <div class="mb-3 flex flex-wrap items-center justify-center gap-2 text-xs font-mono">
+        <span class="text-gray-500">active:</span>
+
+        {% for chip in active_chips %}
+          <a href="{% if chip.qs_remove %}?{{ chip.qs_remove }}{% else %}{% pageurl page %}{% endif %}"
+             class="px-2 py-1 rounded-md border bg-htb-gray/20 hover:bg-htb-gray/30 transition-all whitespace-nowrap"
+             style="{{ chip.style }}">
+            {{ chip.label }} <span class="opacity-60">×</span>
+          </a>
+        {% endfor %}
+
+        <a href="{% pageurl page %}" class="ml-1 text-gray-400 underline hover:text-htb-green whitespace-nowrap">
+          reset
+        </a>
+      </div>
+    {% endif %}
+
+    {# Mobile (collapsible) #}
+    <details class="md:hidden group" {% if active_count > 0 %}open{% endif %}>
       <summary class="list-none [&::-webkit-details-marker]:hidden flex items-center justify-between cursor-pointer select-none font-mono text-sm text-gray-300">
         <span class="flex items-center gap-2">
-          <span class="text-gray-500">filter:</span>
-          {% if selected_category or selected_tech or selected_status %}
-            <span class="text-htb-green">active</span>
+          <span class="text-gray-500">filters</span>
+          {% if active_count > 0 %}
+            <span class="text-htb-green">active ({{ active_count }})</span>
           {% else %}
             <span class="text-gray-500">none</span>
           {% endif %}
@@ -50,137 +70,142 @@
         <span class="px-3 py-1 rounded-lg bg-htb-green text-htb-darker font-bold hidden group-open:inline">Hide</span>
       </summary>
 
-      <div class="pt-3 space-y-3">
+      <div class="pt-3 space-y-4">
 
-        <div class="flex flex-wrap gap-2 items-center">
-          <a href="{% pageurl page %}"
-             class="px-3 py-2 rounded-lg font-mono text-xs transition-all
-             {% if not selected_category and not selected_tech and not selected_status %}bg-htb-green text-htb-darker{% else %}bg-htb-gray text-gray-400 hover:bg-htb-green/20 hover:text-htb-green{% endif %}">
-            all
-          </a>
+        {# Mobile Row 1: Status #}
+        <div class="space-y-2">
+          <div class="text-xs font-mono text-gray-500">status:</div>
+          <div class="flex flex-wrap gap-2 items-center">
+            <a href="{% pageurl page %}"
+               class="px-3 py-2 rounded-lg font-mono text-xs transition-all whitespace-nowrap
+               {% if is_all_active %}bg-htb-green text-htb-darker{% else %}bg-htb-gray text-gray-400 hover:bg-htb-green/20 hover:text-htb-green{% endif %}">
+              all
+            </a>
 
-          <a href="?{% if selected_category %}category={{ selected_category }}&{% endif %}{% if selected_tech %}tech={{ selected_tech }}&{% endif %}status=completed"
-             class="px-3 py-2 rounded-lg font-mono text-xs transition-all
-             {% if selected_status == 'completed' %}bg-htb-cyan text-htb-darker{% else %}bg-htb-gray text-gray-400 hover:bg-htb-cyan/20 hover:text-htb-cyan{% endif %}">
-            ✓ completed
-          </a>
-
-          <a href="?{% if selected_category %}category={{ selected_category }}&{% endif %}{% if selected_tech %}tech={{ selected_tech }}&{% endif %}status=in_progress"
-             class="px-3 py-2 rounded-lg font-mono text-xs transition-all
-             {% if selected_status == 'in_progress' %}bg-yellow-500 text-htb-darker{% else %}bg-htb-gray text-gray-400 hover:bg-yellow-500/20 hover:text-yellow-500{% endif %}">
-            ⏳ in progress
-          </a>
-
-          <a href="?{% if selected_category %}category={{ selected_category }}&{% endif %}{% if selected_tech %}tech={{ selected_tech }}&{% endif %}status=ongoing"
-             class="px-3 py-2 rounded-lg font-mono text-xs transition-all
-             {% if selected_status == 'ongoing' %}bg-htb-cyan text-htb-darker{% else %}bg-htb-gray text-gray-400 hover:bg-htb-cyan/20 hover:text-htb-cyan{% endif %}">
-            ∞ ongoing
-          </a>
-
-          <a href="?{% if selected_category %}category={{ selected_category }}&{% endif %}{% if selected_tech %}tech={{ selected_tech }}&{% endif %}status=archived"
-             class="px-3 py-2 rounded-lg font-mono text-xs transition-all
-             {% if selected_status == 'archived' %}bg-gray-600 text-gray-200{% else %}bg-htb-gray text-gray-400 hover:bg-gray-600/20 hover:text-gray-200{% endif %}">
-            📦 archived
-          </a>
+            {% for s in status_links %}
+                <a href="{% if s.qs %}?{{ s.qs }}{% else %}{% pageurl page %}{% endif %}"
+                   class="px-4 py-2 rounded-lg font-mono text-sm transition-all whitespace-nowrap
+                   {% if s.value == 'in_progress' %}
+                     {% if s.is_active %}bg-yellow-500 text-htb-darker{% else %}bg-htb-gray text-gray-400 hover:bg-yellow-500/20 hover:text-yellow-500{% endif %}
+                   {% elif s.value == 'archived' %}
+                     {% if s.is_active %}bg-gray-600 text-gray-200{% else %}bg-htb-gray text-gray-400 hover:bg-gray-600/20 hover:text-gray-200{% endif %}
+                   {% else %}
+                     {# completed + ongoing #}
+                     {% if s.is_active %}bg-htb-cyan text-htb-darker{% else %}bg-htb-gray text-gray-400 hover:bg-htb-cyan/20 hover:text-htb-cyan{% endif %}
+                   {% endif %}">
+                  {{ s.label }}
+                </a>
+            {% endfor %}
+          </div>
         </div>
 
-        <div class="flex flex-wrap gap-2">
-          {% for category in categories %}
-          <a href="?category={{ category.slug }}{% if selected_tech %}&tech={{ selected_tech }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}"
-             class="px-3 py-2 rounded-lg font-mono text-xs transition-all flex items-center gap-2 border"
-             style="{% if selected_category == category.slug %}background-color: {{ category.color }}; color: #0A0E1A; border-color: {{ category.color }};{% else %}background-color: {{ category.color }}15; border-color: {{ category.color }}40; color: {{ category.color }};{% endif %}">
-            <span>{{ category.icon }}</span><span>{{ category.name }}</span>
-          </a>
-          {% endfor %}
+        {# Mobile Row 2: Categories #}
+        <div class="space-y-2">
+          <div class="text-xs font-mono text-gray-500">category:</div>
+          <div class="flex flex-wrap gap-2">
+            {% for c in category_links %}
+              <a href="{% if c.qs %}?{{ c.qs }}{% else %}{% pageurl page %}{% endif %}"
+                 class="px-3 py-2 rounded-lg font-mono text-xs transition-all flex items-center gap-2 border whitespace-nowrap"
+                 style="{% if c.is_active %}background-color: {{ c.obj.color }}; color: #0A0E1A; border-color: {{ c.obj.color }};{% else %}background-color: {{ c.obj.color }}15; border-color: {{ c.obj.color }}40; color: {{ c.obj.color }};{% endif %}">
+                <span>{{ c.obj.icon }}</span><span>{{ c.obj.name }}</span>
+              </a>
+            {% endfor %}
+          </div>
         </div>
 
-        {% if tech_stacks %}
-        <div class="flex flex-wrap gap-2">
-          {% for tech in tech_stacks %}
-          <a href="?tech={{ tech.slug }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}"
-             class="px-3 py-1 rounded-full text-xs font-mono transition-all flex items-center gap-1 border"
-             style="border-color: {{ tech.color }}40; color: {{ tech.color }}; background-color: {{ tech.color }}15;">
-            <span>{{ tech.icon }}</span><span>{{ tech.name }}</span>
-          </a>
-          {% endfor %}
+        {# Mobile Row 3: Tech #}
+        {% if tech_links %}
+        <div class="space-y-2">
+          <div class="text-xs font-mono text-gray-500">tech:</div>
+          <div class="flex flex-wrap gap-2">
+            {% for t in tech_links %}
+              <a href="{% if t.qs %}?{{ t.qs }}{% else %}{% pageurl page %}{% endif %}"
+                 class="px-3 py-1 rounded-full text-xs font-mono transition-all flex items-center gap-1 whitespace-nowrap
+                        {% if t.is_active %}border-2{% else %}border{% endif %}"
+                 style="border-color: {{ t.obj.color }}40; color: {{ t.obj.color }}; background-color: {{ t.obj.color }}15;">
+                <span>{{ t.obj.icon }}</span><span>{{ t.obj.name }}</span>
+              </a>
+            {% endfor %}
+          </div>
+
+          <div class="pt-1">
+            <a href="{% pageurl page %}" class="inline-block text-xs font-mono text-gray-400 underline">
+              reset
+            </a>
+          </div>
         </div>
         {% endif %}
 
-        <div class="pt-2">
-          <a href="{% pageurl page %}" class="inline-block text-xs font-mono text-gray-400 underline">
-            Reset filters
-          </a>
-        </div>
       </div>
     </details>
 
-    <div class="hidden md:block">
-      <div class="flex flex-wrap gap-3 items-center justify-center">
-        <span class="text-gray-500 font-mono text-sm">filter:</span>
+    {# Desktop: 3 clean rows #}
+    <div class="hidden md:block space-y-4">
+
+      {# Row 1: Status #}
+      <div class="flex flex-wrap items-center justify-center gap-3">
+        <span class="text-gray-500 font-mono text-sm whitespace-nowrap">status:</span>
 
         <a href="{% pageurl page %}"
-           class="px-4 py-2 rounded-lg font-mono text-sm transition-all
-                  {% if not selected_category and not selected_tech and not selected_status %}bg-htb-green text-htb-darker{% else %}bg-htb-gray text-gray-400 hover:bg-htb-green/20 hover:text-htb-green{% endif %}">
+           class="px-4 py-2 rounded-lg font-mono text-sm transition-all whitespace-nowrap
+                  {% if is_all_active %}bg-htb-green text-htb-darker{% else %}bg-htb-gray text-gray-400 hover:bg-htb-green/20 hover:text-htb-green{% endif %}">
           all
         </a>
 
-        <a href="?{% if selected_category %}category={{ selected_category }}&{% endif %}{% if selected_tech %}tech={{ selected_tech }}&{% endif %}status=completed"
-           class="px-4 py-2 rounded-lg font-mono text-sm transition-all
-                  {% if selected_status == 'completed' %}bg-htb-cyan text-htb-darker{% else %}bg-htb-gray text-gray-400 hover:bg-htb-cyan/20 hover:text-htb-cyan{% endif %}">
-          ✓ completed
-        </a>
-
-        <a href="?{% if selected_category %}category={{ selected_category }}&{% endif %}{% if selected_tech %}tech={{ selected_tech }}&{% endif %}status=in_progress"
-           class="px-4 py-2 rounded-lg font-mono text-sm transition-all
-                  {% if selected_status == 'in_progress' %}bg-yellow-500 text-htb-darker{% else %}bg-htb-gray text-gray-400 hover:bg-yellow-500/20 hover:text-yellow-500{% endif %}">
-          ⏳ in progress
-        </a>
-
-        <a href="?{% if selected_category %}category={{ selected_category }}&{% endif %}{% if selected_tech %}tech={{ selected_tech }}&{% endif %}status=ongoing"
-           class="px-4 py-2 rounded-lg font-mono text-sm transition-all
-                  {% if selected_status == 'ongoing' %}bg-htb-cyan text-htb-darker{% else %}bg-htb-gray text-gray-400 hover:bg-htb-cyan/20 hover:text-htb-cyan{% endif %}">
-          ∞ ongoing
-        </a>
-
-        <a href="?{% if selected_category %}category={{ selected_category }}&{% endif %}{% if selected_tech %}tech={{ selected_tech }}&{% endif %}status=archived"
-           class="px-4 py-2 rounded-lg font-mono text-sm transition-all
-                  {% if selected_status == 'archived' %}bg-gray-600 text-gray-200{% else %}bg-htb-gray text-gray-400 hover:bg-gray-600/20 hover:text-gray-200{% endif %}">
-          📦 archived
-        </a>
-
-        {% for category in categories %}
-        <a href="?category={{ category.slug }}{% if selected_tech %}&tech={{ selected_tech }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}"
-           class="px-4 py-2 rounded-lg font-mono text-sm transition-all flex items-center gap-2 border"
-           style="{% if selected_category == category.slug %}background-color: {{ category.color }}; color: #0A0E1A; border-color: {{ category.color }};{% else %}background-color: {{ category.color }}15; border-color: {{ category.color }}40; color: {{ category.color }};{% endif %}">
-          <span>{{ category.icon }}</span>
-          <span>{{ category.name }}</span>
-        </a>
+        {% for s in status_links %}
+            <a href="{% if s.qs %}?{{ s.qs }}{% else %}{% pageurl page %}{% endif %}"
+               class="px-4 py-2 rounded-lg font-mono text-sm transition-all whitespace-nowrap
+               {% if s.value == 'in_progress' %}
+                 {% if s.is_active %}bg-yellow-500 text-htb-darker{% else %}bg-htb-gray text-gray-400 hover:bg-yellow-500/20 hover:text-yellow-500{% endif %}
+               {% elif s.value == 'archived' %}
+                 {% if s.is_active %}bg-gray-600 text-gray-200{% else %}bg-htb-gray text-gray-400 hover:bg-gray-600/20 hover:text-gray-200{% endif %}
+               {% else %}
+                 {# completed + ongoing #}
+                 {% if s.is_active %}bg-htb-cyan text-htb-darker{% else %}bg-htb-gray text-gray-400 hover:bg-htb-cyan/20 hover:text-htb-cyan{% endif %}
+               {% endif %}">
+              {{ s.label }}
+            </a>
         {% endfor %}
       </div>
 
-      {% if tech_stacks %}
-      <div class="mt-6">
-        <div class="flex flex-wrap items-center justify-center gap-2">
-          <span class="text-gray-500 font-mono text-xs whitespace-nowrap self-center">tech:</span>
+      {# Row 2: Categories #}
+      <div class="flex flex-wrap items-center justify-center gap-3">
+        <span class="text-gray-500 font-mono text-xs whitespace-nowrap">category:</span>
 
-          {% for tech in tech_stacks %}
-          <a href="?tech={{ tech.slug }}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}"
-             class="px-3.5 py-1.5 rounded-full text-xs font-mono whitespace-nowrap transition-all flex items-center gap-1
-                    {% if selected_tech == tech.slug %}border-2{% else %}border{% endif %}"
-             style="border-color: {{ tech.color }}40; color: {{ tech.color }}; background-color: {{ tech.color }}15;">
-            <span>{{ tech.icon }}</span>
-            <span>{{ tech.name }}</span>
+        {% for c in category_links %}
+          <a href="{% if c.qs %}?{{ c.qs }}{% else %}{% pageurl page %}{% endif %}"
+             class="px-4 py-2 rounded-lg font-mono text-sm transition-all flex items-center gap-2 border whitespace-nowrap"
+             style="{% if c.is_active %}background-color: {{ c.obj.color }}; color: #0A0E1A; border-color: {{ c.obj.color }};{% else %}background-color: {{ c.obj.color }}15; border-color: {{ c.obj.color }}40; color: {{ c.obj.color }};{% endif %}">
+            <span>{{ c.obj.icon }}</span>
+            <span>{{ c.obj.name }}</span>
           </a>
+        {% endfor %}
+      </div>
+
+      {# Row 3: Tech + reset #}
+      {% if tech_links %}
+      <div class="flex items-start justify-center gap-3">
+        <span class="text-gray-500 font-mono text-xs whitespace-nowrap pt-1">tech:</span>
+
+        <div class="flex flex-wrap items-center justify-center gap-2">
+          {% for t in tech_links %}
+            <a href="{% if t.qs %}?{{ t.qs }}{% else %}{% pageurl page %}{% endif %}"
+               class="px-3.5 py-1.5 rounded-full text-xs font-mono whitespace-nowrap transition-all flex items-center gap-1
+                      {% if t.is_active %}border-2{% else %}border{% endif %}"
+               style="border-color: {{ t.obj.color }}40; color: {{ t.obj.color }}; background-color: {{ t.obj.color }}15;">
+              <span>{{ t.obj.icon }}</span>
+              <span>{{ t.obj.name }}</span>
+            </a>
           {% endfor %}
 
-          <a href="{% pageurl page %}" class="ml-2 text-xs font-mono text-gray-400 underline">
+          <a href="{% pageurl page %}" class="ml-2 text-xs font-mono text-gray-400 underline hover:text-htb-green whitespace-nowrap">
             reset
           </a>
         </div>
       </div>
       {% endif %}
-    </div>
 
+    </div>
   </div>
 </section>
 
