@@ -82,19 +82,20 @@
               all
             </a>
 
-            {% for s in status_links %}
-                <a href="{% if s.qs %}?{{ s.qs }}{% else %}{% pageurl page %}{% endif %}"
-                   class="px-4 py-2 rounded-lg font-mono text-sm transition-all whitespace-nowrap
-                   {% if s.value == 'in_progress' %}
-                     {% if s.is_active %}bg-yellow-500 text-htb-darker{% else %}bg-htb-gray text-gray-400 hover:bg-yellow-500/20 hover:text-yellow-500{% endif %}
-                   {% elif s.value == 'archived' %}
-                     {% if s.is_active %}bg-gray-600 text-gray-200{% else %}bg-htb-gray text-gray-400 hover:bg-gray-600/20 hover:text-gray-200{% endif %}
-                   {% else %}
-                     {# completed + ongoing #}
-                     {% if s.is_active %}bg-htb-cyan text-htb-darker{% else %}bg-htb-gray text-gray-400 hover:bg-htb-cyan/20 hover:text-htb-cyan{% endif %}
-                   {% endif %}">
-                  {{ s.label }}
-                </a>
+               {% for s in status_links %}
+                  <a href="{% if s.qs %}?{{ s.qs }}{% else %}{% pageurl page %}{% endif %}"
+                     class="px-3 py-2 rounded-lg font-mono text-xs transition-all whitespace-nowrap
+                     {% if s.value == 'in_progress' %}
+                       {% if s.is_active %}bg-yellow-500 text-htb-darker{% else %}bg-htb-gray text-gray-400 hover:bg-yellow-500/20 hover:text-yellow-500{% endif %}
+                     {% elif s.value == 'archived' %}
+                       {% if s.is_active %}bg-gray-600 text-gray-200{% else %}bg-htb-gray text-gray-400 hover:bg-gray-600/20 hover:text-gray-200{% endif %}
+                     {% else %}
+                       {# completed + ongoing #}
+                       {% if s.is_active %}bg-htb-cyan text-htb-darker{% else %}bg-htb-gray text-gray-400 hover:bg-htb-cyan/20 hover:text-htb-cyan{% endif %}
+                     {% endif %}">
+                    {{ s.label }}
+                  </a>
+                {% endfor %}
             {% endfor %}
           </div>
         </div>
@@ -126,12 +127,6 @@
                 <span>{{ t.obj.icon }}</span><span>{{ t.obj.name }}</span>
               </a>
             {% endfor %}
-          </div>
-
-          <div class="pt-1">
-            <a href="{% pageurl page %}" class="inline-block text-xs font-mono text-gray-400 underline">
-              reset
-            </a>
           </div>
         </div>
         {% endif %}
@@ -197,10 +192,6 @@
               <span>{{ t.obj.name }}</span>
             </a>
           {% endfor %}
-
-          <a href="{% pageurl page %}" class="ml-2 text-xs font-mono text-gray-400 underline hover:text-htb-green whitespace-nowrap">
-            reset
-          </a>
         </div>
       </div>
       {% endif %}
