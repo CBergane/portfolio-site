@@ -23,15 +23,27 @@
             
             {# Subtitle with typing effect #}
             <p class="text-xl sm:text-2xl md:text-3xl text-gray-300 font-mono">
-                Site Reliability Engineer<span class="text-htb-green cursor-blink">_</span>
+                IT Security Specialist
+                <span class="text-htb-cyan">&</span>
+                Infrastructure Engineer</span>
             </p>
             
             {# Description #}
             <div class="max-w-2xl mx-auto space-y-4 text-gray-400">
                 <p class="text-lg">
-                    Building secure, scalable infrastructure while breaking into systems on HackTheBox. 
-                    From kitchen to cloud, I bring reliability and creativity to everything I do.
+                    Building secure infrastructure, practical security tooling and modern web platforms.
+                    From kitchen pressure to cloud reliability, I bring structure, curiosity and resilience to every project.
                 </p>
+            </div>
+
+            {# Rotating terminal line #}
+            <div class="max-w-3xl mx-auto font-mono text-sm sm:text-base text-left bg-htb-gray/50 border border-htb-cyan/20 rounded-lg px-4 py-3 shadow-lg shadow-htb-cyan/5 min-h-[3rem]">
+                <span class="text-gray-500">christian@portfolio:~$</span>
+                <span
+                    id="terminal-rotating-text"
+                    class="text-htb-cyan ml-1"
+                    data-phrases="monitor logs and signals|harden Linux and cloud infrastructure|build Django and Wagtail web platforms|automate security workflows|turn homelab research into real projects"
+                >monitor logs and signals</span><span class="text-htb-green cursor-blink">█</span>
             </div>
             
             {# Skills badges #}
@@ -192,5 +204,55 @@
         </div>
     </div>
 </section>
+
+
+<script>
+(function () {
+    const el = document.getElementById("terminal-rotating-text");
+    if (!el) return;
+
+    const phrases = el.dataset.phrases.split("|");
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (prefersReducedMotion) {
+        el.textContent = phrases[0];
+        return;
+    }
+
+    let phraseIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+
+    function typeLoop() {
+        const currentPhrase = phrases[phraseIndex];
+
+        if (isDeleting) {
+            charIndex--;
+        } else {
+            charIndex++;
+        }
+
+        el.textContent = currentPhrase.slice(0, charIndex);
+
+        let delay = isDeleting ? 35 : 55;
+
+        if (!isDeleting && charIndex === currentPhrase.length) {
+            delay = 1600;
+            isDeleting = true;
+        }
+
+        if (isDeleting && charIndex === 0) {
+            isDeleting = false;
+            phraseIndex = (phraseIndex + 1) % phrases.length;
+            delay = 350;
+        }
+
+        window.setTimeout(typeLoop, delay);
+    }
+
+    typeLoop();
+})();
+</script>
+
 
 {% endblock %}
