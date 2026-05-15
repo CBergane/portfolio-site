@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags %}
+{% load wagtailsettings_tags %}
 
 {% block content %}
 
@@ -25,7 +26,7 @@
             <p class="text-xl sm:text-2xl md:text-3xl text-gray-300 font-mono">
                 IT Security Specialist
                 <span class="text-htb-cyan">&</span>
-                Infrastructure Engineer</span>
+                Infrastructure Engineer
             </p>
             
             {# Description #}
@@ -75,7 +76,7 @@
     </div>
 </section>
 
-{# About Section with HTMX #}
+{# About Section #}
 <section id="about" class="py-20 bg-htb-dark">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 class="text-4xl font-bold text-htb-cyan font-mono mb-12 text-center">
@@ -84,46 +85,91 @@
         
         <div class="grid md:grid-cols-2 gap-12 items-start">
             <div class="space-y-6 text-gray-300">
-                <div class="bg-htb-gray/50 border border-htb-cyan/20 rounded-lg p-6">
-                    <p class="text-xs text-gray-500 font-mono mb-3">
-                        christian@portfolio:~$ cat about.txt
-                    </p>
-            
-                    <div class="space-y-4 text-gray-300 leading-relaxed">
-                        {{ page.body|richtext }}
-            
-                        <p>
-                            I work with IT security, infrastructure and practical web platforms.
-                            My focus is building reliable systems, understanding how they fail,
-                            and turning security knowledge into real projects.
+               <div class="bg-htb-gray/50 border border-htb-cyan/20 rounded-lg overflow-hidden shadow-lg shadow-htb-cyan/5">
+                    <div class="flex items-center justify-between border-b border-htb-cyan/10 bg-htb-darker/70 px-4 py-3">
+                        <div class="flex items-center gap-2">
+                            <span class="h-2.5 w-2.5 rounded-full bg-htb-green/80"></span>
+                            <span class="h-2.5 w-2.5 rounded-full bg-htb-cyan/60"></span>
+                            <span class="h-2.5 w-2.5 rounded-full bg-gray-500/60"></span>
+                        </div>
+                
+                        <span class="text-xs text-gray-500 font-mono">about.txt</span>
+                    </div>
+                
+                    <div class="p-6 font-mono text-sm sm:text-base">
+                        <p class="text-gray-500 mb-5">
+                            <span class="text-htb-green">christian@portfolio</span><span class="text-gray-500">:~$</span>
+                            <span class="text-htb-cyan">cat about.txt</span>
+                        </p>
+                
+                        <div class="space-y-4 text-gray-300 leading-relaxed">
+                            <div>
+                                <span class="text-htb-green">role</span>
+                                <span class="text-gray-500">:</span>
+                                <span> IT Security Specialist & Infrastructure Engineer</span>
+                            </div>
+                
+                            <div>
+                                <span class="text-htb-green">focus</span>
+                                <span class="text-gray-500">:</span>
+                                <span> secure infrastructure, practical security tooling and modern web platforms</span>
+                            </div>
+                
+                            <div>
+                                <span class="text-htb-green">background</span>
+                                <span class="text-gray-500">:</span>
+                                <span> from kitchen pressure to cloud reliability</span>
+                            </div>
+                
+                            <div>
+                                <span class="text-htb-green">mission</span>
+                                <span class="text-gray-500">:</span>
+                                <span>
+                                    build reliable systems, understand how they fail, and turn security knowledge into real projects
+                                </span>
+                            </div>
+                        </div>
+                
+                        <p class="mt-5 text-gray-500">
+                            <span class="text-htb-green">status</span>
+                            <span class="text-gray-500">:</span>
+                            <span class="text-htb-cyan"> learning, building, hardening</span>
+                            <span class="text-htb-green cursor-blink">█</span>
                         </p>
                     </div>
                 </div>
                 
-                <div class="bg-htb-gray/50 border border-htb-green/20 rounded-lg p-6 space-y-4">
-                    <h3 class="text-xl font-mono text-htb-green">Current Focus</h3>
-            
-                    <ul class="space-y-3 text-gray-400">
-                        <li class="flex items-start gap-2">
-                            <span class="text-htb-green font-mono">[<span class="text-htb-cyan">~</span>]</span>
+                <div class="bg-htb-gray/50 border border-htb-green/20 rounded-lg p-6 space-y-4 font-mono text-sm sm:text-base">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-xl font-mono text-htb-green">Current Focus</h3>
+                        <span class="text-xs text-gray-500 font-mono">focus.log</span>
+                    </div>
+                
+                    <div class="space-y-3 text-gray-300">
+                        <div class="flex items-start gap-3">
+                            <span class="text-htb-green shrink-0">[+]</span>
                             <span>Pursuing OSCP & CPTS certifications</span>
-                        </li>
-            
-                        <li class="flex items-start gap-2">
-                            <span class="text-htb-green font-mono">[<span class="text-htb-cyan">~</span>]</span>
-                            <span>Building home lab infrastructure</span>
-                        </li>
-            
-                        <li class="flex items-start gap-2">
-                            <span class="text-htb-green font-mono">[<span class="text-htb-cyan">~</span>]</span>
-                            <span>Web development for small businesses</span>
-                        </li>
-                    </ul>
+                        </div>
+                
+                        <div class="flex items-start gap-3">
+                            <span class="text-htb-green shrink-0">[+]</span>
+                            <span>Building home lab infrastructure with Proxmox, Linux and Cloudflare</span>
+                        </div>
+                
+                        <div class="flex items-start gap-3">
+                            <span class="text-htb-green shrink-0">[+]</span>
+                            <span>Developing Django/Wagtail platforms, SIEM tooling and threat intel apps</span>
+                        </div>
+                
+                        <div class="flex items-start gap-3">
+                            <span class="text-htb-green shrink-0">[+]</span>
+                            <span>Moving deeper into offensive security, detection engineering and resilient systems</span>
+                        </div>
+                    </div>
                 </div>
             </div>
             
             {# Interactive stats with HTMX #}
-{% load wagtailsettings_tags %}
 {% get_settings %}
 
 <div class="space-y-4">
