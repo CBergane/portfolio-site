@@ -124,50 +124,114 @@
         </div>
     </div>
     
-    {% if settings.home.SocialMediaSettings.hackthebox_url %}
-    <a href="{{ settings.home.SocialMediaSettings.hackthebox_url }}" target="_blank"
-       class="block bg-htb-dark border-2 border-htb-green/30 rounded-lg p-6 hover:border-htb-green hover:shadow-lg hover:shadow-htb-green/20 transition-all transform hover:-translate-y-1 group">
-        <div class="flex items-center justify-between mb-4">
-            <div class="flex items-center gap-3">
-                <span class="text-3xl">🟢</span>
-                <div>
-                    <h3 class="text-lg font-mono font-bold text-htb-green">HackTheBox</h3>
-                    <p class="text-xs text-gray-500 font-mono">{{ htb_profile.rank|default_if_none:"Noob" }}</p>
-                </div>
+{% if settings.home.SocialMediaSettings.hackthebox_url %}
+<a href="{{ settings.home.SocialMediaSettings.hackthebox_url }}"
+   target="_blank"
+   rel="noopener noreferrer"
+   class="block bg-htb-dark border-2 border-htb-green/30 rounded-lg p-6 hover:border-htb-green hover:shadow-lg hover:shadow-htb-green/20 transition-all transform hover:-translate-y-1 group">
+
+    <div class="flex items-start justify-between gap-4 mb-5">
+        <div class="flex items-center gap-3">
+            <div class="flex h-11 w-11 items-center justify-center rounded-lg bg-htb-green/10 border border-htb-green/30 text-htb-green font-mono text-lg">
+                HTB
             </div>
-            <svg class="w-5 h-5 text-htb-green transform group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-            </svg>
+
+            <div>
+                <h3 class="text-lg font-mono font-bold text-htb-green">
+                    Hack The Box Labs
+                </h3>
+                <p class="text-xs text-gray-500 font-mono">
+                    {{ htb_profile.profile_name|default:"CBergane" }} #{{ htb_profile.country_code|default:"SE" }}
+                </p>
+            </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-3 text-sm">
-            <div class="bg-htb-gray/50 rounded p-2">
-                <p class="text-gray-500 text-xs mb-1">Ownership</p>
-                <p class="text-htb-green font-mono font-bold">{{ htb_profile.ownership|default_if_none:"—" }}</p>
+        <div class="flex items-center gap-2">
+            <span class="hidden sm:inline-flex px-3 py-1 rounded bg-htb-cyan/10 border border-htb-cyan/30 text-htb-cyan text-xs font-mono">
+                XP + Legacy
+            </span>
+
+            <svg class="w-5 h-5 text-htb-green transform group-hover:translate-x-1 transition-transform"
+                 fill="none"
+                 stroke="currentColor"
+                 viewBox="0 0 24 24">
+                <path stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14">
+                </path>
+            </svg>
+        </div>
+    </div>
+
+    <div class="bg-htb-gray/50 rounded-lg p-4 border border-htb-cyan/20 mb-4">
+        <p class="text-gray-500 text-xs font-mono mb-1">
+            XP Progression
+        </p>
+
+        <p class="text-2xl font-bold text-white font-mono">
+            {{ htb_profile.xp_rank|default:"Skilled" }}
+            <span class="text-gray-500 text-base">· Level</span>
+            <span class="text-htb-cyan">{{ htb_profile.xp_level|default:"43" }}</span>
+        </p>
+
+        <p class="text-sm text-gray-400 font-mono">
+            Grade {{ htb_profile.xp_grade|default:"III" }}
+        </p>
+
+        <div class="mt-4">
+            <div class="flex justify-between text-xs font-mono text-gray-500 mb-1">
+                <span>XP</span>
+                <span>
+                    {{ htb_profile.xp_current|default:"659" }}/{{ htb_profile.xp_required|default:"1058" }}
+                </span>
             </div>
-            <div class="bg-htb-gray/50 rounded p-2">
-                <p class="text-gray-500 text-xs mb-1">Ranking</p>
-                <p class="text-htb-cyan font-mono font-bold">{{ htb_profile.ranking|default_if_none:"—" }}</p>
-            </div>
-            <div class="bg-htb-gray/50 rounded p-2">
-                <p class="text-gray-500 text-xs mb-1">Points</p>
-                <p class="text-htb-cyan font-mono font-bold">{{ htb_profile.points|default_if_none:"—" }}</p>
-            </div>
-            <div class="bg-htb-gray/50 rounded p-2">
-                <p class="text-gray-500 text-xs mb-1">Flags</p>
-                <p class="text-htb-green font-mono font-bold">{{ htb_profile.flags|default_if_none:"—" }}</p>
-            </div>
-            <div class="bg-htb-gray/50 rounded p-2">
-                <p class="text-gray-500 text-xs mb-1">Machines</p>
-                <p class="text-htb-green font-mono font-bold">{{ htb_profile.machines|default_if_none:"—" }}</p>
-            </div>
-            <div class="bg-htb-gray/50 rounded p-2">
-                <p class="text-gray-500 text-xs mb-1">Bloods</p>
-                <p class="text-htb-cyan font-mono font-bold">{{ htb_profile.bloods|default_if_none:"—" }}</p>
+
+            <div class="h-2 bg-htb-darker rounded-full overflow-hidden">
+                <div class="h-full bg-htb-green rounded-full shadow-[0_0_14px_rgba(159,239,0,0.45)]"
+                     style="width: {{ htb_profile.xp_percent|default:"0" }}%;">
+                </div>
             </div>
         </div>
-    </a>
-    {% endif %}
+    </div>
+
+    <div class="grid grid-cols-2 gap-3 text-sm">
+        <div class="bg-htb-gray/50 rounded p-3 border border-transparent hover:border-htb-green/20 transition-colors">
+            <p class="text-gray-500 text-xs mb-1">Weekly streak</p>
+            <p class="text-htb-green font-mono font-bold">
+                {{ htb_profile.weekly_streak|default:"11" }} weeks
+            </p>
+        </div>
+
+        <div class="bg-htb-gray/50 rounded p-3 border border-transparent hover:border-htb-cyan/20 transition-colors">
+            <p class="text-gray-500 text-xs mb-1">Weekly XP</p>
+            <p class="text-htb-cyan font-mono font-bold">
+                {{ htb_profile.weekly_xp|default:"200" }}/{{ htb_profile.weekly_xp_required|default:"200" }}
+            </p>
+        </div>
+
+        <div class="bg-htb-gray/50 rounded p-3 border border-transparent hover:border-htb-green/20 transition-colors">
+            <p class="text-gray-500 text-xs mb-1">Legacy rank</p>
+            <p class="text-htb-green font-mono font-bold">
+                {{ htb_profile.legacy_rank|default:htb_profile.rank|default:"—" }}
+            </p>
+        </div>
+
+        <div class="bg-htb-gray/50 rounded p-3 border border-transparent hover:border-htb-cyan/20 transition-colors">
+            <p class="text-gray-500 text-xs mb-1">Machines / Flags</p>
+            <p class="text-htb-cyan font-mono font-bold">
+                {{ htb_profile.machines|default_if_none:"—" }} / {{ htb_profile.flags|default_if_none:"—" }}
+            </p>
+        </div>
+    </div>
+
+    <div class="mt-4 pt-4 border-t border-htb-green/10">
+        <p class="text-xs text-gray-500 font-mono">
+            Legacy Labs data is fetched from the HTB API. XP progression is maintained manually until HTB exposes it publicly.
+        </p>
+    </div>
+</a>
+{% endif %}
 </div>
         </div>
     </div>
