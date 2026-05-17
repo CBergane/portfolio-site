@@ -40,3 +40,6 @@ BACKLOG.*
 # OS
 .DS_Store
 Thumbs.db
+
+node_modules/
+app/node_modules/
