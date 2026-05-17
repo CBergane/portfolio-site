@@ -609,3 +609,122 @@ a:focus, button:focus, input:focus, textarea:focus {
 
 .prose .copy-btn svg { width: 14px; height: 14px; }
 
+/* ============================================
+   Color system overrides
+   Cyan = primary identity
+   Green = status / terminal / HTB
+   ============================================ */
+
+/* Reading progress */
+#reading-progress {
+    background: linear-gradient(90deg, var(--cb-cyan), var(--cb-green));
+}
+
+/* Prose / blog content */
+.prose h2,
+.block-heading,
+.block-markdown h2 {
+    color: var(--cb-cyan);
+    border-bottom-color: rgba(34, 211, 238, 0.25);
+}
+
+.prose h3,
+.block-markdown h3,
+.block-markdown h4 {
+    color: var(--cb-cyan);
+}
+
+.prose a,
+.block-paragraph a,
+.block-markdown a {
+    color: var(--cb-cyan);
+    border-bottom-color: rgba(34, 211, 238, 0.35);
+}
+
+.prose a:hover,
+.block-paragraph a:hover,
+.block-markdown a:hover {
+    color: var(--cb-green);
+    border-bottom-color: var(--cb-green);
+}
+
+.prose code,
+.block-paragraph code,
+.block-markdown code {
+    background: rgba(34, 211, 238, 0.08);
+    color: var(--cb-cyan);
+    border: 1px solid rgba(34, 211, 238, 0.25);
+}
+
+.prose pre,
+.block-markdown pre {
+    background: var(--cb-bg-soft);
+    border-color: rgba(34, 211, 238, 0.25);
+}
+
+/* Lists */
+.block-paragraph li::marker {
+    color: var(--cb-green);
+}
+
+.block-markdown ul:not(ol ul) > li::before {
+    color: var(--cb-green) !important;
+}
+
+.block-markdown ol > li::before {
+    color: var(--cb-cyan) !important;
+}
+
+/* Blockquotes / separators */
+.prose blockquote,
+.block-markdown blockquote {
+    border-left-color: var(--cb-cyan);
+}
+
+.block-markdown hr {
+    border-top-color: rgba(34, 211, 238, 0.25);
+}
+
+/* Selection and focus */
+::selection {
+    background: var(--cb-cyan);
+    color: var(--cb-bg);
+}
+
+::-moz-selection {
+    background: var(--cb-cyan);
+    color: var(--cb-bg);
+}
+
+a:focus,
+button:focus,
+input:focus,
+textarea:focus {
+    outline-color: var(--cb-cyan);
+}
+
+/* Scrollbars */
+::-webkit-scrollbar-thumb {
+    background: var(--cb-surface);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--cb-cyan);
+}
+
+/* Copy buttons */
+.prose .copy-btn {
+    border-color: rgba(34, 211, 238, 0.35);
+    color: var(--cb-cyan);
+}
+
+.prose .copy-btn:hover {
+    background: rgba(34, 211, 238, 0.1);
+    border-color: rgba(34, 211, 238, 0.6);
+    color: var(--cb-cyan);
+}
+
+.prose .copy-btn.copied {
+    border-color: rgba(159, 239, 0, 0.6);
+    color: var(--cb-green);
+}
