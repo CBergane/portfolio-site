@@ -2,6 +2,28 @@
    Portfolio Site - Custom Styles
    Author: Christian Bergane
    ============================================ */
+:root {
+    /* Core palette */
+    --cb-bg: #030712;
+    --cb-bg-soft: #080d16;
+    --cb-surface: #111827;
+
+    /* Main identity accent */
+    --cb-cyan: #22d3ee;
+    --cb-cyan-strong: #00d9ff;
+
+    /* Status / terminal / HTB accent */
+    --cb-green: #9fef00;
+    --cb-green-soft: #a3e635;
+
+    /* Optional depth accent */
+    --cb-violet: #8b5cf6;
+
+    /* Text */
+    --cb-text: #e5e7eb;
+    --cb-muted: #94a3b8;
+}
+
 
 /* ========== ANIMATIONS ========== */
 
