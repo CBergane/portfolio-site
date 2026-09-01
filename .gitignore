@@ -43,3 +43,5 @@ Thumbs.db
 
 node_modules/
 app/node_modules/
+/backups/
+/volumes/
