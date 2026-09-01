@@ -1,7 +1,14 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
+# One-off mode: if a command is provided, run it and exit
+if [[ $# -gt 0 ]]; then
+  echo "▶ Running one-off command: $*"
+  exec "$@"
+fi
+
 echo "🚀 Starting Django application..."
+
 
 RUN_MIGRATIONS="${RUN_MIGRATIONS:-1}"
 RUN_COLLECTSTATIC="${RUN_COLLECTSTATIC:-1}"
