@@ -63,7 +63,8 @@ COPY --from=pybuilder /opt/venv /opt/venv
 WORKDIR /app
 
 COPY --chown=appuser:appuser entrypoint.sh /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
+# Git checkouts on Windows may use CRLF. Normalize the executable script in-image.
+RUN sed -i 's/\r$//' /app/entrypoint.sh && chmod +x /app/entrypoint.sh
 
 # app code
 COPY --chown=appuser:appuser . .
