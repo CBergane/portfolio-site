@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailsettings_tags %}
+{% load static wagtailcore_tags wagtailsettings_tags %}
 
 {% block content %}
 <div class="home-page">
@@ -133,38 +133,8 @@
                 </div>
 
                 <div class="featured-system__visual" aria-hidden="true">
-                    <svg viewBox="0 0 900 470">
-                        <defs>
-                            <pattern id="case-grid" width="36" height="36" patternUnits="userSpaceOnUse">
-                                <path d="M36 0H0V36" fill="none" stroke="currentColor" stroke-width="0.6" opacity="0.18"/>
-                            </pattern>
-                            <filter id="case-glow" x="-30%" y="-30%" width="160%" height="160%">
-                                <feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-                            </filter>
-                        </defs>
-                        <rect width="900" height="470" fill="url(#case-grid)"/>
-                        <g class="case-landscape">
-                            <path d="M0 338L82 279L151 320L223 232L315 318L401 255L504 324L598 219L692 299L791 237L900 305"/>
-                            <path d="M0 372L97 331L183 356L273 306L354 361L451 316L554 366L663 316L746 351L828 314L900 345"/>
-                        </g>
-                        <g class="case-network">
-                            <path d="M138 329V389H423V345H693V389H817"/>
-                            <circle cx="138" cy="329" r="6"/><circle cx="423" cy="345" r="6"/><circle cx="693" cy="345" r="6"/><circle cx="817" cy="389" r="6"/>
-                        </g>
-                        <g class="case-radar">
-                            <circle cx="138" cy="248" r="76"/><circle cx="138" cy="248" r="50"/><circle cx="138" cy="248" r="8"/>
-                            <path d="M62 248h152M138 172v152M84 194l108 108M192 194L84 302"/>
-                        </g>
-                        <g class="case-dish">
-                            <path d="M382 274l87-95c26 34 14 75-18 98-25 18-49 17-69-3zM425 278v57M392 335h70M452 195l30-31"/>
-                            <circle cx="484" cy="162" r="7"/>
-                        </g>
-                        <g class="case-server">
-                            <path d="M657 195L785 166L848 195V322L720 351L657 322zM720 223l128-28M720 223v128M657 195l63 28"/>
-                            <rect x="742" y="242" width="70" height="65"/><path d="M753 258h48M753 270h48M753 282h48"/>
-                            <path class="case-shield" filter="url(#case-glow)" d="M689 248l18-7 18 7v17c0 13-8 24-18 29-10-5-18-16-18-29z"/>
-                        </g>
-                    </svg>
+                    <img src="{% static 'images/projects/borealsec-intel.webp' %}"
+                         alt="" width="1600" height="900" loading="lazy" decoding="async">
                     <div class="featured-system__coordinates">N 59.3293° / E 18.0686°</div>
                 </div>
 
@@ -177,10 +147,22 @@
 
             <div class="supporting-systems">
                 <a class="supporting-system reveal" href="/projects">
-                    <span>02</span><div><small>Infrastructure / operating</small><h3>Self-hosted platform</h3></div><i aria-hidden="true">↗</i>
+                    <div class="supporting-system__visual" aria-hidden="true">
+                        <img src="{% static 'images/projects/self-hosted-platform.webp' %}"
+                             alt="" width="1600" height="900" loading="lazy" decoding="async">
+                    </div>
+                    <div class="supporting-system__content">
+                        <b>02</b><div><small>Infrastructure / operating</small><h3>Self-hosted platform</h3></div><i aria-hidden="true">↗</i>
+                    </div>
                 </a>
                 <a class="supporting-system reveal" href="/projects">
-                    <span>03</span><div><small>Security research / in progress</small><h3>Pentest Copilot</h3></div><i aria-hidden="true">↗</i>
+                    <div class="supporting-system__visual" aria-hidden="true">
+                        <img src="{% static 'images/projects/pentest-copilot.webp' %}"
+                             alt="" width="1600" height="900" loading="lazy" decoding="async">
+                    </div>
+                    <div class="supporting-system__content">
+                        <b>03</b><div><small>Security research / in progress</small><h3>Pentest Copilot</h3></div><i aria-hidden="true">↗</i>
+                    </div>
                 </a>
             </div>
         </div>

@@ -498,7 +498,7 @@ button, input, textarea, select { font: inherit; }
     border-top: 1px solid var(--line);
 }
 
-.position-section { padding-block: clamp(6rem, 12vw, 11rem); }
+.position-section { padding-block: clamp(4.5rem, 8vw, 7.5rem); }
 
 .position-section__grid {
     display: grid;
@@ -528,7 +528,7 @@ button, input, textarea, select { font: inherit; }
 .position-section__copy {
     display: grid;
     max-width: 900px;
-    margin-top: clamp(3rem, 6vw, 5rem);
+    margin-top: clamp(2.25rem, 4vw, 3.5rem);
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: clamp(2rem, 6vw, 6rem);
     color: var(--frost-400);
@@ -545,8 +545,8 @@ button, input, textarea, select { font: inherit; }
     color: var(--frost-400);
 }
 
-.systems-section,
-.capabilities-section { padding-block: clamp(5rem, 10vw, 9rem); }
+.systems-section { padding-block: clamp(5rem, 10vw, 9rem); }
+.capabilities-section { padding-block: clamp(4.5rem, 8vw, 7rem); }
 
 .systems-section { background: var(--carbon-900); }
 
@@ -671,8 +671,10 @@ button, input, textarea, select { font: inherit; }
 
 .capability {
     position: relative;
+    display: flex;
     min-height: 24rem;
     padding: 2.25rem clamp(1.5rem, 3vw, 3rem);
+    flex-direction: column;
     border-right: 1px solid var(--line-strong);
 }
 
@@ -704,18 +706,13 @@ button, input, textarea, select { font: inherit; }
 }
 
 .capability__tools {
-    position: absolute;
-    right: clamp(1.5rem, 3vw, 3rem);
-    bottom: 2.25rem;
-    left: clamp(1.5rem, 3vw, 3rem);
-    margin: 0;
+    position: static;
+    margin: auto 0 0;
+    padding-top: 2rem;
     color: var(--frost-500);
     font-size: 0.58rem;
     letter-spacing: 0.06em;
 }
-
-.capability:first-child .capability__tools { left: 0; }
-.capability:last-child .capability__tools { right: 0; }
 
 .signal-section {
     padding-block: clamp(5rem, 10vw, 9rem);
@@ -1166,7 +1163,7 @@ button, input, textarea, select { font: inherit; }
     .capability:first-child,
     .capability:last-child {
         min-height: 0;
-        padding: 2.2rem 0 5rem;
+        padding: 2.2rem 0;
         border-right: 0;
         border-bottom: 1px solid var(--line-strong);
     }
@@ -1177,9 +1174,7 @@ button, input, textarea, select { font: inherit; }
     .capability__tools,
     .capability:first-child .capability__tools,
     .capability:last-child .capability__tools {
-        right: 0;
-        bottom: 2.2rem;
-        left: 0;
+        margin-top: 2rem;
     }
 
     .signal-section__grid { gap: 3rem; }
@@ -1629,6 +1624,30 @@ button, input, textarea, select { font: inherit; }
         #090c0f;
 }
 
+.featured-system__visual::after,
+.supporting-system__visual::after {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(180deg, rgba(5, 8, 11, 0.02) 52%, rgba(5, 8, 11, 0.46)),
+        linear-gradient(90deg, rgba(5, 8, 11, 0.26), transparent 30%);
+    content: "";
+    pointer-events: none;
+}
+
+.featured-system__visual img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.82) contrast(1.04);
+    transition: filter 500ms ease, transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.featured-system:hover .featured-system__visual img {
+    filter: saturate(0.95) contrast(1.08);
+    transform: scale(1.018);
+}
+
 .featured-system__visual svg {
     position: absolute;
     inset: 0;
@@ -1672,6 +1691,7 @@ button, input, textarea, select { font: inherit; }
     position: absolute;
     right: 1.25rem;
     bottom: 1rem;
+    z-index: 2;
     color: var(--arctic);
     font-family: var(--font-mono);
     font-size: 0.55rem;
@@ -1716,12 +1736,9 @@ button, input, textarea, select { font: inherit; }
 }
 
 .supporting-system {
-    display: grid;
-    min-height: 9.5rem;
-    padding: 2rem;
-    grid-template-columns: 2rem minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 1.2rem;
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
     border-right: 1px solid var(--line-strong);
     color: inherit;
     text-decoration: none;
@@ -1730,10 +1747,38 @@ button, input, textarea, select { font: inherit; }
 
 .supporting-system:last-child { border-right: 0; }
 .supporting-system:hover { background: rgba(240, 169, 40, 0.045); }
-.supporting-system > span { color: var(--signal); font-family: var(--font-mono); font-size: 0.64rem; }
+.supporting-system__visual {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 7.5;
+    overflow: hidden;
+    border-bottom: 1px solid var(--line-strong);
+    background: #090c0f;
+}
+.supporting-system__visual img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.72) contrast(1.05) brightness(0.84);
+    transition: filter 500ms ease, transform 700ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.supporting-system:hover .supporting-system__visual img {
+    filter: saturate(0.92) contrast(1.08) brightness(0.96);
+    transform: scale(1.025);
+}
+.supporting-system__content {
+    display: grid;
+    min-height: 9.5rem;
+    padding: 1.7rem 2rem;
+    grid-template-columns: 2rem minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 1.2rem;
+}
+.supporting-system__content > b { color: var(--signal); font-family: var(--font-mono); font-size: 0.64rem; font-weight: 500; }
 .supporting-system small { color: var(--frost-500); font-family: var(--font-mono); font-size: 0.56rem; letter-spacing: 0.1em; text-transform: uppercase; }
 .supporting-system h3 { margin: 0.35rem 0 0; color: var(--frost-100); font-family: var(--font-display); font-size: clamp(1.5rem, 2.4vw, 2.5rem); letter-spacing: -0.035em; }
-.supporting-system > i { color: var(--signal); font-size: 1.2rem; font-style: normal; }
+.supporting-system__content > i { color: var(--signal); font-size: 1.2rem; font-style: normal; }
 
 @media (max-width: 1220px) {
     .signal-hero { height: auto; min-height: 820px; padding-block: 8.5rem 4rem; }
@@ -1846,7 +1891,9 @@ button, input, textarea, select { font: inherit; }
     .featured-system__facts { display: none; }
 
     .supporting-systems { grid-template-columns: 1fr; }
-    .supporting-system { min-height: 8rem; padding-inline: 1rem; border-right: 0; border-bottom: 1px solid var(--line-strong); }
+    .supporting-system { border-right: 0; border-bottom: 1px solid var(--line-strong); }
     .supporting-system:last-child { border-bottom: 0; }
+    .supporting-system__visual { aspect-ratio: 16 / 9; }
+    .supporting-system__content { min-height: 8rem; padding: 1.25rem 1rem; }
     .supporting-system h3 { font-size: 1.65rem; }
 }
