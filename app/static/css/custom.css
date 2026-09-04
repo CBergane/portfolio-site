@@ -1242,9 +1242,49 @@ button, input, textarea, select { font: inherit; }
     content: "";
 }
 
+/* Desktop section index */
+
+.section-rail {
+    position: fixed;
+    top: 50%;
+    left: max(1rem, calc((100vw - var(--page-width)) / 2 + 0.5rem));
+    z-index: 30;
+    transform: translateY(-50%);
+}
+
+.section-rail ol {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    gap: 0.15rem;
+    list-style: none;
+}
+
+.section-rail a {
+    display: grid;
+    min-width: 7.25rem;
+    padding: 0.45rem 0;
+    grid-template-columns: 1.85rem minmax(0, 1fr);
+    align-items: center;
+    border-left: 1px solid var(--line);
+    color: var(--frost-500);
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.11em;
+    line-height: 1;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: border-color 180ms ease, color 180ms ease;
+}
+
+.section-rail span { padding-left: 0.55rem; color: var(--signal); }
+.section-rail b { font-weight: 500; }
+.section-rail a:hover,
+.section-rail a:focus-visible { border-color: var(--signal); color: var(--frost-100); }
+
 .signal-hero {
-    height: min(900px, calc(100svh - 1.5rem));
-    min-height: 760px;
+    height: min(820px, calc(100svh - 6.75rem));
+    min-height: 730px;
     padding-top: 5.15rem;
 }
 
@@ -1253,8 +1293,8 @@ button, input, textarea, select { font: inherit; }
 }
 
 .signal-hero__grid {
-    grid-template-columns: minmax(500px, 0.84fr) minmax(610px, 1.16fr);
-    gap: clamp(2.5rem, 5vw, 6rem);
+    grid-template-columns: minmax(465px, 0.78fr) minmax(650px, 1.22fr);
+    gap: clamp(2rem, 3.7vw, 4.5rem);
 }
 
 .signal-hero__content {
@@ -1321,7 +1361,7 @@ button, input, textarea, select { font: inherit; }
 
 .system-blueprint {
     position: relative;
-    min-height: 590px;
+    min-height: 620px;
     overflow: hidden;
     border: 1px solid var(--line-strong);
     background:
@@ -1357,12 +1397,31 @@ button, input, textarea, select { font: inherit; }
 
 .system-blueprint__location { color: var(--arctic); }
 
-.blueprint-field {
+.system-blueprint__diagram {
     position: absolute;
     z-index: 0;
     inset: 3.25rem 0 3rem;
+    margin: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.system-blueprint__diagram figcaption {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.blueprint-field {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
     width: 100%;
-    height: calc(100% - 6.25rem);
+    height: 100%;
     color: var(--arctic);
     opacity: 0.88;
 }
@@ -1385,6 +1444,14 @@ button, input, textarea, select { font: inherit; }
     stroke: currentColor;
     stroke-dasharray: 4 7;
     opacity: 0.4;
+}
+
+.blueprint-field__mesh path {
+    fill: none;
+    stroke: currentColor;
+    stroke-dasharray: 2 7;
+    stroke-width: 0.85;
+    opacity: 0.3;
 }
 
 .blueprint-field__signal {
@@ -1410,15 +1477,15 @@ button, input, textarea, select { font: inherit; }
 .system-blueprint__layers {
     position: relative;
     z-index: 3;
-    width: 58%;
+    width: 54%;
     margin: 0;
-    padding: 2.25rem 0 2rem;
+    padding: 0.9rem 0 0.75rem;
     list-style: none;
 }
 
 .system-blueprint__layers li {
     display: grid;
-    min-height: 111px;
+    min-height: 120px;
     padding: 1.15rem 1.4rem;
     grid-template-columns: 2.2rem 4.7rem minmax(0, 1fr);
     align-items: center;
@@ -1501,7 +1568,7 @@ button, input, textarea, select { font: inherit; }
 
 .systems-section--featured {
     position: relative;
-    padding-block: clamp(5.5rem, 9vw, 8.5rem);
+    padding-block: clamp(2.75rem, 3vw, 3.75rem) clamp(5.5rem, 9vw, 8.5rem);
     background:
         linear-gradient(180deg, rgba(240, 169, 40, 0.025), transparent 22rem),
         var(--carbon-900);
@@ -1782,10 +1849,11 @@ button, input, textarea, select { font: inherit; }
 
 @media (max-width: 1220px) {
     .signal-hero { height: auto; min-height: 820px; padding-block: 8.5rem 4rem; }
-    .signal-hero__grid { grid-template-columns: minmax(420px, 0.85fr) minmax(500px, 1.15fr); gap: 2rem; }
+    .section-rail { display: none; }
+    .signal-hero__grid { grid-template-columns: minmax(0, 0.78fr) minmax(430px, 1.22fr); gap: 2rem; }
     .system-blueprint { min-height: 550px; }
-    .system-blueprint__layers { width: 63%; }
-    .system-blueprint__layers li { grid-template-columns: 1.7rem 3.7rem minmax(0, 1fr); padding-inline: 1rem; }
+    .system-blueprint__layers { width: 63%; padding-block: 0.7rem 0.5rem; }
+    .system-blueprint__layers li { min-height: 106px; padding-inline: 1rem; grid-template-columns: 1.7rem 3.7rem minmax(0, 1fr); }
     .layer-icon { width: 3.5rem; height: 3.5rem; }
     .layer-icon svg { width: 2.2rem; height: 2.2rem; }
     .featured-system { grid-template-columns: minmax(280px, 0.72fr) minmax(430px, 1.2fr); }

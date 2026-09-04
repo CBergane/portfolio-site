@@ -3,7 +3,17 @@
 
 {% block content %}
 <div class="home-page">
-    <section class="signal-hero" aria-labelledby="hero-title">
+    <nav class="section-rail" aria-label="Homepage sections">
+        <ol>
+            <li><a href="#overview"><span>01</span><b>Overview</b></a></li>
+            <li><a href="#selected-systems"><span>02</span><b>Systems</b></a></li>
+            <li><a href="#about"><span>03</span><b>Principle</b></a></li>
+            <li><a href="#capabilities"><span>04</span><b>Capabilities</b></a></li>
+            <li><a href="#current-signal"><span>05</span><b>Signal</b></a></li>
+        </ol>
+    </nav>
+
+    <section id="overview" class="signal-hero" aria-labelledby="hero-title">
         <div class="signal-hero__ambient" aria-hidden="true"></div>
 
         <div class="page-frame signal-hero__grid">
@@ -34,39 +44,46 @@
                     <span class="system-blueprint__location">59.3293° N&nbsp;&nbsp;18.0686° E</span>
                 </div>
 
-                <svg class="blueprint-field" viewBox="0 0 760 620" aria-hidden="true">
-                    <defs>
-                        <pattern id="bp-grid" width="42" height="42" patternUnits="userSpaceOnUse">
-                            <path d="M42 0H0V42" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.22"/>
-                        </pattern>
-                        <filter id="bp-glow" x="-40%" y="-40%" width="180%" height="180%">
-                            <feGaussianBlur stdDeviation="4" result="blur"/>
-                            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-                        </filter>
-                    </defs>
-                    <rect width="760" height="620" fill="url(#bp-grid)"/>
-                    <g class="blueprint-field__contours">
-                        <path d="M500 25C608 53 728 109 715 205C702 303 595 318 592 404C588 502 692 518 746 592"/>
-                        <path d="M558 48C639 88 690 127 680 194C668 270 622 298 636 365C652 440 705 452 738 505"/>
-                        <path d="M461 76C529 114 557 158 541 216C523 285 461 302 475 374C486 435 557 464 588 544"/>
-                        <path d="M640 23L608 94L626 154L592 215L612 281L579 347L621 411L594 486L660 561"/>
-                    </g>
-                    <g class="blueprint-field__coordinates">
-                        <circle cx="612" cy="206" r="6"/>
-                        <circle cx="579" cy="347" r="6"/>
-                        <circle cx="594" cy="486" r="6"/>
-                        <path d="M612 206H690M579 347H690M594 486H690"/>
-                    </g>
-                    <path class="blueprint-field__signal" filter="url(#bp-glow)"
-                          d="M360 118H492L548 174V263L512 299V401L563 452V558H748"/>
-                    <g class="blueprint-field__nodes">
-                        <circle cx="360" cy="118" r="9"/><circle cx="512" cy="299" r="9"/>
-                        <circle cx="563" cy="452" r="9"/><circle cx="748" cy="558" r="9"/>
-                    </g>
-                    <text x="660" y="187">EDGE</text>
-                    <text x="660" y="328">ORIGIN</text>
-                    <text x="660" y="467">DATA</text>
-                </svg>
+                <figure class="system-blueprint__diagram">
+                    <figcaption>Network topology for the Edge, Origin, Application and Data layers.</figcaption>
+                    <svg class="blueprint-field" viewBox="0 0 920 620" aria-hidden="true">
+                        <defs>
+                            <pattern id="bp-grid" width="42" height="42" patternUnits="userSpaceOnUse">
+                                <path d="M42 0H0V42" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.22"/>
+                            </pattern>
+                            <filter id="bp-glow" x="-40%" y="-40%" width="180%" height="180%">
+                                <feGaussianBlur stdDeviation="4" result="blur"/>
+                                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                            </filter>
+                        </defs>
+                        <rect width="920" height="620" fill="url(#bp-grid)"/>
+                        <g class="blueprint-field__contours">
+                            <path d="M560 25C685 53 870 109 852 205C835 303 711 318 708 404C703 502 825 518 902 592"/>
+                            <path d="M632 48C725 88 795 127 782 194C767 270 713 298 731 365C750 440 819 452 884 505"/>
+                            <path d="M510 76C596 114 632 158 612 216C590 285 510 302 529 374C544 435 626 464 668 544"/>
+                            <path d="M748 23L708 94L731 154L689 215L715 281L674 347L727 411L692 486L776 561"/>
+                        </g>
+                        <g class="blueprint-field__mesh">
+                            <path d="M510 118L612 216L689 215L782 194M529 374L674 347L731 365M668 544L692 486L884 505"/>
+                            <path d="M560 25L612 216M632 48L689 215M708 404L674 347M703 502L692 486"/>
+                        </g>
+                        <g class="blueprint-field__coordinates">
+                            <circle cx="731" cy="206" r="6"/>
+                            <circle cx="674" cy="347" r="6"/>
+                            <circle cx="692" cy="486" r="6"/>
+                            <path d="M731 206H852M674 347H852M692 486H852"/>
+                        </g>
+                        <path class="blueprint-field__signal" filter="url(#bp-glow)"
+                              d="M430 118H550L620 174V263L570 299V401L646 452V558H905"/>
+                        <g class="blueprint-field__nodes">
+                            <circle cx="430" cy="118" r="9"/><circle cx="570" cy="299" r="9"/>
+                            <circle cx="646" cy="452" r="9"/><circle cx="905" cy="558" r="9"/>
+                        </g>
+                        <text x="814" y="187">EDGE / 01</text>
+                        <text x="814" y="328">ORIGIN / 02</text>
+                        <text x="814" y="467">DATA / 04</text>
+                    </svg>
+                </figure>
 
                 <ol class="system-blueprint__layers">
                     <li>
@@ -189,7 +206,7 @@
         </div>
     </section>
 
-    <section class="capabilities-section" aria-labelledby="capabilities-title">
+    <section id="capabilities" class="capabilities-section" aria-labelledby="capabilities-title">
         <div class="page-frame">
             <div class="section-heading section-heading--compact reveal">
                 <div><p class="eyebrow"><span>04</span> Capabilities</p><h2 id="capabilities-title">Across the stack.</h2></div>
@@ -214,7 +231,7 @@
         </div>
     </section>
 
-    <section class="signal-section" aria-labelledby="signal-title">
+    <section id="current-signal" class="signal-section" aria-labelledby="signal-title">
         <div class="page-frame signal-section__grid reveal">
             <div><p class="eyebrow"><span>05</span> Current signal</p><h2 id="signal-title">Learning is part<br>of the infrastructure.</h2></div>
             <div class="signal-section__metrics">
