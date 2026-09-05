@@ -17,8 +17,8 @@
         <details class="project-index__filter-panel" open>
             <summary>Filters{% if active_count %}<span>{{ active_count }} active</span>{% else %}<span>All systems</span>{% endif %}</summary>
             <div class="project-index__filter-rows">
-                <div class="project-index__filter-row"><p>Status</p><div><a href="{% pageurl page %}"{% if is_all_active %} aria-current="true"{% endif %}>All</a>{% for status in status_links %}<a href="{% if status.qs %}?{{ status.qs }}{% else %}{% pageurl page %}{% endif %}"{% if status.is_active %} aria-current="true"{% endif %}>{{ status.value }}</a>{% endfor %}</div></div>
-                <div class="project-index__filter-row"><p>Domain</p><div>{% for category in category_links %}<a href="{% if category.qs %}?{{ category.qs }}{% else %}{% pageurl page %}{% endif %}"{% if category.is_active %} aria-current="true"{% endif %}>{{ category.obj.name }}</a>{% endfor %}</div></div>
+                <div class="project-index__filter-row"><p>Status</p><div><a href="{% pageurl page %}"{% if is_all_active %} aria-current="true"{% endif %}>ALL</a>{% for status in status_links %}<a href="{% if status.qs %}?{{ status.qs }}{% else %}{% pageurl page %}{% endif %}"{% if status.is_active %} aria-current="true"{% endif %}>{{ status.label }}</a>{% endfor %}</div></div>
+                {% if category_links %}<div class="project-index__filter-row"><p>Domain</p><div>{% for category in category_links %}<a href="{% if category.qs %}?{{ category.qs }}{% else %}{% pageurl page %}{% endif %}"{% if category.is_active %} aria-current="true"{% endif %}>{{ category.obj.name }}</a>{% endfor %}</div></div>{% endif %}
                 {% if tech_links %}<div class="project-index__filter-row"><p>Stack</p><div>{% for tech in tech_links %}<a href="{% if tech.qs %}?{{ tech.qs }}{% else %}{% pageurl page %}{% endif %}"{% if tech.is_active %} aria-current="true"{% endif %}>{{ tech.obj.name }}</a>{% endfor %}</div></div>{% endif %}
             </div>
         </details>
@@ -35,9 +35,12 @@
                     {% with items=project.tech_stack_items.all %}{% if items %}<p class="project-record__stack" aria-label="Technology stack">{% for item in items %}<span{% if item.is_primary %} class="is-primary"{% endif %}>{{ item.tech.name }}</span>{% endfor %}</p>{% endif %}{% endwith %}
                     <div class="project-record__actions"><a class="project-record__open" href="{% pageurl project %}">Open case study <span aria-hidden="true">→</span></a>{% if project.live_url %}<a href="{{ project.live_url }}" target="_blank" rel="noopener noreferrer">Live <span aria-hidden="true">↗</span></a>{% endif %}{% if project.github_url %}<a href="{{ project.github_url }}" target="_blank" rel="noopener noreferrer">Source <span aria-hidden="true">↗</span></a>{% endif %}</div>
                 </div>
-                <div class="project-record__visual" role="img" aria-label="{{ project.title }} project visual"{% if project.hero_image %}{% image project.hero_image width-1000 as archive_visual %} style="--archive-image: url('{{ archive_visual.url }}');"{% endif %}>
+                {% if project.hero_image %}{% image project.hero_image width-1000 as archive_visual %}
+                <div class="project-record__visual project-record__visual--image" aria-hidden="true" style="--archive-image: url('{{ archive_visual.url }}');"></div>
+                {% else %}
+                <div class="project-record__visual" aria-hidden="true">
                     <svg viewBox="0 0 520 300" aria-hidden="true" preserveAspectRatio="xMidYMid slice"><defs><pattern id="archive-grid-{{ forloop.counter }}" width="36" height="36" patternUnits="userSpaceOnUse"><path d="M36 0H0V36" fill="none" stroke="currentColor" stroke-width="1" opacity=".2"/></pattern></defs><rect width="520" height="300" fill="url(#archive-grid-{{ forloop.counter }})"/><g class="project-record__routes"><path d="M26 88h110l58 56h108l63-63h129"/><path d="M30 228h103l61-59h112l57 49h125"/></g><path class="project-record__signal" d="M20 184h95l50-48h106l53 53h95l52-52h36"/><g class="project-record__nodes"><circle cx="115" cy="184" r="6"/><circle cx="271" cy="136" r="6"/><circle cx="419" cy="189" r="6"/></g><g class="project-record__labels"><text x="28" y="68">INPUT / 01</text><text x="329" y="118">ROUTE / 02</text><text x="395" y="252">OUTPUT / 03</text></g></svg>
-                </div>
+                </div>{% endif %}
             </article>{% endfor %}
         </div>{% else %}
         <section class="project-index__empty"><p class="eyebrow"><span>00</span> Archive status</p>{% if active_count %}<h2>No systems match these filters.</h2><p>Adjust an active filter or return to the complete archive.</p><a href="{% pageurl page %}">Reset filters <span aria-hidden="true">→</span></a>{% else %}<h2>No published systems yet.</h2><p>New work will appear here when it is published.</p>{% endif %}</section>{% endif %}

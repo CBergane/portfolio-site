@@ -1,5 +1,6 @@
 {% load static wagtailcore_tags navigation_tags wagtailsettings_tags %}
 {% get_settings %}
+{% get_site_root as site_root %}
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
@@ -58,11 +59,11 @@
 
     <header class="site-header" data-site-header>
         <div class="site-header__inner">
-            <a href="/" class="site-brand" aria-label="CBergane home">
+            {% if site_root %}<a href="{% pageurl site_root %}" class="site-brand" aria-label="CBergane home">{% else %}<span class="site-brand" aria-label="CBergane">{% endif %}
                 <span class="site-brand__mark" aria-hidden="true"></span>
                 <span>CBERGANE</span>
                 <span class="site-brand__descriptor">SYSTEMS &amp; SECURITY</span>
-            </a>
+            {% if site_root %}</a>{% else %}</span>{% endif %}
 
             <nav class="site-nav site-nav--desktop" aria-label="Primary navigation">
                 {% main_navigation %}

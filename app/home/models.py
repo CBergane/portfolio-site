@@ -289,9 +289,16 @@ class HomePage(Page):
                 ).order_by('-date', '-first_published_at')[:3]
             )
 
+        published_projects = ProjectPage.objects.live().public()
+        published_notes = BlogPage.objects.live().public()
+
         context['primary_project'] = selected_projects[0] if selected_projects else None
         context['supporting_projects'] = selected_projects[1:]
-        context['total_projects'] = ProjectPage.objects.live().public().count()
+        context['total_projects'] = published_projects.count()
+        context['published_project_count'] = context['total_projects']
+        context['published_note_count'] = published_notes.count()
+        context['latest_project'] = published_projects.order_by('-date', '-first_published_at').first()
+        context['latest_note'] = published_notes.order_by('-date', '-first_published_at').first()
         context['htb_profile'] = get_htb_profile(request)
         return context
 
@@ -586,10 +593,16 @@ class ProjectIndexPage(Page):
             ("ongoing", "∞ ongoing"),
             ("archived", "📦 archived"),
         ]
-        status_label_map = dict(status_defs)
+        status_label_map = {
+            "completed": "COMPLETED",
+            "in_progress": "IN PROGRESS",
+            "ongoing": "ONGOING",
+            "archived": "ARCHIVED",
+        }
     
         status_links = []
-        for value, label in status_defs:
+        for value, _legacy_label in status_defs:
+            label = status_label_map[value]
             is_active = (selected_status == value)
             # klick på aktiv status -> toggla av status (behåll övriga filter)
             qs = build_qs(status="" if is_active else value)
