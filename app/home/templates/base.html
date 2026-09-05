@@ -167,21 +167,30 @@
                                 return line.replace(/^\s*[$>#]\s?/, '');
                             }).join('\n');
                         }
+                        let copied = false;
                         try {
+                            if (!navigator.clipboard || !navigator.clipboard.writeText) throw new Error('Clipboard unavailable');
                             await navigator.clipboard.writeText(value);
+                            copied = true;
                         } catch (error) {
-                            const range = document.createRange();
-                            const selection = window.getSelection();
-                            range.selectNodeContents(code);
-                            selection.removeAllRanges();
-                            selection.addRange(range);
-                            document.execCommand('copy');
-                            selection.removeAllRanges();
+                            try {
+                                const range = document.createRange();
+                                const selection = window.getSelection();
+                                range.selectNodeContents(code);
+                                selection.removeAllRanges();
+                                selection.addRange(range);
+                                copied = document.execCommand('copy');
+                                selection.removeAllRanges();
+                            } catch (fallbackError) {
+                                copied = false;
+                            }
                         }
-                        button.classList.add('copied');
-                        button.textContent = 'Copied';
+                        button.classList.toggle('copied', copied);
+                        button.classList.toggle('copy-failed', !copied);
+                        button.textContent = copied ? 'Copied' : 'Try again';
                         window.setTimeout(function () {
                             button.classList.remove('copied');
+                            button.classList.remove('copy-failed');
                             button.textContent = 'Copy';
                         }, 1500);
                     });
