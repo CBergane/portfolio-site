@@ -6,7 +6,10 @@ from django.test import RequestFactory, TestCase
 from django.urls import reverse
 from wagtail.models import Page, Site
 
-from .models import ContactSubmission, HomePage, HomePageProject, ProjectIndexPage, ProjectPage
+from .models import (
+    ContactSubmission, HomePage, HomePageProject, ProjectCategory, ProjectIndexPage,
+    ProjectPage, ProjectPageTechStack, TechStack,
+)
 
 
 class HomePageProjectSelectionTests(TestCase):
@@ -143,3 +146,59 @@ class ContactSubmissionTests(TestCase):
         self.assertIn('message', response.json()['errors'])
         self.assertFalse(ContactSubmission.objects.exists())
         notify.assert_not_called()
+
+
+class ProjectIndexFilteringTests(TestCase):
+    def setUp(self):
+        self.root_page = Page.get_first_root_node()
+        Site.objects.filter(is_default_site=True).update(is_default_site=False)
+        self.site = Site.objects.create(hostname='testserver', port=80, root_page=self.root_page, is_default_site=True)
+        self.home_page = HomePage(title='Portfolio home', slug='portfolio-home')
+        self.root_page.add_child(instance=self.home_page)
+        self.home_page.save_revision().publish()
+        self.index_page = ProjectIndexPage(title='Projects', slug='projects')
+        self.home_page.add_child(instance=self.index_page)
+        self.index_page.save_revision().publish()
+        self.platform = ProjectCategory.objects.create(name='Platform', slug='platform')
+        self.security = ProjectCategory.objects.create(name='Security', slug='security')
+        self.python = TechStack.objects.create(name='Python', slug='python')
+        self.django = TechStack.objects.create(name='Django', slug='django')
+
+    def create_project(self, title, slug, *, category=None, status='completed', live=True, techs=()):
+        project = ProjectPage(title=title, slug=slug, intro='A project summary.', date=date(2026, 1, 1), category=category, status=status, live=False)
+        self.index_page.add_child(instance=project)
+        revision = project.save_revision()
+        if live:
+            revision.publish()
+        for tech in techs:
+            ProjectPageTechStack.objects.create(page=project, tech=tech)
+        return project
+
+    def context(self, params=None):
+        request = RequestFactory().get('/projects/', params or {})
+        return self.index_page.get_context(request)
+
+    def test_only_live_projects_are_indexed_and_status_filter_is_bookmarkable(self):
+        completed = self.create_project('Completed', 'completed', category=self.platform)
+        self.create_project('Draft', 'draft', category=self.platform, live=False)
+        self.create_project('In progress', 'in-progress', category=self.security, status='in_progress')
+
+        context = self.context({'status': 'completed'})
+
+        self.assertEqual(list(context['projects']), [completed])
+        completed_link = next(link for link in context['status_links'] if link['value'] == 'completed')
+        self.assertTrue(completed_link['is_active'])
+        self.assertEqual(completed_link['qs'], '')
+
+    def test_multi_category_and_tech_filters_use_existing_or_semantics_and_toggle_urls(self):
+        platform = self.create_project('Platform', 'platform-project', category=self.platform, techs=[self.python])
+        security = self.create_project('Security', 'security-project', category=self.security, techs=[self.django])
+        context = self.context({'category': ['platform', 'security'], 'tech': ['python', 'django']})
+
+        self.assertCountEqual(list(context['projects']), [platform, security])
+        category_link = next(link for link in context['category_links'] if link['obj'] == self.platform)
+        tech_link = next(link for link in context['tech_links'] if link['obj'] == self.python)
+        self.assertNotIn('category=platform', category_link['qs'])
+        self.assertNotIn('tech=python', tech_link['qs'])
+        self.assertTrue(context['active_count'])
+        self.assertTrue(any(chip['qs_remove'] for chip in context['active_chips']))
