@@ -3,9 +3,10 @@ from unittest.mock import patch
 
 from django.template.loader import render_to_string
 from django.test import RequestFactory, TestCase
+from django.urls import reverse
 from wagtail.models import Page, Site
 
-from .models import HomePage, HomePageProject, ProjectIndexPage, ProjectPage
+from .models import ContactSubmission, HomePage, HomePageProject, ProjectIndexPage, ProjectPage
 
 
 class HomePageProjectSelectionTests(TestCase):
@@ -108,3 +109,37 @@ class HomePageProjectSelectionTests(TestCase):
         rendered = render_to_string('home/home_page.html', context, request=self.request)
 
         self.assertIn(f'href="{project.get_url(request=self.request)}"', rendered)
+
+
+class ContactSubmissionTests(TestCase):
+    def valid_payload(self):
+        return {
+            'name': 'Ada Lovelace',
+            'email': 'ada@example.com',
+            'subject': 'Systems review',
+            'message': 'I would like to discuss a systems review.',
+        }
+
+    @patch('home.views.send_discord_notification')
+    def test_valid_contact_submission_is_stored_and_notified(self, notify):
+        response = self.client.post(reverse('contact_submit'), self.valid_payload())
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['success'], True)
+        submission = ContactSubmission.objects.get()
+        self.assertEqual(submission.email, 'ada@example.com')
+        notify.assert_called_once_with(submission)
+        self.assertIn('last_contact_submission', self.client.session)
+
+    @patch('home.views.send_discord_notification')
+    def test_short_message_returns_errors_without_creating_submission(self, notify):
+        payload = self.valid_payload()
+        payload['message'] = 'Too short'
+
+        response = self.client.post(reverse('contact_submit'), payload)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json()['success'], False)
+        self.assertIn('message', response.json()['errors'])
+        self.assertFalse(ContactSubmission.objects.exists())
+        notify.assert_not_called()
