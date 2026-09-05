@@ -5,7 +5,7 @@
 <div class="home-page">
     <nav class="section-rail" aria-label="Homepage sections">
         <ol>
-            <li><a href="#overview"><span>01</span><b>Overview</b></a></li>
+            <li><a href="#overview" aria-current="location"><span>01</span><b>Overview</b></a></li>
             <li><a href="#selected-systems"><span>02</span><b>Systems</b></a></li>
             <li><a href="#about"><span>03</span><b>Principle</b></a></li>
             <li><a href="#capabilities"><span>04</span><b>Capabilities</b></a></li>
@@ -138,7 +138,7 @@
             </div>
 
             {% if primary_project %}
-            <a class="featured-system reveal" href="{% pageurl primary_project %}">
+            <a class="featured-system reveal{% if not primary_project.category and not primary_project.date and not primary_project.duration and not primary_project.status %} featured-system--without-facts{% endif %}" href="{% pageurl primary_project %}">
                 <div class="featured-system__content">
                     <p class="meta-label"><span>01 /</span> {% if primary_project.category %}{{ primary_project.category.name }}{% else %}Selected system{% endif %}</p>
                     <h3>{{ primary_project.title }}</h3>
@@ -181,14 +181,19 @@
                         </g>
                     </svg>
                     {% endif %}
-                    <div class="featured-system__coordinates">{{ primary_project.date|date:"Y.m.d" }} / {{ primary_project.get_status_display|upper }}</div>
+                    {% if primary_project.date or primary_project.status %}
+                    <div class="featured-system__coordinates">{% if primary_project.date %}{{ primary_project.date|date:"Y.m.d" }}{% endif %}{% if primary_project.date and primary_project.status %} / {% endif %}{% if primary_project.status %}{{ primary_project.get_status_display|upper }}{% endif %}</div>
+                    {% endif %}
                 </div>
 
+                {% if primary_project.category or primary_project.date or primary_project.duration or primary_project.status %}
                 <dl class="featured-system__facts">
-                    <div><dt>Category</dt><dd>{% if primary_project.category %}{{ primary_project.category.name }}{% else %}General{% endif %}</dd></div>
-                    <div><dt>Date</dt><dd>{{ primary_project.date|date:"M Y" }}</dd></div>
-                    <div><dt>State</dt><dd><i></i> {{ primary_project.get_status_display }}</dd></div>
+                    {% if primary_project.category %}<div><dt>Category</dt><dd>{{ primary_project.category.name }}</dd></div>{% endif %}
+                    {% if primary_project.date %}<div><dt>Date</dt><dd>{{ primary_project.date|date:"M Y" }}</dd></div>{% endif %}
+                    {% if primary_project.duration %}<div><dt>Duration</dt><dd>{{ primary_project.duration }}</dd></div>{% endif %}
+                    {% if primary_project.status %}<div><dt>State</dt><dd><i></i> {{ primary_project.get_status_display }}</dd></div>{% endif %}
                 </dl>
+                {% endif %}
             </a>
 
             {% endif %}
@@ -207,7 +212,7 @@
                         {% endif %}
                     </div>
                     <div class="supporting-system__content">
-                        <b>0{{ forloop.counter|add:1 }}</b><div><small>{% if project.category %}{{ project.category.name }} / {% endif %}{{ project.get_status_display }} / {{ project.date|date:"Y" }}</small><h3>{{ project.title }}</h3></div><i aria-hidden="true">↗</i>
+                        <b>0{{ forloop.counter|add:1 }}</b><div>{% if project.category or project.status or project.date or project.duration %}<small>{% if project.category %}<span>{{ project.category.name }}</span>{% endif %}{% if project.status %}<span>{{ project.get_status_display }}</span>{% endif %}{% if project.date %}<span>{{ project.date|date:"Y" }}</span>{% endif %}{% if project.duration %}<span>{{ project.duration }}</span>{% endif %}</small>{% endif %}<h3>{{ project.title }}</h3></div><i aria-hidden="true">↗</i>
                     </div>
                 </a>
                 {% endfor %}
@@ -291,19 +296,38 @@
 <script>
     (function () {
         const elements = document.querySelectorAll('.reveal');
+        const railLinks = Array.from(document.querySelectorAll('.section-rail a[href^="#"]'));
+        const sectionTargets = railLinks.map(function (link) {
+            return document.querySelector(link.getAttribute('href'));
+        }).filter(Boolean);
         const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        function setActiveSection(section) {
+            railLinks.forEach(function (link) {
+                if (link.getAttribute('href') === '#' + section.id) {
+                    link.setAttribute('aria-current', 'location');
+                } else {
+                    link.removeAttribute('aria-current');
+                }
+            });
+        }
+
         if (reduced || !('IntersectionObserver' in window)) {
             elements.forEach(function (element) { element.classList.add('is-visible'); });
-            return;
         }
+        if (!('IntersectionObserver' in window)) return;
+
         const observer = new IntersectionObserver(function (entries) {
             entries.forEach(function (entry) {
-                if (!entry.isIntersecting) return;
-                entry.target.classList.add('is-visible');
-                observer.unobserve(entry.target);
+                if (entry.target.classList.contains('reveal') && entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+                if (entry.target.id && entry.isIntersecting) setActiveSection(entry.target);
             });
-        }, { threshold: 0.1 });
-        elements.forEach(function (element) { observer.observe(element); });
+        }, { rootMargin: '-18% 0px -62% 0px', threshold: 0.1 });
+        if (!reduced) elements.forEach(function (element) { observer.observe(element); });
+        sectionTargets.forEach(function (section) { observer.observe(section); });
     })();
 </script>
 {% endblock %}
