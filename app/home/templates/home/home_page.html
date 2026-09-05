@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static wagtailcore_tags wagtailsettings_tags %}
+{% load wagtailcore_tags wagtailsettings_tags %}
 
 {% block content %}
 <div class="home-page">
@@ -150,8 +150,35 @@
                 </div>
 
                 <div class="featured-system__visual" aria-hidden="true">
-                    <img src="{% static 'images/projects/borealsec-intel.webp' %}"
-                         alt="" width="1600" height="900" loading="lazy" decoding="async">
+                    <svg class="project-topology" viewBox="0 0 760 500">
+                        <defs>
+                            <pattern id="project-grid" width="32" height="32" patternUnits="userSpaceOnUse">
+                                <path d="M32 0H0V32" fill="none" stroke="currentColor" stroke-width="0.75"/>
+                            </pattern>
+                        </defs>
+                        <rect width="760" height="500" fill="url(#project-grid)"/>
+                        <g class="project-topology__contours">
+                            <path d="M430 24C544 55 691 112 680 204C670 285 564 327 587 414C598 457 657 475 728 492"/>
+                            <path d="M486 10C624 68 722 134 699 231C680 309 627 346 654 420C666 453 709 474 748 486"/>
+                            <path d="M357 78C447 119 500 165 482 231C464 296 401 326 419 390C432 438 495 462 530 492"/>
+                        </g>
+                        <g class="project-topology__routes">
+                            <path d="M74 112H221L278 168H390L445 222H571L625 274H719"/>
+                            <path d="M145 374H277L331 320H463L518 371H668"/>
+                            <path d="M221 112V320M390 168V320M571 222V371"/>
+                        </g>
+                        <g class="project-topology__nodes">
+                            <circle cx="74" cy="112" r="7"/><circle cx="221" cy="112" r="7"/>
+                            <circle cx="390" cy="168" r="7"/><circle cx="571" cy="222" r="7"/>
+                            <circle cx="719" cy="274" r="7"/><circle cx="145" cy="374" r="7"/>
+                            <circle cx="331" cy="320" r="7"/><circle cx="518" cy="371" r="7"/>
+                        </g>
+                        <path class="project-topology__signal" d="M74 112H221L278 168H390L445 222H571"/>
+                        <g class="project-topology__labels">
+                            <text x="74" y="88">INGEST</text><text x="390" y="144">NORMALIZE</text>
+                            <text x="571" y="198">CONTEXT</text><text x="518" y="398">QUERY</text>
+                        </g>
+                    </svg>
                     <div class="featured-system__coordinates">N 59.3293° / E 18.0686°</div>
                 </div>
 
@@ -165,8 +192,9 @@
             <div class="supporting-systems">
                 <a class="supporting-system reveal" href="/projects">
                     <div class="supporting-system__visual" aria-hidden="true">
-                        <img src="{% static 'images/projects/self-hosted-platform.webp' %}"
-                             alt="" width="1600" height="900" loading="lazy" decoding="async">
+                        <svg class="supporting-system__schematic" viewBox="0 0 132 48">
+                            <path d="M5 24H38L54 10H84L99 36H127"/><circle cx="5" cy="24" r="3"/><circle cx="54" cy="10" r="3"/><circle cx="99" cy="36" r="3"/><circle cx="127" cy="36" r="3"/>
+                        </svg>
                     </div>
                     <div class="supporting-system__content">
                         <b>02</b><div><small>Infrastructure / operating</small><h3>Self-hosted platform</h3></div><i aria-hidden="true">↗</i>
@@ -174,8 +202,9 @@
                 </a>
                 <a class="supporting-system reveal" href="/projects">
                     <div class="supporting-system__visual" aria-hidden="true">
-                        <img src="{% static 'images/projects/pentest-copilot.webp' %}"
-                             alt="" width="1600" height="900" loading="lazy" decoding="async">
+                        <svg class="supporting-system__schematic" viewBox="0 0 132 48">
+                            <path d="M5 34H35L49 17H78L94 8H127"/><circle cx="5" cy="34" r="3"/><circle cx="49" cy="17" r="3"/><circle cx="94" cy="8" r="3"/><circle cx="127" cy="8" r="3"/>
+                        </svg>
                     </div>
                     <div class="supporting-system__content">
                         <b>03</b><div><small>Security research / in progress</small><h3>Pentest Copilot</h3></div><i aria-hidden="true">↗</i>
