@@ -1,16 +1,3 @@
-{% load wagtailcore_tags %}
-
-{% if menu_pages %}
-    {% for page in menu_pages %}
-    <a href="{% pageurl page %}"
-       class="site-nav__link{% if request.path == page.url %} site-nav__link--active{% endif %}"
-       {% if request.path == page.url %}aria-current="page"{% endif %}>
-        {{ page.title }}
-    </a>
-    {% endfor %}
-{% else %}
-    <a href="/#selected-systems" class="site-nav__link">Work</a>
-    <a href="/#about" class="site-nav__link">About</a>
-    <a href="/blog" class="site-nav__link">Notes</a>
-    <a href="/contact" class="site-nav__link">Contact</a>
-{% endif %}
+{% for item in nav_items %}
+<a href="{{ item.url }}" data-nav-label="{{ item.label }}" class="site-nav__link{% if item.is_active %} site-nav__link--active{% endif %}"{% if item.is_active %} aria-current="page"{% endif %}>{{ item.label }}</a>
+{% endfor %}

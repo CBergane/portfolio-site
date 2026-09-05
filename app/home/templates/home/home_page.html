@@ -5,19 +5,20 @@
 <div class="home-page">
     <nav class="section-rail" aria-label="Homepage sections">
         <ol>
-            <li><a href="#overview" aria-current="location"><span>01</span><b>Overview</b></a></li>
-            <li><a href="#selected-systems"><span>02</span><b>Systems</b></a></li>
-            <li><a href="#about"><span>03</span><b>Principle</b></a></li>
-            <li><a href="#capabilities"><span>04</span><b>Capabilities</b></a></li>
-            <li><a href="#current-signal"><span>05</span><b>Signal</b></a></li>
+            <li><a href="#overview" aria-current="location"><span>01</span><svg aria-hidden="true" viewBox="0 0 32 32"><path d="M4 16h24M16 4v24M11 11h10v10H11z"/><circle cx="16" cy="16" r="2"/></svg><b>Overview</b></a></li>
+            <li><a href="#selected-systems"><span>02</span><svg aria-hidden="true" viewBox="0 0 32 32"><path d="M7 8l9 8 9-8M7 24l9-8 9 8"/><circle cx="7" cy="8" r="2"/><circle cx="25" cy="8" r="2"/><circle cx="7" cy="24" r="2"/><circle cx="25" cy="24" r="2"/></svg><b>Systems</b></a></li>
+            <li><a href="#operating-principle"><span>03</span><svg aria-hidden="true" viewBox="0 0 32 32"><path d="M13 7A10 10 0 0 0 13 25M19 7a10 10 0 0 1 0 18"/><circle cx="16" cy="16" r="4"/></svg><b>Principle</b></a></li>
+            <li><a href="#capabilities"><span>04</span><svg aria-hidden="true" viewBox="0 0 32 32"><path d="M6 8h20M6 16h20M6 24h20"/><circle cx="10" cy="8" r="1.5"/><circle cx="16" cy="16" r="1.5"/><circle cx="22" cy="24" r="1.5"/></svg><b>Capabilities</b></a></li>
+            <li><a href="#current-signal"><span>05</span><svg aria-hidden="true" viewBox="0 0 32 32"><path d="M3 16h6l3-7 5 14 3-7h9"/><circle cx="27" cy="16" r="2"/></svg><b>Signal</b></a></li>
+            <i class="section-rail__marker" aria-hidden="true"></i>
         </ol>
     </nav>
 
-    <section id="overview" class="signal-hero" aria-labelledby="hero-title">
+    <section id="overview" class="signal-hero" data-motion="trace" aria-labelledby="hero-title">
         <div class="signal-hero__ambient" aria-hidden="true"></div>
 
         <div class="page-frame signal-hero__grid">
-            <div class="signal-hero__content reveal">
+            <div class="signal-hero__content" data-motion="document">
                 <p class="eyebrow"><span>01</span> Stockholm / security &amp; infrastructure</p>
                 <h1 id="hero-title">Christian<br>Bergane</h1>
                 <span class="hero-rule" aria-hidden="true"></span>
@@ -38,7 +39,7 @@
                 </div>
             </div>
 
-            <aside class="system-blueprint reveal" aria-label="System architecture trace">
+            <aside class="system-blueprint" data-motion="document" aria-label="System architecture trace">
                 <div class="system-blueprint__header">
                     <span>SYSTEM ARCHITECTURE / LIVE</span>
                     <span class="system-blueprint__location">59.3293° N&nbsp;&nbsp;18.0686° E</span>
@@ -127,7 +128,7 @@
         </div>
     </section>
 
-    <section id="selected-systems" class="systems-section systems-section--featured" aria-labelledby="systems-title">
+    <section id="selected-systems" class="systems-section systems-section--featured" data-motion="document" aria-labelledby="systems-title">
         <div class="page-frame">
             <div class="section-heading reveal">
                 <div>
@@ -221,7 +222,7 @@
         </div>
     </section>
 
-    <section id="about" class="position-section" aria-labelledby="position-title">
+    <section id="operating-principle" class="position-section" data-motion="field" aria-labelledby="position-title">
         <div class="page-frame position-section__grid">
             <div class="section-index reveal"><span>03</span><p>OPERATING PRINCIPLE</p></div>
             <div class="position-section__content reveal">
@@ -242,23 +243,23 @@
         </div>
     </section>
 
-    <section id="capabilities" class="capabilities-section" aria-labelledby="capabilities-title">
+    <section id="capabilities" class="capabilities-section" data-motion="document" aria-labelledby="capabilities-title">
         <div class="page-frame">
             <div class="section-heading section-heading--compact reveal">
                 <div><p class="eyebrow"><span>04</span> Capabilities</p><h2 id="capabilities-title">Across the stack.</h2></div>
             </div>
             <div class="capability-grid">
-                <article class="capability reveal">
+                <article class="capability" data-motion="column">
                     <span class="capability__index">A</span><h3>Security engineering</h3>
                     <p>Detection thinking, hardening, threat intelligence and practical defensive controls.</p>
                     <p class="capability__tools">Sentinel · Defender · Linux · KQL</p>
                 </article>
-                <article class="capability reveal">
+                <article class="capability" data-motion="column">
                     <span class="capability__index">B</span><h3>Infrastructure</h3>
                     <p>Small platforms that are reproducible, observable and straightforward to recover.</p>
                     <p class="capability__tools">Proxmox · Podman · Cloudflare · PostgreSQL</p>
                 </article>
-                <article class="capability reveal">
+                <article class="capability" data-motion="column">
                     <span class="capability__index">C</span><h3>Software systems</h3>
                     <p>Web tools and automation that turn operational needs into maintainable workflows.</p>
                     <p class="capability__tools">Python · Django · Wagtail · HTMX</p>
@@ -267,17 +268,21 @@
         </div>
     </section>
 
-    <section id="current-signal" class="signal-section" aria-labelledby="signal-title">
-        <div class="page-frame signal-section__grid reveal">
-            <div><p class="eyebrow"><span>05</span> Current signal</p><h2 id="signal-title">Learning is part<br>of the infrastructure.</h2></div>
-            <div class="signal-section__metrics">
-                <div><span>Published systems</span><strong>{{ total_projects }}</strong></div>
-                {% if settings.home.SocialMediaSettings.hackthebox_url %}
-                <a href="{{ settings.home.SocialMediaSettings.hackthebox_url }}" target="_blank" rel="noopener noreferrer">
-                    <span>Hack The Box</span><strong>{{ htb_profile.xp_rank|default:"Active" }}</strong>
-                </a>
-                {% endif %}
-                <div><span>Primary focus</span><strong>Security + infrastructure</strong></div>
+    <section id="current-signal" class="signal-section" data-motion="trace" aria-labelledby="signal-title">
+        <div class="page-frame">
+            <div class="signal-section__panel">
+                <div class="signal-section__panel-meta" aria-hidden="true"><span>SIGNAL REGISTRY</span><span>STOCKHOLM</span><span>INDEX / 05</span></div>
+                <div class="signal-section__grid">
+                    <div class="signal-section__editorial"><p class="eyebrow"><span>05</span> / Current signal</p><h2 id="signal-title">Learning is part of the infrastructure.</h2></div>
+                    <svg class="signal-section__route" aria-hidden="true" viewBox="0 0 1200 360" preserveAspectRatio="none"><path class="signal-section__route-secondary" d="M30 292H430V86H1160M660 326V210H1135"/><path d="M42 272H510V142H1144"/><circle cx="510" cy="272" r="5"/><circle cx="510" cy="142" r="5"/><circle cx="1144" cy="142" r="5"/></svg>
+                    <dl class="signal-section__metrics" aria-label="Signal registry">
+                        <div><dt>Systems published</dt><dd>{{ published_project_count }}</dd></div>
+                        <div><dt>Notes logged</dt><dd>{{ published_note_count }}</dd></div>
+                        {% if latest_project %}<div><dt>Latest system</dt><dd><a href="{% pageurl latest_project %}">{{ latest_project.title }}</a></dd></div>{% endif %}
+                        {% if latest_note %}<div><dt>Latest note</dt><dd><a href="{% pageurl latest_note %}">{{ latest_note.title }} <time datetime="{{ latest_note.date|date:'Y-m-d' }}">{{ latest_note.date|date:"d M Y" }}</time></a></dd></div>{% endif %}
+                        <div><dt>Primary focus</dt><dd>Security + infrastructure</dd></div>
+                    </dl>
+                </div>
             </div>
         </div>
     </section>
@@ -295,8 +300,11 @@
 {% block extra_js %}
 <script>
     (function () {
-        const elements = document.querySelectorAll('.reveal');
+        const home = document.querySelector('.home-page');
+        if (!home) return;
         const railLinks = Array.from(document.querySelectorAll('.section-rail a[href^="#"]'));
+        const siteNavLinks = Array.from(document.querySelectorAll('.site-nav__link[data-nav-label]'));
+        const marker = document.querySelector('.section-rail__marker');
         const sectionTargets = railLinks.map(function (link) {
             return document.querySelector(link.getAttribute('href'));
         }).filter(Boolean);
@@ -306,28 +314,52 @@
             railLinks.forEach(function (link) {
                 if (link.getAttribute('href') === '#' + section.id) {
                     link.setAttribute('aria-current', 'location');
+                    link.classList.add('is-active');
                 } else {
                     link.removeAttribute('aria-current');
+                    link.classList.remove('is-active');
                 }
             });
+            siteNavLinks.forEach(function (link) {
+                const matchesAbout = section.id === 'operating-principle' && link.dataset.navLabel === 'ABOUT';
+                const matchesWork = section.id === 'selected-systems' && link.dataset.navLabel === 'WORK';
+                link.classList.toggle('site-nav__link--section-active', matchesAbout || matchesWork);
+            });
+            updateMarker();
         }
-
+        function updateMarker() {
+            if (!marker || reduced) return;
+            const active = document.querySelector('.section-rail a[aria-current="location"]');
+            if (!active) return;
+            marker.style.transform = 'translateY(' + (active.offsetTop + (active.offsetHeight - marker.offsetHeight) / 2) + 'px)';
+        }
+        function revealSection(section) {
+            section.classList.add('is-assembled');
+            section.querySelectorAll('.reveal').forEach(function (element) { element.classList.add('is-visible'); });
+        }
         if (reduced || !('IntersectionObserver' in window)) {
-            elements.forEach(function (element) { element.classList.add('is-visible'); });
+            home.classList.add('motion-static');
+            sectionTargets.forEach(revealSection);
+            return;
         }
-        if (!('IntersectionObserver' in window)) return;
-
+        home.classList.add('motion-ready');
         const observer = new IntersectionObserver(function (entries) {
             entries.forEach(function (entry) {
-                if (entry.target.classList.contains('reveal') && entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
-                    observer.unobserve(entry.target);
+                if (entry.isIntersecting) {
+                    revealSection(entry.target);
                 }
-                if (entry.target.id && entry.isIntersecting) setActiveSection(entry.target);
+                if (entry.isIntersecting) setActiveSection(entry.target);
             });
         }, { rootMargin: '-18% 0px -62% 0px', threshold: 0.1 });
-        if (!reduced) elements.forEach(function (element) { observer.observe(element); });
         sectionTargets.forEach(function (section) { observer.observe(section); });
+        railLinks.forEach(function (link) {
+            link.addEventListener('mouseenter', function () { link.classList.add('is-preview'); });
+            link.addEventListener('mouseleave', function () { link.classList.remove('is-preview'); });
+            link.addEventListener('focus', function () { link.classList.add('is-preview'); });
+            link.addEventListener('blur', function () { link.classList.remove('is-preview'); });
+        });
+        window.addEventListener('resize', updateMarker);
+        updateMarker();
     })();
 </script>
 {% endblock %}
