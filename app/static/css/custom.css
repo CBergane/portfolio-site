@@ -1719,6 +1719,13 @@ button, input, textarea, select { font: inherit; }
     color: var(--arctic);
 }
 
+.featured-system__visual img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.78) contrast(1.04);
+}
+
 .project-topology__contours path {
     fill: none;
     stroke: var(--frost-500);
@@ -1829,6 +1836,13 @@ button, input, textarea, select { font: inherit; }
     fill: none;
     stroke: currentColor;
     stroke-width: 1.4;
+}
+.supporting-system__visual img {
+    display: block;
+    width: 100%;
+    height: 3rem;
+    object-fit: cover;
+    filter: saturate(0.72) contrast(1.04);
 }
 .supporting-system__content {
     display: grid;

@@ -9,7 +9,7 @@ from wagtail.models import Orderable
 
 from wagtail.models import Page
 from wagtail.fields import RichTextField, StreamField
-from wagtail.admin.panels import FieldPanel, MultiFieldPanel, InlinePanel
+from wagtail.admin.panels import FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel
 from wagtail.search import index
 from wagtail import blocks
 from wagtail.images.blocks import ImageChooserBlock
@@ -262,13 +262,36 @@ class HomePage(Page):
 
     content_panels = Page.content_panels + [
         FieldPanel('body'),
+        InlinePanel('selected_projects', label='Selected project', max_num=3),
     ]
     
     def get_context(self, request, *args, **kwargs):
-        from .models import ProjectPage
         from .htb import get_htb_profile
         context = super().get_context(request, *args, **kwargs)
-        context['total_projects'] = ProjectPage.objects.live().count()
+        selected_project_ids = list(
+            self.selected_projects.order_by('sort_order').values_list('project_id', flat=True)
+        )
+
+        if selected_project_ids:
+            available_projects = ProjectPage.objects.live().public().filter(
+                id__in=selected_project_ids
+            ).select_related('category', 'hero_image')
+            projects_by_id = {project.id: project for project in available_projects}
+            selected_projects = [
+                projects_by_id[project_id]
+                for project_id in selected_project_ids
+                if project_id in projects_by_id
+            ]
+        else:
+            selected_projects = list(
+                ProjectPage.objects.live().public().select_related(
+                    'category', 'hero_image'
+                ).order_by('-date', '-first_published_at')[:3]
+            )
+
+        context['primary_project'] = selected_projects[0] if selected_projects else None
+        context['supporting_projects'] = selected_projects[1:]
+        context['total_projects'] = ProjectPage.objects.live().public().count()
         context['htb_profile'] = get_htb_profile(request)
         return context
 
@@ -765,6 +788,27 @@ class ProjectPage(Page):
     class Meta:
         verbose_name = "Project"
         ordering = ['-date']
+
+
+class HomePageProject(Orderable):
+    """An editor-curated, ordered project selection for the homepage."""
+    home_page = ParentalKey(
+        'home.HomePage',
+        related_name='selected_projects',
+        on_delete=models.CASCADE,
+    )
+    project = models.ForeignKey(
+        'home.ProjectPage',
+        related_name='+',
+        on_delete=models.CASCADE,
+    )
+
+    panels = [
+        PageChooserPanel('project', ['home.ProjectPage']),
+    ]
+
+    def __str__(self):
+        return self.project.title
 
 
 # ============= CONTACT FORM =============

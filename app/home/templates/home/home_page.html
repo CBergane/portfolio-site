@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailsettings_tags %}
+{% load wagtailcore_tags wagtailimages_tags wagtailsettings_tags %}
 
 {% block content %}
 <div class="home-page">
@@ -137,19 +137,20 @@
                 <a class="text-link" href="/projects">All projects <span aria-hidden="true">↗</span></a>
             </div>
 
-            <a class="featured-system reveal" href="https://intel.borealsec.io" target="_blank" rel="noopener noreferrer">
+            {% if primary_project %}
+            <a class="featured-system reveal" href="{% pageurl primary_project %}">
                 <div class="featured-system__content">
-                    <p class="meta-label"><span>01 /</span> Threat intelligence</p>
-                    <h3>BorealSec<br>Intel</h3>
-                    <p class="featured-system__lead">Threat intelligence, normalized.</p>
-                    <p class="featured-system__body">
-                        A self-hosted platform that turns fragmented security signals into structured,
-                        searchable and useful context.
-                    </p>
+                    <p class="meta-label"><span>01 /</span> {% if primary_project.category %}{{ primary_project.category.name }}{% else %}Selected system{% endif %}</p>
+                    <h3>{{ primary_project.title }}</h3>
+                    <p class="featured-system__lead">{{ primary_project.intro }}</p>
                     <span class="featured-system__link">View case study <i aria-hidden="true">→</i></span>
                 </div>
 
                 <div class="featured-system__visual" aria-hidden="true">
+                    {% if primary_project.hero_image %}
+                    {% image primary_project.hero_image fill-1200x800 as primary_project_image %}
+                    <img src="{{ primary_project_image.url }}" width="{{ primary_project_image.width }}" height="{{ primary_project_image.height }}" alt="">
+                    {% else %}
                     <svg class="project-topology" viewBox="0 0 760 500">
                         <defs>
                             <pattern id="project-grid" width="32" height="32" patternUnits="userSpaceOnUse">
@@ -179,38 +180,39 @@
                             <text x="571" y="198">CONTEXT</text><text x="518" y="398">QUERY</text>
                         </g>
                     </svg>
-                    <div class="featured-system__coordinates">N 59.3293° / E 18.0686°</div>
+                    {% endif %}
+                    <div class="featured-system__coordinates">{{ primary_project.date|date:"Y.m.d" }} / {{ primary_project.get_status_display|upper }}</div>
                 </div>
 
                 <dl class="featured-system__facts">
-                    <div><dt>Domain</dt><dd>Threat intelligence</dd></div>
-                    <div><dt>Role</dt><dd>System architect</dd></div>
-                    <div><dt>State</dt><dd><i></i> Operating</dd></div>
+                    <div><dt>Category</dt><dd>{% if primary_project.category %}{{ primary_project.category.name }}{% else %}General{% endif %}</dd></div>
+                    <div><dt>Date</dt><dd>{{ primary_project.date|date:"M Y" }}</dd></div>
+                    <div><dt>State</dt><dd><i></i> {{ primary_project.get_status_display }}</dd></div>
                 </dl>
             </a>
 
+            {% endif %}
+            {% if supporting_projects %}
             <div class="supporting-systems">
-                <a class="supporting-system reveal" href="/projects">
+                {% for project in supporting_projects %}
+                <a class="supporting-system reveal" href="{% pageurl project %}">
                     <div class="supporting-system__visual" aria-hidden="true">
+                        {% if project.hero_image %}
+                        {% image project.hero_image fill-280x120 as supporting_project_image %}
+                        <img src="{{ supporting_project_image.url }}" width="{{ supporting_project_image.width }}" height="{{ supporting_project_image.height }}" alt="">
+                        {% else %}
                         <svg class="supporting-system__schematic" viewBox="0 0 132 48">
                             <path d="M5 24H38L54 10H84L99 36H127"/><circle cx="5" cy="24" r="3"/><circle cx="54" cy="10" r="3"/><circle cx="99" cy="36" r="3"/><circle cx="127" cy="36" r="3"/>
                         </svg>
+                        {% endif %}
                     </div>
                     <div class="supporting-system__content">
-                        <b>02</b><div><small>Infrastructure / operating</small><h3>Self-hosted platform</h3></div><i aria-hidden="true">↗</i>
+                        <b>0{{ forloop.counter|add:1 }}</b><div><small>{% if project.category %}{{ project.category.name }} / {% endif %}{{ project.get_status_display }} / {{ project.date|date:"Y" }}</small><h3>{{ project.title }}</h3></div><i aria-hidden="true">↗</i>
                     </div>
                 </a>
-                <a class="supporting-system reveal" href="/projects">
-                    <div class="supporting-system__visual" aria-hidden="true">
-                        <svg class="supporting-system__schematic" viewBox="0 0 132 48">
-                            <path d="M5 34H35L49 17H78L94 8H127"/><circle cx="5" cy="34" r="3"/><circle cx="49" cy="17" r="3"/><circle cx="94" cy="8" r="3"/><circle cx="127" cy="8" r="3"/>
-                        </svg>
-                    </div>
-                    <div class="supporting-system__content">
-                        <b>03</b><div><small>Security research / in progress</small><h3>Pentest Copilot</h3></div><i aria-hidden="true">↗</i>
-                    </div>
-                </a>
+                {% endfor %}
             </div>
+            {% endif %}
         </div>
     </section>
 
