@@ -37,7 +37,7 @@ html {
 
 body.site-shell {
     margin: 0;
-    min-width: 320px;
+    min-width: 0;
     background: var(--carbon-950);
     color: var(--frost-100);
     font-family: var(--font-body);
@@ -140,9 +140,9 @@ button, input, textarea, select { font: inherit; }
     align-items: center;
     gap: 0.7rem;
     color: var(--frost-100);
-    font-size: 0.76rem;
+    font-size: 0.82rem;
     font-weight: 750;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.16em;
     text-decoration: none;
 }
 
@@ -169,9 +169,10 @@ button, input, textarea, select { font: inherit; }
 .site-brand__descriptor {
     padding-left: 0.7rem;
     border-left: 1px solid var(--line-strong);
-    color: var(--frost-500);
+    color: var(--signal);
     font-size: 0.58rem;
     font-weight: 500;
+    letter-spacing: 0.14em;
 }
 
 .site-nav--desktop {
@@ -253,24 +254,26 @@ button, input, textarea, select { font: inherit; }
     position: relative;
     --home-section-space: clamp(5.5rem, 9vw, 9rem);
     --home-anchor-offset: 6.75rem;
+    --home-content-pad: var(--page-pad);
     background: var(--carbon-950);
 }
+
+.home-page .page-frame { padding-left: var(--home-content-pad); }
 
 .signal-hero {
     position: relative;
     display: grid;
     overflow: visible;
     align-items: center;
-    padding-top: 5.15rem;
-    height: auto;
-    min-height: 0;
+    min-width: 0;
     padding: 8rem 0 3rem;
+    background: radial-gradient(ellipse at 85% 35%, rgba(118, 184, 216, .045), transparent 55%);
 }
 
 .signal-hero::before {
     position: absolute;
     bottom: 0;
-    left: max(var(--page-pad), calc((100vw - var(--page-width)) / 2 + var(--page-pad)));
+    left: max(var(--home-content-pad), calc((100% - var(--page-width)) / 2 + var(--home-content-pad)));
     width: 1px;
     background: linear-gradient(var(--signal), rgba(240, 169, 40, 0.05) 68%, transparent);
     content: "";
@@ -628,7 +631,8 @@ button, input, textarea, select { font: inherit; }
     transform: translateY(-50%);
     display: none;
     z-index: 10;
-    left: max(.5rem, calc((100vw - var(--page-width)) / 2 + .5rem));
+    left: max(.5rem, calc((100% - var(--page-width)) / 2 + .5rem));
+    width: 7rem;
 }
 
 .section-rail ol {
@@ -642,9 +646,9 @@ button, input, textarea, select { font: inherit; }
 
 .section-rail a {
     display: grid;
-    color: var(--frost-500);
+    color: var(--arctic);
     font-family: var(--font-mono);
-    font-size: 0.55rem;
+    font-size: 0.625rem;
     letter-spacing: 0.11em;
     line-height: 1.08;
     text-decoration: none;
@@ -656,15 +660,30 @@ button, input, textarea, select { font: inherit; }
     width: 3.5rem;
     min-height: 44px;
     padding: .6rem .25rem;
-    grid-template-columns: 1.3rem 1.2rem;
+    grid-template-columns: 1.3rem 1.25rem;
     column-gap: .3rem;
     border-left: 1px solid var(--line);
     background: transparent;
 }
 
-.section-rail span {
-    padding-left: 0;
-    color: var(--frost-500);
+.section-rail span { color: inherit; }
+
+.section-rail svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    stroke-width: 2;
+}
+
+/* A single readout stays entirely inside the reserved desktop gutter.
+   Item names remain screen-reader text; scrolling never opens a tooltip. */
+.section-rail__status {
+    margin: 1rem 0 0;
+    padding: .55rem .4rem;
+    border: 1px solid var(--line-strong);
+    background: var(--carbon-900);
+    color: var(--frost-200);
+    font: .625rem/1.5 var(--font-mono);
+    overflow-wrap: anywhere;
 }
 
 .section-rail b {
@@ -694,8 +713,19 @@ button, input, textarea, select { font: inherit; }
     background: transparent;
 }
 
-.section-rail a[aria-current="location"] span {
-    color: var(--signal-bright);
+.section-rail a[aria-current="location"]::before {
+    position: absolute;
+    left: -1px;
+    top: .65rem;
+    bottom: .65rem;
+    width: 2px;
+    background: var(--signal);
+    box-shadow: 0 0 5px rgba(240, 169, 40, .3);
+    content: "";
+}
+
+.section-rail a[aria-current="location"] svg {
+    filter: drop-shadow(0 0 3px rgba(240, 169, 40, .3));
 }
 
 #overview {
@@ -753,8 +783,8 @@ button, input, textarea, select { font: inherit; }
 .system-blueprint {
     position: relative;
     border: 1px solid var(--line-strong);
-    background: linear-gradient(90deg, rgba(8, 10, 13, 0.96) 0%, rgba(8, 10, 13, 0.92) 48%, rgba(8, 10, 13, 0.7) 100%),
-        var(--carbon-900);
+    isolation: isolate;
+    background: radial-gradient(ellipse at 90% 10%, rgba(118, 184, 216, .08), transparent 65%), var(--carbon-900);
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -762,8 +792,20 @@ button, input, textarea, select { font: inherit; }
     min-width: 0;
     min-height: 0;
     overflow: visible;
-    box-shadow: none;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, .28), inset 0 1px 0 rgba(215, 217, 213, .08);
     font-family: var(--font-mono);
+}
+
+/* Static depth: coordinate field, secondary topology, foreground layers. */
+.system-blueprint::before {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-image: linear-gradient(rgba(118, 184, 216, .045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(118, 184, 216, .045) 1px, transparent 1px);
+    background-size: 42px 42px;
+    content: "";
+    pointer-events: none;
 }
 
 .system-blueprint::after {
@@ -818,14 +860,14 @@ button, input, textarea, select { font: inherit; }
 
 .system-blueprint__diagram {
     position: absolute;
-    z-index: 0;
+    z-index: 1;
     margin: 0;
     pointer-events: none;
     max-width: 100%;
     inset: 3.5rem 0 3rem;
     width: auto;
     height: auto;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .system-blueprint__diagram figcaption {
@@ -892,7 +934,6 @@ button, input, textarea, select { font: inherit; }
     opacity: 1;
     color: var(--arctic);
     stroke: currentColor;
-    filter: drop-shadow(0 0 3px rgba(118, 184, 216, .3));
 }
 
 .blueprint-field text {
@@ -917,7 +958,7 @@ button, input, textarea, select { font: inherit; }
     align-items: center;
     border-bottom: 1px solid var(--line);
     grid-template-columns: 1.5rem 3.25rem minmax(0, 1fr);
-    min-height: 0;
+    min-width: 0;
     padding: 1.15rem clamp(.8rem, 2vw, 1.5rem);
     column-gap: .85rem;
 }
@@ -953,7 +994,7 @@ button, input, textarea, select { font: inherit; }
     width: 2rem;
     height: 2rem;
     stroke: currentColor;
-    stroke-width: 1.75;
+    stroke-width: 2;
 }
 
 .layer-copy {
@@ -974,7 +1015,7 @@ button, input, textarea, select { font: inherit; }
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
-    font-size: 0.56rem;
+    font-size: 0.625rem;
     font-style: normal;
     letter-spacing: 0.1em;
     text-transform: uppercase;
@@ -1382,11 +1423,6 @@ button, input, textarea, select { font: inherit; }
     transform: translateX(3px);
 }
 
-.section-rail svg {
-    width: 1.2rem;
-    height: 1.2rem;
-    color: var(--arctic);
-}
 
 #operating-principle {
     scroll-margin-top: var(--home-anchor-offset, 6.75rem);
@@ -1598,15 +1634,12 @@ button, input, textarea, select { font: inherit; }
     color: var(--arctic);
 }
 
-.section-rail a[aria-current="location"] svg {
-    filter: drop-shadow(0 0 3px rgba(118, 184, 216, .35));
-}
 
 
-/* The rail has a reserved gutter; labels stay inside its own control. */
+/* 112px rail + 8px inset + 16px clearance. Hide below the safe desktop gutter. */
 @media (min-width: 1200px) {
     .section-rail { display: block; }
-    .home-page .page-frame { padding-left: max(var(--page-pad), 5rem); }
+    .home-page { --home-content-pad: max(var(--page-pad), 8.5rem); }
 }
 @media (max-width: 1199px) {
     .signal-hero__grid { grid-template-columns: minmax(0, 1fr); }
@@ -1635,9 +1668,16 @@ button, input, textarea, select { font: inherit; }
     .hero-meta div { grid-template-columns: 4rem minmax(0, 1fr); gap: .5rem; }
     .system-blueprint__header, .system-blueprint__footer { padding: .85rem; }
     .system-blueprint__location { display: none; }
-    .system-blueprint__layers li { padding: 1rem .85rem; }
+    .system-blueprint__layers li {
+        padding: .75rem .85rem;
+        grid-template-columns: 1.2rem 2.5rem minmax(0, 1fr);
+        column-gap: .5rem;
+    }
+    .layer-icon { width: 2.5rem; height: 2.5rem; }
+    .layer-icon svg { width: 1.5rem; height: 1.5rem; }
+    .layer-copy { gap: .25rem; }
+    .system-blueprint__diagram { display: none; }
     .layer-copy strong { font-size: .75rem; }
-    .blueprint-field { opacity: .4; }
     .signal-hero__index { display: none; }
     .section-heading { align-items: flex-start; flex-direction: column; gap: 1rem; }
     .position-section__grid, .position-section__copy, .capability-grid { grid-template-columns: minmax(0, 1fr); }
@@ -1665,16 +1705,11 @@ button, input, textarea, select { font: inherit; }
 @media (prefers-reduced-motion: no-preference) {
     .is-assembled .blueprint-field__signal { animation: route-assembly 460ms ease both; }
     .is-assembled .blueprint-field__nodes circle { animation: node-assembly 360ms ease both; }
-    .is-assembled .system-blueprint__layers li { animation: layer-assembly 400ms ease both; }
-    .is-assembled .system-blueprint__layers li:nth-child(2) { animation-delay: 60ms; }
-    .is-assembled .system-blueprint__layers li:nth-child(3) { animation-delay: 120ms; }
-    .is-assembled .system-blueprint__layers li:nth-child(4) { animation-delay: 180ms; }
     .position-section.is-assembled::before { animation: rule-assembly 400ms ease; }
     .is-assembled .project-topology__signal { animation: route-assembly 420ms ease; }
     .is-assembled .signal-section__route path:not(.signal-section__route-secondary) { animation: route-assembly 460ms ease; }
     @keyframes route-assembly { from { stroke-dasharray: 1600; stroke-dashoffset: 1600; } to { stroke-dasharray: 1600; stroke-dashoffset: 0; } }
     @keyframes node-assembly { from { opacity: .4; filter: none; } to { opacity: 1; } }
-    @keyframes layer-assembly { from { transform: translateY(8px); } to { transform: translateY(0); } }
     @keyframes rule-assembly { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 }
 
@@ -1980,7 +2015,10 @@ button, input, textarea, select { font: inherit; }
 @media (max-width: 767px) {
     :root { --page-pad: 1.15rem; }
 
+    .site-header { background: var(--carbon-950); backdrop-filter: none; }
     .site-header__inner { min-height: 4.4rem; }
+    .site-brand { font-size: .78rem; }
+    .menu-open { overflow: hidden; }
     .site-nav--desktop { display: none; }
 
     .menu-toggle {
@@ -2009,26 +2047,26 @@ button, input, textarea, select { font: inherit; }
 
     .site-nav--mobile {
         position: static;
-        z-index: 99;
         display: flex;
         padding: .5rem var(--page-pad) 1rem;
         flex-direction: column;
         gap: 0;
-        background: rgba(8, 10, 13, 0.985);
+        background: var(--carbon-950);
+        min-width: 0;
     }
 
     .site-nav--mobile[hidden] { display: none; }
     html:not(.navigation-ready) .site-header { position: static; }
     .navigation-ready .site-nav--mobile {
-        position: absolute;
-        top: 100%;
-        right: 0;
-        left: 0;
-        max-height: calc(100dvh - 4.4rem);
+        position: fixed;
+        inset: calc(4.4rem + 1px) 0 0;
+        height: calc(100dvh - 4.4rem - 1px);
         overflow-y: auto;
+        overscroll-behavior: contain;
     }
 
     .site-nav--mobile .site-nav__link {
+        flex: none;
         padding: 1.2rem 0;
         border-bottom: 1px solid var(--line);
         font-size: 0.82rem;
@@ -2057,16 +2095,6 @@ button, input, textarea, select { font: inherit; }
 
 
 
-
-.site-brand {
-    font-size: 0.82rem;
-    letter-spacing: 0.16em;
-}
-
-.site-brand__descriptor {
-    color: var(--signal);
-    letter-spacing: 0.14em;
-}
 
 .site-nav--desktop::after {
     width: 4.5rem;
@@ -2104,10 +2132,6 @@ button, input, textarea, select { font: inherit; }
 @media (max-width: 860px) { .blog-index__grid { grid-template-columns: repeat(2,minmax(0,1fr)); }.blog-page__main { grid-template-columns: 1fr; }.blog-page__aside { grid-template-columns: 1fr auto; gap: 1.25rem; }.blog-page__aside #toc { display: none; }
 }
 @media (max-width: 600px) { .blog-index, .blog-page { padding-top: 4.4rem; }.blog-index h1, .blog-page h1 { font-size: clamp(3.1rem,16vw,5rem); }.blog-index__grid { grid-template-columns: 1fr; }.blog-card { min-height: 19rem; }.blog-page__main { padding-top: 2.5rem; }.code-block pre, .prose .code-block pre { padding: 1rem; font-size: .78rem; }
-}
-@media (max-width: 767px) {
-    .site-brand { font-size: 0.78rem; }
-
 }
 
 /* Final shared-editorial overrides after legacy prose utilities. */

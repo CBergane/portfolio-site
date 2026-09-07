@@ -4,6 +4,7 @@
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
     const sections = Array.from(home.querySelectorAll('section[id]'));
     const railLinks = Array.from(home.querySelectorAll('.section-rail a'));
+    const railStatus = home.querySelector('.section-rail__status');
     const navLinks = document.querySelectorAll('.site-nav__link[data-nav-label]');
     const visible = new Map();
 
@@ -30,6 +31,11 @@
             if (active && link.hash === '#' + active.id) link.setAttribute('aria-current', 'location');
             else link.removeAttribute('aria-current');
         });
+        if (railStatus) {
+            const current = active && railLinks.find(function (link) { return link.hash === '#' + active.id; });
+            railStatus.hidden = !current;
+            if (current) railStatus.textContent = current.querySelector('b').textContent;
+        }
         // Section highlighting never changes server-authored aria-current in primary navigation.
         navLinks.forEach(function (link) {
             link.classList.toggle('site-nav__link--section-active',

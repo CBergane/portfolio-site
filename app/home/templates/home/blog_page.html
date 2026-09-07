@@ -5,7 +5,7 @@
 {% get_site_navigation as navigation %}
 <article class="blog-page">
     <header class="blog-page__hero"><div class="page-frame">
-        <nav class="blog-page__breadcrumb" aria-label="Breadcrumb">{% if navigation.notes %}<a href="{% pageurl navigation.notes %}">NOTES</a>{% endif %}<span aria-hidden="true">/</span><span aria-current="page">{{ page.title }}</span></nav>
+        <nav class="blog-page__breadcrumb" aria-label="Breadcrumb">{% if navigation.notes %}<a href="{% pageurl navigation.notes %}">NOTES</a><span aria-hidden="true">/</span>{% endif %}<span aria-current="page">{{ page.title }}</span></nav>
         <div class="blog-page__hero-copy">
             <dl class="blog-page__metadata">{% if page.categories %}<div><dt>Category</dt><dd>{{ page.categories.name }}</dd></div>{% endif %}<div><dt>Published</dt><dd><time datetime="{{ page.date|date:'Y-m-d' }}">{{ page.date|date:"d M Y" }}</time></dd></div>{% if page.reading_time %}<div><dt>Reading time</dt><dd>{{ page.reading_time }} min</dd></div>{% endif %}</dl>
             <h1>{{ page.title }}</h1>{% if page.intro %}<p class="blog-page__intro">{{ page.intro }}</p>{% endif %}

@@ -30,6 +30,14 @@ def site_destinations(request, current_page=None):
         ('work', ProjectIndexPage), ('notes', BlogIndexPage), ('contact', ContactPage),
     ):
         candidates = public_site_pages(model, request).order_by('path')
-        branch = candidates.ancestor_of(current_page, inclusive=True).last() if current_page else None
+        # An index label must never lead to the Site root, even if that root
+        # itself has an index type. Ownership/public filtering applies to both
+        # the ancestor preference and the fallback for legacy sibling details.
+        if site and name in ('work', 'notes'):
+            candidates = candidates.exclude(pk=site.root_page_id)
+        branch = (
+            candidates.ancestor_of(current_page, inclusive=True).order_by('-depth').first()
+            if current_page else None
+        )
         destinations[name] = branch or candidates.first()
     return destinations

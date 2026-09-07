@@ -116,47 +116,7 @@
         </div>
     </footer>
 
-    <script>
-        (function () {
-            const button = document.getElementById('mobile-menu-btn');
-            const menu = document.getElementById('mobile-menu');
-            if (!button || !menu) return;
-
-            menu.hidden = true;
-            button.hidden = false;
-            document.documentElement.classList.add('navigation-ready');
-
-            document.addEventListener('keydown', function (event) {
-                if (event.key === 'Escape' && !menu.hidden) {
-                    closeMenu();
-                    button.focus();
-                }
-            });
-
-            function closeMenu() {
-                menu.hidden = true;
-                button.setAttribute('aria-expanded', 'false');
-                button.setAttribute('aria-label', 'Open menu');
-
-            }
-
-            button.addEventListener('click', function () {
-                const opening = menu.hidden;
-                menu.hidden = !opening;
-                button.setAttribute('aria-expanded', String(opening));
-                button.setAttribute('aria-label', opening ? 'Close menu' : 'Open menu');
-
-            });
-
-            menu.querySelectorAll('a').forEach(function (link) {
-                link.addEventListener('click', closeMenu);
-            });
-
-            window.addEventListener('resize', function () {
-                if (window.innerWidth >= 768) closeMenu();
-            });
-        })();
-    </script>
+    <script src="{% static 'js/navigation.js' %}"></script>
 
     <script>
         (function () {
