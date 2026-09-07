@@ -1,12 +1,13 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags navigation_tags %}
 
 {% block content %}
-<main class="contact-page">
+{% get_site_navigation as navigation %}
+<div class="contact-page">
     <header class="contact-page__hero page-frame">
         <p class="eyebrow"><span>06</span> Contact</p>
         <h1>Start a conversation.</h1>
-        {% if page.intro %}<div class="contact-page__intro">{{ page.intro|richtext }}</div>{% else %}<p class="contact-page__intro">For security engineering, infrastructure, or practical systems work, get in touch.</p>{% endif %}
+        {% if page.intro %}<div class="contact-page__intro">{{ page.intro|richtext }}</div>{% else %}<p class="contact-page__intro">For Web development, Infrastructure or Security work, get in touch.</p>{% endif %}
     </header>
 
     <section class="contact-page__main page-frame" aria-label="Contact details">
@@ -16,11 +17,11 @@
                 <p class="contact-page__status">Submission complete</p>
                 <h2 id="contact-success-title">Message received.</h2>
                 {% if page.thank_you_text %}<div>{{ page.thank_you_text|richtext }}</div>{% endif %}
-                <a class="contact-page__return" href="{% pageurl page.get_parent %}"><span aria-hidden="true">←</span> Back to site</a>
+                {% if navigation.root %}<a class="contact-page__return" href="{% pageurl navigation.root %}"><span aria-hidden="true">←</span> Back to site</a>{% endif %}
             </section>
             {% else %}
             <div class="contact-page__form-heading"><p class="eyebrow"><span>01</span> Brief</p><h2>Send a message</h2><p>Fields marked <span aria-hidden="true">*</span><span class="sr-only">required</span> are required.</p></div>
-            <form id="contact-form" class="contact-page__form" hx-post="{% url 'contact_submit' %}" hx-swap="none" novalidate>
+            <form id="contact-form" class="contact-page__form" method="post" action="{% url 'contact_submit' %}" hx-post="{% url 'contact_submit' %}" hx-swap="none" novalidate>
                 {% csrf_token %}
                 <div id="form-response" class="contact-page__response" aria-live="polite" aria-atomic="true" tabindex="-1"></div>
                 <div class="contact-page__field"><label for="id_name">Name <span aria-hidden="true">*</span><span class="sr-only">required</span></label><input id="id_name" name="name" type="text" required autocomplete="name" placeholder="Your name"></div>
@@ -46,7 +47,7 @@
             </dl>
         </aside>
     </section>
-</main>
+</div>
 {% endblock %}
 
 {% block extra_js %}<script>

@@ -9,7 +9,7 @@ from wagtail import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
 from wagtail.contrib.sitemaps.views import sitemap
 
-from home.views import htb_stats, contact_form_submit
+from home.views import contact_form_submit
 
 # Minimal och snabb hälsokontroll (GET/HEAD). Låg overhead, plain text.
 @require_safe
@@ -23,7 +23,6 @@ urlpatterns = [
 
     # API/verktyg
     path('documents/', include(wagtaildocs_urls)),
-    path('api/htb-stats', htb_stats, name='htb_stats'),
     path('api/contact-submit', contact_form_submit, name='contact_submit'),
     path('sitemap.xml', sitemap, name='sitemap'),
 

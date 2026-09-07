@@ -2,9 +2,9 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
 {% block content %}
-<main class="project-index">
+<div class="project-index">
     <header class="project-index__hero page-frame">
-        <p class="eyebrow"><span>02</span> Work archive</p>
+        <p class="eyebrow">{% include "home/tags/icon.html" with name="work" only %} <span>02</span> Work archive</p>
         <h1>{{ page.title }}</h1>
         {% if page.intro %}<div class="project-index__intro">{{ page.intro|richtext }}</div>{% endif %}
         <p class="project-index__summary"><span>{{ projects|length|stringformat:"02d" }}</span> system{{ projects|length|pluralize }} indexed</p>
@@ -33,7 +33,7 @@
                     <h2><a href="{% pageurl project %}">{{ project.title }}</a></h2>
                     {% if project.intro %}<p class="project-record__intro">{{ project.intro }}</p>{% endif %}
                     {% with items=project.tech_stack_items.all %}{% if items %}<p class="project-record__stack" aria-label="Technology stack">{% for item in items %}<span{% if item.is_primary %} class="is-primary"{% endif %}>{{ item.tech.name }}</span>{% endfor %}</p>{% endif %}{% endwith %}
-                    <div class="project-record__actions"><a class="project-record__open" href="{% pageurl project %}">Open case study <span aria-hidden="true">→</span></a>{% if project.live_url %}<a href="{{ project.live_url }}" target="_blank" rel="noopener noreferrer">Live <span aria-hidden="true">↗</span></a>{% endif %}{% if project.github_url %}<a href="{{ project.github_url }}" target="_blank" rel="noopener noreferrer">Source <span aria-hidden="true">↗</span></a>{% endif %}</div>
+                    <div class="project-record__actions"><a class="project-record__open" href="{% pageurl project %}">Open case study <span aria-hidden="true">→</span></a>{% if project.live_url %}<a href="{{ project.live_url }}" rel="noopener noreferrer">Live <span aria-hidden="true">↗</span></a>{% endif %}{% if project.github_url %}<a href="{{ project.github_url }}" target="_blank" rel="noopener noreferrer">Source <span aria-hidden="true">↗</span></a>{% endif %}</div>
                 </div>
                 {% if project.hero_image %}{% image project.hero_image width-1000 as archive_visual %}
                 <div class="project-record__visual project-record__visual--image" aria-hidden="true" style="--archive-image: url('{{ archive_visual.url }}');"></div>
@@ -45,5 +45,5 @@
         </div>{% else %}
         <section class="project-index__empty"><p class="eyebrow"><span>00</span> Archive status</p>{% if active_count %}<h2>No systems match these filters.</h2><p>Adjust an active filter or return to the complete archive.</p><a href="{% pageurl page %}">Reset filters <span aria-hidden="true">→</span></a>{% else %}<h2>No published systems yet.</h2><p>New work will appear here when it is published.</p>{% endif %}</section>{% endif %}
     </section>
-</main>
+</div>
 {% endblock %}

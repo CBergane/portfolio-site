@@ -1,12 +1,13 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags wagtailimages_tags navigation_tags %}
 
 {% block content %}
+{% get_site_navigation as navigation %}
 <article class="project-page">
     <header class="project-page__hero">
         <div class="page-frame">
             <nav class="project-page__breadcrumb" aria-label="Breadcrumb">
-                <a href="{% pageurl page.get_parent %}">Projects</a><span aria-hidden="true">/</span><span aria-current="page">{{ page.title }}</span>
+                {% if navigation.work %}<a href="{% pageurl navigation.work %}">WORK</a>{% endif %}<span aria-hidden="true">/</span><span aria-current="page">{{ page.title }}</span>
             </nav>
             <div class="project-page__hero-grid">
                 <div class="project-page__hero-copy">
@@ -19,7 +20,7 @@
                     <h1>{{ page.title }}</h1>
                     <p class="project-page__intro">{{ page.intro }}</p>
                     {% if page.github_url or page.live_url %}<div class="project-page__actions">
-                        {% if page.live_url %}<a class="button button--primary" href="{{ page.live_url }}" target="_blank" rel="noopener noreferrer">View live <span aria-hidden="true">↗</span></a>{% endif %}
+                        {% if page.live_url %}<a class="button button--primary" href="{{ page.live_url }}" rel="noopener noreferrer">View live <span aria-hidden="true">↗</span></a>{% endif %}
                         {% if page.github_url %}<a class="project-page__button-outline" href="{{ page.github_url }}" target="_blank" rel="noopener noreferrer">View source <span aria-hidden="true">↗</span></a>{% endif %}
                     </div>{% endif %}
                 </div>
@@ -27,7 +28,7 @@
                     {% if page.hero_image %}
                         {% image page.hero_image width-1600 as project_hero %}<img src="{{ project_hero.url }}" width="{{ project_hero.width }}" height="{{ project_hero.height }}" alt="{{ page.title }} project visual">
                     {% else %}
-                        <svg viewBox="0 0 760 460" role="img" aria-label="Abstract technical topology diagram for {{ page.title }}" preserveAspectRatio="xMidYMid slice"><defs><pattern id="project-grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="currentColor" stroke-width="1" opacity=".18"/></pattern></defs><rect width="760" height="460" fill="url(#project-grid)"/><g class="project-page__topology-contours"><path d="M64 80C180 28 285 91 364 160s178 70 328 16"/><path d="M26 330c122-75 218-21 298 23s210 32 388-64"/><path d="M121 445c30-108 117-128 215-105s182 3 254-82"/></g><g class="project-page__topology-routes"><path d="M72 122H224L306 202H456L564 116H692"/><path d="M53 348h151l79-74h155l86 72h180"/></g><path class="project-page__topology-signal" d="M32 250h122l63-63h129l68 67h130l72-76h112"/><g class="project-page__topology-nodes"><circle cx="154" cy="250" r="8"/><circle cx="346" cy="187" r="8"/><circle cx="544" cy="254" r="8"/><circle cx="616" cy="178" r="8"/></g><g class="project-page__topology-labels"><text x="51" y="104">INPUT / 01</text><text x="477" y="98">ROUTE / 02</text><text x="560" y="376">OUTPUT / 03</text></g></svg>
+                        <svg viewBox="0 0 760 460" aria-hidden="true" preserveAspectRatio="xMidYMid slice"><defs><pattern id="project-grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="currentColor" stroke-width="1" opacity=".18"/></pattern></defs><rect width="760" height="460" fill="url(#project-grid)"/><g class="project-page__topology-contours"><path d="M64 80C180 28 285 91 364 160s178 70 328 16"/><path d="M26 330c122-75 218-21 298 23s210 32 388-64"/><path d="M121 445c30-108 117-128 215-105s182 3 254-82"/></g><g class="project-page__topology-routes"><path d="M72 122H224L306 202H456L564 116H692"/><path d="M53 348h151l79-74h155l86 72h180"/></g><path class="project-page__topology-signal" d="M32 250h122l63-63h129l68 67h130l72-76h112"/><g class="project-page__topology-nodes"><circle cx="154" cy="250" r="8"/><circle cx="346" cy="187" r="8"/><circle cx="544" cy="254" r="8"/><circle cx="616" cy="178" r="8"/></g><g class="project-page__topology-labels"><text x="51" y="104">INPUT / 01</text><text x="477" y="98">ROUTE / 02</text><text x="560" y="376">OUTPUT / 03</text></g></svg>
                     {% endif %}
                     <figcaption>{% if page.hero_image %}Project visual{% else %}System topology / project context{% endif %}</figcaption>
                 </figure>
@@ -43,6 +44,6 @@
     </div><aside class="project-page__facts" aria-labelledby="project-facts-title"><h2 id="project-facts-title">Project facts</h2><dl>
         {% if page.category %}<div><dt>Category</dt><dd>{{ page.category.name }}</dd></div>{% endif %}<div><dt>Status</dt><dd class="project-page__status project-page__status--{{ page.status }}">{{ page.get_status_display }}</dd></div><div><dt>Released</dt><dd><time datetime="{{ page.date|date:'Y-m-d' }}">{{ page.date|date:"M Y" }}</time></dd></div>{% if page.duration %}<div><dt>Duration</dt><dd>{{ page.duration }}</dd></div>{% endif %}
         {% with items=page.tech_stack_items.all %}{% if items %}<div class="project-page__facts-tech"><dt>Technology</dt><dd>{% for item in items|dictsortreversed:"is_primary" %}<span class="project-page__tech-tag">{{ item.tech.name }}</span>{% endfor %}</dd></div>{% endif %}{% endwith %}
-    </dl><a class="project-page__back-link" href="{% pageurl page.get_parent %}"><span aria-hidden="true">←</span> All projects</a></aside></div></section>
+    </dl>{% if navigation.work %}<a class="project-page__back-link" href="{% pageurl navigation.work %}"><span aria-hidden="true">←</span> All projects</a>{% endif %}</aside></div></section>
 </article>
 {% endblock %}

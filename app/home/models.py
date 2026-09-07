@@ -20,6 +20,7 @@ from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 from modelcluster.fields import ParentalKey
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from taggit.models import TaggedItemBase
+from .navigation import public_site_pages
 
 
 # ============= SITE SETTINGS =============
@@ -266,14 +267,13 @@ class HomePage(Page):
     ]
     
     def get_context(self, request, *args, **kwargs):
-        from .htb import get_htb_profile
         context = super().get_context(request, *args, **kwargs)
         selected_project_ids = list(
             self.selected_projects.order_by('sort_order').values_list('project_id', flat=True)
         )
 
         if selected_project_ids:
-            available_projects = ProjectPage.objects.live().public().filter(
+            available_projects = public_site_pages(ProjectPage, request).filter(
                 id__in=selected_project_ids
             ).select_related('category', 'hero_image')
             projects_by_id = {project.id: project for project in available_projects}
@@ -284,13 +284,13 @@ class HomePage(Page):
             ]
         else:
             selected_projects = list(
-                ProjectPage.objects.live().public().select_related(
+                public_site_pages(ProjectPage, request).select_related(
                     'category', 'hero_image'
                 ).order_by('-date', '-first_published_at')[:3]
             )
 
-        published_projects = ProjectPage.objects.live().public()
-        published_notes = BlogPage.objects.live().public()
+        published_projects = public_site_pages(ProjectPage, request)
+        published_notes = public_site_pages(BlogPage, request)
 
         context['primary_project'] = selected_projects[0] if selected_projects else None
         context['supporting_projects'] = selected_projects[1:]
@@ -299,7 +299,6 @@ class HomePage(Page):
         context['published_note_count'] = published_notes.count()
         context['latest_project'] = published_projects.order_by('-date', '-first_published_at').first()
         context['latest_note'] = published_notes.order_by('-date', '-first_published_at').first()
-        context['htb_profile'] = get_htb_profile(request)
         return context
 
     class Meta:
@@ -320,7 +319,7 @@ class BlogIndexPage(Page):
         context = super().get_context(request, *args, **kwargs)
         
         # Get all published blog posts
-        all_posts = BlogPage.objects.live().public().order_by('-first_published_at')
+        all_posts = public_site_pages(BlogPage, request).descendant_of(self).order_by('-first_published_at')
         
         # Filter by category if provided
         category = request.GET.get('category')
@@ -514,7 +513,7 @@ class ProjectIndexPage(Page):
         context = super().get_context(request, *args, **kwargs)
     
         # Base queryset
-        all_projects = ProjectPage.objects.live().public().order_by('-date')
+        all_projects = public_site_pages(ProjectPage, request).descendant_of(self).order_by('-date')
     
         def get_multi(key: str) -> list[str]:
             """
