@@ -1,13 +1,23 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load static wagtailcore_tags wagtailimages_tags %}
 
 {% block content %}
 <div class="project-index">
-    <header class="project-index__hero page-frame">
+    <header class="project-index__hero index-hero page-frame">
+        <div class="index-hero__art" aria-hidden="true">
+            <picture>
+                <source media="(max-width: 767px)" type="image/avif" srcset="{% static 'images/nordic-signal/work-systems-atlas-960.avif' %}">
+                <source media="(max-width: 767px)" type="image/webp" srcset="{% static 'images/nordic-signal/work-systems-atlas-960.webp' %}">
+                <source type="image/avif" srcset="{% static 'images/nordic-signal/work-systems-atlas-960.avif' %} 960w, {% static 'images/nordic-signal/work-systems-atlas-1942.avif' %} 1942w" sizes="(min-width: 1740px) 1740px, 100vw">
+                <img src="{% static 'images/nordic-signal/work-systems-atlas-1942.webp' %}" srcset="{% static 'images/nordic-signal/work-systems-atlas-960.webp' %} 960w, {% static 'images/nordic-signal/work-systems-atlas-1942.webp' %} 1942w" sizes="(min-width: 1740px) 1740px, 100vw" width="1942" height="809" alt="" aria-hidden="true" decoding="async" loading="eager" fetchpriority="high">
+            </picture>
+        </div>
+        <div class="index-hero__copy">
         <p class="eyebrow">{% include "home/tags/icon.html" with name="work" only %} <span>02</span> Work archive</p>
         <h1>{{ page.title }}</h1>
         {% if page.intro %}<div class="project-index__intro">{{ page.intro|richtext }}</div>{% endif %}
         <p class="project-index__summary"><span>{{ projects|length|stringformat:"02d" }}</span> system{{ projects|length|pluralize }} indexed</p>
+        </div>
     </header>
 
     <section class="project-index__controls" aria-label="Archive filters"><div class="page-frame">
