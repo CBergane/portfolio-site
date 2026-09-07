@@ -1,0 +1,6 @@
+{% load wagtailcore_tags %}
+<a class="reading-neighbor" href="{% pageurl entry %}">
+    <span class="reading-neighbor__route">{{ direction }} <span aria-hidden="true">{% if direction == "Previous" %}←{% else %}→{% endif %}</span></span>
+    <span class="reading-neighbor__type">{% if entry.content_type.model == "blogpage" %}Field note{% else %}Case study{% endif %}{% if entry.date %} / <time datetime="{{ entry.date|date:'Y-m-d' }}">{{ entry.date|date:"d M Y" }}</time>{% endif %}</span>
+    <span class="reading-neighbor__title">{{ entry.title }}</span>
+</a>

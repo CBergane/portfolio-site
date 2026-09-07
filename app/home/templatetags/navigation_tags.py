@@ -1,40 +1,38 @@
 from django import template
-from wagtail.models import Page, Site
+
+from home.navigation import site_destinations, site_for_request
 
 register = template.Library()
 
 
-@register.simple_tag()
-def get_site_root():
-    """
-    Get the site root page (home page)
-    """
-    return Page.objects.filter(depth=2).first()
+@register.simple_tag(takes_context=True)
+def get_site_root(context):
+    site = site_for_request(context.get('request'))
+    return site.root_page if site else None
+
+
+@register.simple_tag(takes_context=True)
+def get_site_navigation(context):
+    return site_destinations(context.get('request'), context.get('page'))
 
 
 @register.inclusion_tag('home/tags/main_navigation.html', takes_context=True)
 def main_navigation(context):
-    """
-    Hämta alla publicerade pages som ska visas i menyn
-    """
-    request = context['request']
-    
-    # Hämta site via Wagtail Site-modellen
-    try:
-        site = Site.find_for_request(request)
-    except:
-        # Fallback till default site
-        site = Site.objects.filter(is_default_site=True).first()
-    
-    if not site:
-        return {'menu_pages': [], 'request': request}
-    
-    root_page = site.root_page
-    
-    # Hämta alla direkta barn till root som är publicerade och ska visas i menyn
-    menu_pages = root_page.get_children().live().in_menu()
-    
-    return {
-        'menu_pages': menu_pages,
-        'request': request,
-    }
+    request = context.get('request')
+    current_page = context.get('page')
+    destinations = get_site_navigation(context)
+    nav_items = []
+    for label, key in (('WORK', 'work'), ('ABOUT', 'root'), ('NOTES', 'notes'), ('CONTACT', 'contact')):
+        destination = destinations[key]
+        url = destination.get_url(request=request) if destination else None
+        if not url:
+            continue
+        is_active = bool(label != 'ABOUT' and current_page and (
+            current_page.pk == destination.pk or current_page.is_descendant_of(destination)
+        ))
+        nav_items.append({
+            'label': label,
+            'url': url + '#operating-principle' if label == 'ABOUT' else url,
+            'is_active': is_active,
+        })
+    return {'nav_items': nav_items}

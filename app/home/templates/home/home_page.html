@@ -1,389 +1,289 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags %}
-{% load wagtailsettings_tags %}
+{% load wagtailcore_tags wagtailimages_tags wagtailsettings_tags navigation_tags static %}
 
 {% block content %}
+{% get_site_navigation as navigation %}
+<div class="home-page">
+    <nav class="section-rail" aria-label="Homepage sections">
+        <ol>
+            <li><a href="#overview"><span>01</span>{% include "home/tags/icon.html" with name="web" only %}<b>Overview</b></a></li>
+            <li><a href="#selected-systems"><span>02</span>{% include "home/tags/icon.html" with name="work" only %}<b>Systems</b></a></li>
+            <li><a href="#operating-principle"><span>03</span>{% include "home/tags/icon.html" with name="security" only %}<b>Principle</b></a></li>
+            <li><a href="#capabilities"><span>04</span>{% include "home/tags/icon.html" with name="infrastructure" only %}<b>Capabilities</b></a></li>
+            <li><a href="#current-signal"><span>05</span>{% include "home/tags/icon.html" with name="signal" only %}<b>Signal</b></a></li>
+        </ol>
+        <p class="section-rail__status" hidden aria-hidden="true"></p>
+    </nav>
 
-{# Hero Section #}
-<section class="min-h-screen flex items-center justify-center bg-gradient-to-b from-htb-darker via-htb-dark to-htb-darker relative overflow-hidden">
-    {# Animated background grid #}
-    <div class="absolute inset-0 bg-[linear-gradient(rgba(159,239,0,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(159,239,0,0.03)_1px,transparent_1px)] bg-[size:50px_50px]"></div>
-    
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 fade-in">
-        <div class="text-center space-y-8">
-            {# Terminal-style greeting #}
-            <div class="font-mono text-htb-green text-sm sm:text-base">
-                <span class="text-gray-500">christian@portfolio:~$</span> whoami
-            </div>
-            
-            {# Main heading with glitch effect #}
-            <h1 class="text-5xl sm:text-6xl md:text-7xl font-bold glitch">
-                <span class="text-htb-cyan">Christian</span>
-                <span class="text-htb-green"> Bergane</span>
-            </h1>
-            
-            {# Subtitle with typing effect #}
-            <p class="text-xl sm:text-2xl md:text-3xl text-gray-300 font-mono">
-                IT Security Specialist
-                <span class="text-htb-cyan">&</span>
-                Infrastructure Engineer
-            </p>
-            
-            {# Description #}
-            <div class="max-w-2xl mx-auto space-y-4 text-gray-400">
-                <p class="text-lg">
-                    Building secure infrastructure, practical security tooling and modern web platforms.
-                    From kitchen pressure to cloud reliability, I bring structure, curiosity and resilience to every project.
+    <section id="overview" class="signal-hero" data-motion="trace" aria-labelledby="hero-title">
+
+        <div class="page-frame signal-hero__grid">
+            <div class="signal-hero__content" data-motion="document">
+                <p class="eyebrow"><span>01</span> Stockholm / Web development · Infrastructure · Security</p>
+                <h1 id="hero-title">Christian<br>Bergane</h1>
+                <span class="hero-rule" aria-hidden="true"></span>
+
+                <p class="signal-hero__statement">
+                    I build systems that remain understandable when they fail.
                 </p>
+
+                <dl class="hero-meta">
+                    <div><dt>Focus</dt><dd>Web development, Infrastructure, Security</dd></div>
+                    <div><dt>Domain</dt><dd>Applications and the systems behind them</dd></div>
+                    <div><dt>Approach</dt><dd>Systematic, measurable, durable</dd></div>
+                </dl>
+
+                <div class="signal-hero__actions">
+                    <a class="button button--primary" href="#selected-systems">View selected work <span aria-hidden="true">→</span></a>
+                    {% if navigation.contact %}<a class="button button--quiet" href="{% pageurl navigation.contact %}">Start a conversation <span aria-hidden="true">↗</span></a>{% endif %}
+                </div>
             </div>
 
-            {# Rotating terminal line #}
-            <div class="max-w-3xl mx-auto font-mono text-sm sm:text-base text-left bg-htb-gray/50 border border-htb-cyan/20 rounded-lg px-4 py-3 shadow-lg shadow-htb-cyan/5 min-h-[3rem]">
-                <span class="text-gray-500">christian@portfolio:~$</span>
-                <span
-                    id="terminal-rotating-text"
-                    class="text-htb-cyan ml-1"
-                    data-phrases="monitor logs and signals|harden Linux and cloud infrastructure|build Django and Wagtail web platforms|automate security workflows|turn homelab research into real projects"
-                >monitor logs and signals</span><span class="text-htb-green cursor-blink">█</span>
+            <aside class="system-blueprint" data-motion="document" aria-label="System architecture trace">
+                <div class="system-blueprint__header">
+                    <span>SYSTEM ARCHITECTURE / ILLUSTRATIVE</span>
+                    <span class="system-blueprint__location">59.3293° N&nbsp;&nbsp;18.0686° E</span>
+                </div>
+
+                <figure class="system-blueprint__diagram">
+                    <figcaption>Network topology for the Edge, Origin, Application and Data layers.</figcaption>
+                    <svg class="blueprint-field" viewBox="0 0 920 620" aria-hidden="true">
+                        <g class="blueprint-field__contours">
+                            <path d="M560 25C685 53 870 109 852 205C835 303 711 318 708 404C703 502 825 518 902 592"/>
+                            <path d="M632 48C725 88 795 127 782 194C767 270 713 298 731 365C750 440 819 452 884 505"/>
+                            <path d="M510 76C596 114 632 158 612 216C590 285 510 302 529 374C544 435 626 464 668 544"/>
+                            <path d="M748 23L708 94L731 154L689 215L715 281L674 347L727 411L692 486L776 561"/>
+                        </g>
+                        <g class="blueprint-field__mesh">
+                            <path d="M510 118L612 216L689 215L782 194M529 374L674 347L731 365M668 544L692 486L884 505"/>
+                            <path d="M560 25L612 216M632 48L689 215M708 404L674 347M703 502L692 486"/>
+                        </g>
+                        <g class="blueprint-field__coordinates">
+                            <circle cx="731" cy="206" r="6"/>
+                            <circle cx="674" cy="347" r="6"/>
+                            <circle cx="692" cy="486" r="6"/>
+                            <path d="M731 206H852M674 347H852M692 486H852"/>
+                        </g>
+                        <path class="blueprint-field__signal"
+                              d="M430 118H550L620 174V263L570 299V401L646 452V558H905"/>
+                        <g class="blueprint-field__nodes">
+                            <circle cx="430" cy="118" r="9"/><circle cx="570" cy="299" r="9"/>
+                            <circle cx="646" cy="452" r="9"/><circle cx="905" cy="558" r="9"/>
+                        </g>
+                    </svg>
+                </figure>
+
+                <ol class="system-blueprint__layers">
+                    <li>
+                        <span class="layer-number">01</span>
+                        <span class="layer-icon" aria-hidden="true">
+                            {% include "home/tags/icon.html" with name="signal" only %}
+                        </span>
+                        <span class="layer-copy"><strong>EDGE</strong><em>Ingress</em></span>
+                    </li>
+                    <li>
+                        <span class="layer-number">02</span>
+                        <span class="layer-icon" aria-hidden="true">
+                            {% include "home/tags/icon.html" with name="infrastructure" only %}
+                        </span>
+                        <span class="layer-copy"><strong>ORIGIN</strong><em>Hosting</em></span>
+                    </li>
+                    <li>
+                        <span class="layer-number">03</span>
+                        <span class="layer-icon" aria-hidden="true">
+                            {% include "home/tags/icon.html" with name="web" only %}
+                        </span>
+                        <span class="layer-copy"><strong>APPLICATION</strong><em>Web service</em></span>
+                    </li>
+                    <li data-state="active">
+                        <span class="layer-number">04</span>
+                        <span class="layer-icon" aria-hidden="true">
+                            {% include "home/tags/icon.html" with name="data" only %}
+                        </span>
+                        <span class="layer-copy"><strong>DATA</strong><em>Persistence</em></span>
+                    </li>
+                </ol>
+
+                <div class="system-blueprint__footer">
+                    <span>SYS-04 / GRID A2</span><span>STOCKHOLM</span><span>REQUEST PATH</span>
+                </div>
+            </aside>
+        </div>
+
+        <div class="page-frame signal-hero__index" aria-hidden="true">
+            <span>CB / {% now "Y" %}</span><span>SCROLL TO INSPECT</span>
+        </div>
+    </section>
+
+    <section id="selected-systems" class="systems-section systems-section--featured" data-motion="document" aria-labelledby="systems-title">
+        <div class="page-frame">
+            <div class="section-heading reveal">
+                <div>
+                    <p class="eyebrow"><span>02</span> Selected systems</p>
+                    <h2 id="systems-title">Work built to operate.</h2>
+                </div>
+                {% if navigation.work %}<a class="text-link" href="{% pageurl navigation.work %}">All projects <span aria-hidden="true">↗</span></a>{% endif %}
             </div>
-            
-            {# Skills badges #}
-            <div class="flex flex-wrap justify-center gap-3 pt-4">
-                <span class="px-4 py-2 bg-htb-gray border border-htb-green/30 rounded-lg text-sm font-mono text-htb-green hover:bg-htb-green/10 transition-colors">Python</span>
-                <span class="px-4 py-2 bg-htb-gray border border-htb-cyan/30 rounded-lg text-sm font-mono text-htb-cyan hover:bg-htb-cyan/10 transition-colors">Django</span>
-                <span class="px-4 py-2 bg-htb-gray border border-htb-green/30 rounded-lg text-sm font-mono text-htb-green hover:bg-htb-green/10 transition-colors">Proxmox</span>
-                <span class="px-4 py-2 bg-htb-gray border border-htb-cyan/30 rounded-lg text-sm font-mono text-htb-cyan hover:bg-htb-cyan/10 transition-colors">PostgreSQL</span>
-                <span class="px-4 py-2 bg-htb-gray border border-htb-green/30 rounded-lg text-sm font-mono text-htb-green hover:bg-htb-green/10 transition-colors">Podman</span>
-            </div>
-            
-            {# CTA Buttons #}
-            <div class="flex flex-col sm:flex-row gap-4 justify-center pt-8">
-                <a href="/projects" class="px-8 py-4 bg-htb-green text-htb-darker font-mono font-bold rounded-lg hover:bg-htb-green/90 transition-all hover:scale-105 transform">
-                    View Projects
+
+            {% if primary_project %}
+            <a class="featured-system reveal{% if not primary_project.category and not primary_project.date and not primary_project.duration and not primary_project.status %} featured-system--without-facts{% endif %}" href="{% pageurl primary_project %}">
+                <div class="featured-system__content">
+                    <p class="meta-label"><span>01 /</span> {% if primary_project.category %}{{ primary_project.category.name }}{% else %}Selected system{% endif %}</p>
+                    <h3>{{ primary_project.title }}</h3>
+                    <p class="featured-system__lead">{{ primary_project.intro }}</p>
+                    <span class="featured-system__link">View case study <i aria-hidden="true">→</i></span>
+                </div>
+
+                <div class="featured-system__visual" aria-hidden="true">
+                    {% if primary_project.hero_image %}
+                    {% image primary_project.hero_image fill-1200x800 as primary_project_image %}
+                    <img src="{{ primary_project_image.url }}" width="{{ primary_project_image.width }}" height="{{ primary_project_image.height }}" alt="">
+                    {% else %}
+                    <svg aria-hidden="true" class="project-topology" viewBox="0 0 760 500">
+                        <defs>
+                            <pattern id="project-grid" width="32" height="32" patternUnits="userSpaceOnUse">
+                                <path d="M32 0H0V32" fill="none" stroke="currentColor" stroke-width="0.75"/>
+                            </pattern>
+                        </defs>
+                        <rect width="760" height="500" fill="url(#project-grid)"/>
+                        <g class="project-topology__contours">
+                            <path d="M430 24C544 55 691 112 680 204C670 285 564 327 587 414C598 457 657 475 728 492"/>
+                            <path d="M486 10C624 68 722 134 699 231C680 309 627 346 654 420C666 453 709 474 748 486"/>
+                            <path d="M357 78C447 119 500 165 482 231C464 296 401 326 419 390C432 438 495 462 530 492"/>
+                        </g>
+                        <g class="project-topology__routes">
+                            <path d="M74 112H221L278 168H390L445 222H571L625 274H719"/>
+                            <path d="M145 374H277L331 320H463L518 371H668"/>
+                            <path d="M221 112V320M390 168V320M571 222V371"/>
+                        </g>
+                        <g class="project-topology__nodes">
+                            <circle cx="74" cy="112" r="7"/><circle cx="221" cy="112" r="7"/>
+                            <circle cx="390" cy="168" r="7"/><circle cx="571" cy="222" r="7"/>
+                            <circle cx="719" cy="274" r="7"/><circle cx="145" cy="374" r="7"/>
+                            <circle cx="331" cy="320" r="7"/><circle cx="518" cy="371" r="7"/>
+                        </g>
+                        <path class="project-topology__signal" d="M74 112H221L278 168H390L445 222H571"/>
+                        <g class="project-topology__labels">
+                            <text x="74" y="88">INGEST</text><text x="390" y="144">NORMALIZE</text>
+                            <text x="571" y="198">CONTEXT</text><text x="518" y="398">QUERY</text>
+                        </g>
+                    </svg>
+                    {% endif %}
+                    {% if primary_project.date or primary_project.status %}
+                    <div class="featured-system__coordinates">{% if primary_project.date %}{{ primary_project.date|date:"Y.m.d" }}{% endif %}{% if primary_project.date and primary_project.status %} / {% endif %}{% if primary_project.status %}{{ primary_project.get_status_display|upper }}{% endif %}</div>
+                    {% endif %}
+                </div>
+
+                {% if primary_project.category or primary_project.date or primary_project.duration or primary_project.status %}
+                <dl class="featured-system__facts">
+                    {% if primary_project.category %}<div><dt>Category</dt><dd>{{ primary_project.category.name }}</dd></div>{% endif %}
+                    {% if primary_project.date %}<div><dt>Date</dt><dd>{{ primary_project.date|date:"M Y" }}</dd></div>{% endif %}
+                    {% if primary_project.duration %}<div><dt>Duration</dt><dd>{{ primary_project.duration }}</dd></div>{% endif %}
+                    {% if primary_project.status %}<div><dt>State</dt><dd>{{ primary_project.get_status_display }}</dd></div>{% endif %}
+                </dl>
+                {% endif %}
+            </a>
+
+            {% endif %}
+            {% if supporting_projects %}
+            <div class="supporting-systems">
+                {% for project in supporting_projects %}
+                <a class="supporting-system reveal" href="{% pageurl project %}">
+                    <div class="supporting-system__visual" aria-hidden="true">
+                        {% if project.hero_image %}
+                        {% image project.hero_image fill-280x120 as supporting_project_image %}
+                        <img src="{{ supporting_project_image.url }}" width="{{ supporting_project_image.width }}" height="{{ supporting_project_image.height }}" alt="">
+                        {% else %}
+                        <svg aria-hidden="true" class="supporting-system__schematic" viewBox="0 0 132 48">
+                            <path d="M5 24H38L54 10H84L99 36H127"/><circle cx="5" cy="24" r="3"/><circle cx="54" cy="10" r="3"/><circle cx="99" cy="36" r="3"/><circle cx="127" cy="36" r="3"/>
+                        </svg>
+                        {% endif %}
+                    </div>
+                    <div class="supporting-system__content">
+                        <b>0{{ forloop.counter|add:1 }}</b><div>{% if project.category or project.status or project.date or project.duration %}<small>{% if project.category %}<span>{{ project.category.name }}</span>{% endif %}{% if project.status %}<span>{{ project.get_status_display }}</span>{% endif %}{% if project.date %}<span>{{ project.date|date:"Y" }}</span>{% endif %}{% if project.duration %}<span>{{ project.duration }}</span>{% endif %}</small>{% endif %}<h3>{{ project.title }}</h3></div><i aria-hidden="true">↗</i>
+                    </div>
                 </a>
-                <a href="/contact" class="px-8 py-4 bg-transparent border-2 border-htb-cyan text-htb-cyan font-mono font-bold rounded-lg hover:bg-htb-cyan/10 transition-all">
-                    Get In Touch
-                </a>
+                {% endfor %}
             </div>
-            
-            {# Scroll indicator #}
-            <div class="pt-16 animate-bounce">
-                <svg class="w-6 h-6 mx-auto text-htb-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-                </svg>
-            </div>
+            {% endif %}
         </div>
-    </div>
-</section>
+    </section>
 
-{# About Section #}
-<section id="about" class="py-20 bg-htb-dark">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="text-4xl font-bold text-htb-cyan font-mono mb-12 text-center">
-            <span class="text-htb-green">~/</span>about
-        </h2>
-        
-        <div class="grid md:grid-cols-2 gap-12 items-start">
-            <div class="space-y-6 text-gray-300">
-               <div class="bg-htb-gray/50 border border-htb-cyan/20 rounded-lg overflow-hidden shadow-lg shadow-htb-cyan/5">
-                    <div class="flex items-center justify-between border-b border-htb-cyan/10 bg-htb-darker/70 px-4 py-3">
-                        <div class="flex items-center gap-2">
-                            <span class="h-2.5 w-2.5 rounded-full bg-htb-green/80"></span>
-                            <span class="h-2.5 w-2.5 rounded-full bg-htb-cyan/60"></span>
-                            <span class="h-2.5 w-2.5 rounded-full bg-gray-500/60"></span>
-                        </div>
-                
-                        <span class="text-xs text-gray-500 font-mono">about.txt</span>
-                    </div>
-                
-                    <div class="p-6 font-mono text-sm sm:text-base">
-                        <p class="text-gray-500 mb-5">
-                            <span class="text-htb-green">christian@portfolio</span><span class="text-gray-500">:~$</span>
-                            <span class="text-htb-cyan">cat about.txt</span>
-                        </p>
-                
-                        <div class="space-y-4 text-gray-300 leading-relaxed">
-                            <div>
-                                <span class="text-htb-cyan">role</span>
-                                <span class="text-gray-500">:</span>
-                                <span> IT Security Specialist & Infrastructure Engineer</span>
-                            </div>
-                
-                            <div>
-                                <span class="text-htb-cyan">focus</span>
-                                <span class="text-gray-500">:</span>
-                                <span> secure infrastructure, practical security tooling and modern web platforms</span>
-                            </div>
-                
-                            <div>
-                                <span class="text-htb-cyan">background</span>
-                                <span class="text-gray-500">:</span>
-                                <span> from kitchen pressure to cloud reliability</span>
-                            </div>
-                
-                            <div>
-                                <span class="text-htb-cyan">mission</span>
-                                <span class="text-gray-500">:</span>
-                                <span>
-                                    build reliable systems, understand how they fail, and turn security knowledge into real projects
-                                </span>
-                            </div>
-                        </div>
-                
-                        <p class="mt-5 text-gray-500">
-                            <span class="text-htb-green">status</span>
-                            <span class="text-gray-500">:</span>
-                            <span class="text-htb-cyan"> learning, building, hardening</span>
-                            <span class="text-htb-green cursor-blink">█</span>
-                        </p>
-                    </div>
+    <section id="operating-principle" class="position-section" data-motion="field" aria-labelledby="position-title">
+        <div class="page-frame position-section__grid">
+            <div class="section-index reveal"><span>03</span><p>OPERATING PRINCIPLE</p></div>
+            <div class="position-section__content reveal">
+                <h2 id="position-title">Security is a property<br>of the whole system.</h2>
+                <div class="position-section__copy">
+                    <p>
+                        My work connects web development, infrastructure and security. I care about
+                        how systems are deployed, how they behave under pressure and whether another
+                        engineer can understand them six months later.
+                    </p>
+                    <p>
+                        Ten years in professional kitchens taught me calm execution, clear ownership
+                        and reliable handovers. Today I apply the same discipline across these three areas.
+                    </p>
                 </div>
-                
-                <div class="bg-htb-gray/50 border border-htb-green/20 rounded-lg overflow-hidden shadow-lg shadow-htb-green/5 font-mono text-sm sm:text-base">
-                    <div class="flex items-center justify-between border-b border-htb-green/10 bg-htb-darker/70 px-4 py-3">
-                        <div class="flex items-center gap-2">
-                            <span class="h-2.5 w-2.5 rounded-full bg-htb-green/80"></span>
-                            <span class="h-2.5 w-2.5 rounded-full bg-htb-cyan/60"></span>
-                            <span class="h-2.5 w-2.5 rounded-full bg-gray-500/60"></span>
-                        </div>
-                
-                        <span class="text-xs text-gray-500 font-mono">focus.log</span>
-                    </div>
-                
-                    <div class="p-6 space-y-4">
-                        <h3 class="text-xl font-mono text-htb-green">Current Focus</h3>
-                
-                        <div class="space-y-3 text-gray-300">
-                            <div class="flex items-start gap-3">
-                                <span class="text-htb-green shrink-0">[+]</span>
-                                <span>Pursuing OSCP & CPTS certifications</span>
-                            </div>
-                
-                            <div class="flex items-start gap-3">
-                                <span class="text-htb-green shrink-0">[+]</span>
-                                <span>Building home lab infrastructure with Proxmox, Linux and Cloudflare</span>
-                            </div>
-                
-                            <div class="flex items-start gap-3">
-                                <span class="text-htb-green shrink-0">[+]</span>
-                                <span>Developing Django/Wagtail platforms, SIEM tooling and threat intel apps</span>
-                            </div>
-                
-                            <div class="flex items-start gap-3">
-                                <span class="text-htb-green shrink-0">[+]</span>
-                                <span>Moving deeper into offensive security, detection engineering and resilient systems</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            {# Interactive stats with HTMX #}
-{% get_settings %}
-
-<div class="space-y-4">
-    <div class="bg-htb-gray border border-htb-green/30 rounded-lg p-6 hover:border-htb-green/60 transition-colors">
-        <div class="flex justify-between items-center">
-            <span class="text-gray-400 font-mono">Experience</span>
-            <span class="text-2xl font-bold text-htb-green">2+ years</span>
-        </div>
-    </div>
-    
-    <div class="bg-htb-gray border border-htb-cyan/30 rounded-lg p-6 hover:border-htb-cyan/60 transition-colors">
-        <div class="flex justify-between items-center">
-            <span class="text-gray-400 font-mono">Projects</span>
-            <span class="text-2xl font-bold text-htb-cyan">{{ total_projects }}</span>
-        </div>
-    </div>
-    
-{% if settings.home.SocialMediaSettings.hackthebox_url %}
-<a href="{{ settings.home.SocialMediaSettings.hackthebox_url }}"
-   target="_blank"
-   rel="noopener noreferrer"
-   class="block bg-htb-dark border-2 border-htb-green/30 rounded-lg p-6 hover:border-htb-green hover:shadow-lg hover:shadow-htb-green/20 transition-all transform hover:-translate-y-1 group">
-
-    <div class="flex items-start justify-between gap-4 mb-5">
-        <div class="flex items-center gap-3">
-            <div class="flex h-11 w-11 items-center justify-center rounded-lg bg-htb-green/10 border border-htb-green/30 text-htb-green font-mono text-lg">
-                HTB
-            </div>
-
-            <div>
-                <h3 class="text-lg font-mono font-bold text-htb-green">
-                    Hack The Box Labs
-                </h3>
-                <p class="text-xs text-gray-500 font-mono">
-                    {{ htb_profile.profile_name|default:"CBergane" }} #{{ htb_profile.country_code|default:"SE" }}
-                </p>
+                {% if page.body %}<div class="position-section__editorial">{{ page.body|richtext }}</div>{% endif %}
             </div>
         </div>
+    </section>
 
-        <div class="flex items-center gap-2">
-            <span class="hidden sm:inline-flex px-3 py-1 rounded bg-htb-cyan/10 border border-htb-cyan/30 text-htb-cyan text-xs font-mono">
-                Labs profile
-            </span>
-
-            <svg class="w-5 h-5 text-htb-green transform group-hover:translate-x-1 transition-transform"
-                 fill="none"
-                 stroke="currentColor"
-                 viewBox="0 0 24 24">
-                <path stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14">
-                </path>
-            </svg>
-        </div>
-    </div>
-
-    <div class="bg-htb-gray/50 rounded-lg p-4 border border-htb-cyan/20 mb-4">
-        <p class="text-gray-500 text-xs font-mono mb-1">
-            XP Progression
-        </p>
-
-        <p class="text-2xl font-bold text-white font-mono">
-            {{ htb_profile.xp_rank|default:"Skilled" }}
-            <span class="text-gray-500 text-base">· Level</span>
-            <span class="text-htb-cyan">{{ htb_profile.xp_level|default:"43" }}</span>
-        </p>
-
-        <p class="text-sm text-gray-400 font-mono">
-            Grade {{ htb_profile.xp_grade|default:"III" }}
-        </p>
-
-        <div class="mt-4">
-            <div class="flex justify-between text-xs font-mono text-gray-500 mb-1">
-                <span>XP</span>
-                <span>
-                    {{ htb_profile.xp_current|default:"659" }}/{{ htb_profile.xp_required|default:"1058" }}
-                </span>
+    <section id="capabilities" class="capabilities-section" data-motion="document" aria-labelledby="capabilities-title">
+        <div class="page-frame">
+            <div class="section-heading section-heading--compact reveal">
+                <div><p class="eyebrow"><span>04</span> Capabilities</p><h2 id="capabilities-title">Across the stack.</h2></div>
             </div>
+            <div class="capability-grid">
+                <article class="capability">
+                    <span class="capability__index">{% include "home/tags/icon.html" with name="web" only %} A</span><h3>Web development</h3>
+                    <p>Web tools and automation that turn operational needs into maintainable workflows.</p>
+                    <p class="capability__tools">Python · Django · Wagtail · HTMX</p>
+                </article>
+                <article class="capability">
+                    <span class="capability__index">{% include "home/tags/icon.html" with name="infrastructure" only %} B</span><h3>Infrastructure</h3>
+                    <p>Small platforms that are reproducible, observable and straightforward to recover.</p>
+                    <p class="capability__tools">Proxmox · Podman · Cloudflare · PostgreSQL</p>
+                </article>
+                <article class="capability">
+                    <span class="capability__index">{% include "home/tags/icon.html" with name="security" only %} C</span><h3>Security</h3>
+                    <p>Detection thinking, hardening, threat intelligence and practical defensive controls.</p>
+                    <p class="capability__tools">Sentinel · Defender · Linux · KQL</p>
+                </article>
+            </div>
+        </div>
+    </section>
 
-            <div class="h-2 bg-htb-darker rounded-full overflow-hidden">
-                <div class="h-full bg-htb-green rounded-full shadow-[0_0_14px_rgba(159,239,0,0.45)]"
-                     style="width: {{ htb_profile.xp_percent|default:"0" }}%;">
+    <section id="current-signal" class="signal-section" data-motion="trace" aria-labelledby="signal-title">
+        <div class="page-frame">
+            <div class="signal-section__panel">
+                <div class="signal-section__panel-meta" aria-hidden="true"><span>SIGNAL REGISTRY</span><span>STOCKHOLM</span><span>INDEX / 05</span></div>
+                <div class="signal-section__grid">
+                    <div class="signal-section__editorial"><p class="eyebrow"><span>05</span> / Current signal</p><h2 id="signal-title">Learning is part of the infrastructure.</h2></div>
+                    <svg class="signal-section__route" aria-hidden="true" viewBox="0 0 1200 360" preserveAspectRatio="none"><path class="signal-section__route-secondary" d="M30 292H430V86H1160M660 326V210H1135"/><path d="M42 272H510V142H1144"/><circle cx="510" cy="272" r="5"/><circle cx="510" cy="142" r="5"/><circle cx="1144" cy="142" r="5"/></svg>
+                    <dl class="signal-section__metrics" aria-label="Signal registry">
+                        <div><dt>Systems published</dt><dd>{{ published_project_count }}</dd></div>
+                        <div><dt>Notes logged</dt><dd>{{ published_note_count }}</dd></div>
+                        {% if latest_project %}<div><dt>Latest system</dt><dd><a href="{% pageurl latest_project %}">{{ latest_project.title }}</a></dd></div>{% endif %}
+                        {% if latest_note %}<div><dt>Latest note</dt><dd><a href="{% pageurl latest_note %}">{{ latest_note.title }} <time datetime="{{ latest_note.date|date:'Y-m-d' }}">{{ latest_note.date|date:"d M Y" }}</time></a></dd></div>{% endif %}
+                        <div><dt>Primary focus</dt><dd>Web development · Infrastructure · Security</dd></div>
+                    </dl>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <div class="grid grid-cols-2 gap-3 text-sm">
-        <div class="bg-htb-gray/50 rounded p-3 border border-transparent hover:border-htb-green/20 transition-colors">
-            <p class="text-gray-500 text-xs mb-1">Weekly streak</p>
-            <p class="text-htb-green font-mono font-bold">
-                {{ htb_profile.weekly_streak|default:"11" }} weeks
-            </p>
+    <section class="contact-cta" aria-labelledby="contact-title">
+        <div class="page-frame contact-cta__inner reveal">
+            <p class="eyebrow"><span>06</span> Contact</p>
+            <h2 id="contact-title">Have a system worth<br>making more resilient?</h2>
+            {% if navigation.contact %}<a class="button button--primary" href="{% pageurl navigation.contact %}">Start a conversation</a>{% endif %}
         </div>
-
-        <div class="bg-htb-gray/50 rounded p-3 border border-transparent hover:border-htb-cyan/20 transition-colors">
-            <p class="text-gray-500 text-xs mb-1">Weekly XP</p>
-            <p class="text-htb-cyan font-mono font-bold">
-                {{ htb_profile.weekly_xp|default:"200" }}/{{ htb_profile.weekly_xp_required|default:"200" }}
-            </p>
-        </div>
-
-        <div class="bg-htb-gray/50 rounded p-3 border border-transparent hover:border-htb-green/20 transition-colors">
-            <p class="text-gray-500 text-xs mb-1">Legacy rank</p>
-            <p class="text-htb-green font-mono font-bold">
-                {{ htb_profile.legacy_rank|default:htb_profile.rank|default:"—" }}
-            </p>
-        </div>
-
-        <div class="bg-htb-gray/50 rounded p-3 border border-transparent hover:border-htb-cyan/20 transition-colors">
-            <p class="text-gray-500 text-xs mb-1">Machines / Flags</p>
-            <p class="text-htb-cyan font-mono font-bold">
-                {{ htb_profile.machines|default_if_none:"—" }} / {{ htb_profile.flags|default_if_none:"—" }}
-            </p>
-        </div>
-    </div>
-
-</a>
-{% endif %}
+    </section>
 </div>
-        </div>
-    </div>
-</section>
+{% endblock %}
 
-{# Services Section #}
-<section id="services" class="py-20 bg-htb-darker">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="text-4xl font-bold text-htb-cyan font-mono mb-12 text-center">
-            <span class="text-htb-green">~/</span>services
-        </h2>
-        
-        <div class="grid md:grid-cols-3 gap-8">
-            {# Service 1 #}
-            <div class="bg-htb-gray border border-htb-green/30 rounded-lg p-6 hover:border-htb-green hover:shadow-lg hover:shadow-htb-green/20 transition-all transform hover:-translate-y-2">
-                <div class="text-htb-green text-3xl mb-4">🌐</div>
-                <h3 class="text-xl font-mono text-htb-cyan mb-3">Web Development</h3>
-                <p class="text-gray-400 text-sm">Custom websites and web applications built with Django, Wagtail, and modern frontend technologies.</p>
-            </div>
-            
-            {# Service 2 #}
-            <div class="bg-htb-gray border border-htb-cyan/30 rounded-lg p-6 hover:border-htb-cyan hover:shadow-lg hover:shadow-htb-cyan/20 transition-all transform hover:-translate-y-2">
-                <div class="text-htb-cyan text-3xl mb-4">🔧</div>
-                <h3 class="text-xl font-mono text-htb-cyan mb-3">Infrastructure Support</h3>
-                <p class="text-gray-400 text-sm">Server setup, maintenance, and optimization. From Proxmox to cloud deployments.</p>
-            </div>
-            
-            {# Service 3 #}
-            <div class="bg-htb-gray border border-htb-green/30 rounded-lg p-6 hover:border-htb-green hover:shadow-lg hover:shadow-htb-green/20 transition-all transform hover:-translate-y-2">
-                <div class="text-htb-green text-3xl mb-4">☁️</div>
-                <h3 class="text-xl font-mono text-htb-cyan mb-3">Hosting via Linode</h3>
-                <p class="text-gray-400 text-sm">Reliable hosting solutions with monitoring, backups, and 24/7 uptime.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-
-<script>
-(function () {
-    const el = document.getElementById("terminal-rotating-text");
-    if (!el) return;
-
-    const phrases = el.dataset.phrases.split("|");
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    if (prefersReducedMotion) {
-        el.textContent = phrases[0];
-        return;
-    }
-
-    let phraseIndex = 0;
-    let charIndex = 0;
-    let isDeleting = false;
-
-    function typeLoop() {
-        const currentPhrase = phrases[phraseIndex];
-
-        if (isDeleting) {
-            charIndex--;
-        } else {
-            charIndex++;
-        }
-
-        el.textContent = currentPhrase.slice(0, charIndex);
-
-        let delay = isDeleting ? 35 : 55;
-
-        if (!isDeleting && charIndex === currentPhrase.length) {
-            delay = 1600;
-            isDeleting = true;
-        }
-
-        if (isDeleting && charIndex === 0) {
-            isDeleting = false;
-            phraseIndex = (phraseIndex + 1) % phrases.length;
-            delay = 350;
-        }
-
-        window.setTimeout(typeLoop, delay);
-    }
-
-    typeLoop();
-})();
-</script>
-
-
+{% block extra_js %}
+<script src="{% static 'js/home.js' %}" defer></script>
 {% endblock %}
