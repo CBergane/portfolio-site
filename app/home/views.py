@@ -4,17 +4,6 @@ from django_ratelimit.decorators import ratelimit
 import requests
 import os
 
-from .htb import get_htb_profile
-
-
-@require_http_methods(["GET"])
-def htb_stats(request):
-    """
-    Simple HTMX endpoint
-    """
-    return JsonResponse(get_htb_profile(request))
-
-
 def send_discord_notification(submission):
     """
     Send contact form submission to Discord webhook

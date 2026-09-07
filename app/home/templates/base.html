@@ -62,20 +62,20 @@
             {% if site_root %}<a href="{% pageurl site_root %}" class="site-brand" aria-label="CBergane home">{% else %}<span class="site-brand" aria-label="CBergane">{% endif %}
                 <span class="site-brand__mark" aria-hidden="true"></span>
                 <span>CBERGANE</span>
-                <span class="site-brand__descriptor">SYSTEMS &amp; SECURITY</span>
+                <span class="site-brand__descriptor">WEB / INFRASTRUCTURE / SECURITY</span>
             {% if site_root %}</a>{% else %}</span>{% endif %}
 
             <nav class="site-nav site-nav--desktop" aria-label="Primary navigation">
                 {% main_navigation %}
             </nav>
 
-            <button class="menu-toggle" id="mobile-menu-btn" type="button"
+            <button class="menu-toggle" id="mobile-menu-btn" type="button" hidden
                     aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
                 <span></span><span></span>
             </button>
         </div>
 
-        <nav id="mobile-menu" class="site-nav site-nav--mobile" aria-label="Mobile navigation" hidden>
+        <nav id="mobile-menu" class="site-nav site-nav--mobile" aria-label="Mobile navigation">
             {% main_navigation %}
         </nav>
     </header>
@@ -88,7 +88,7 @@
         <div class="site-footer__inner">
             <div class="site-footer__identity">
                 <span class="meta-label">CBERGANE / STOCKHOLM</span>
-                <p>Security engineering, infrastructure and practical systems.</p>
+                <p>Web development, Infrastructure and Security.</p>
             </div>
 
             <div class="site-footer__links" aria-label="Social links">
@@ -107,8 +107,7 @@
             </div>
 
             <div class="site-footer__status">
-                <span class="status-dot" aria-hidden="true"></span>
-                <span>Systems operational</span>
+                <span>Portfolio / Selected work</span>
             </div>
         </div>
         <div class="site-footer__base">
@@ -123,11 +122,22 @@
             const menu = document.getElementById('mobile-menu');
             if (!button || !menu) return;
 
+            menu.hidden = true;
+            button.hidden = false;
+            document.documentElement.classList.add('navigation-ready');
+
+            document.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape' && !menu.hidden) {
+                    closeMenu();
+                    button.focus();
+                }
+            });
+
             function closeMenu() {
                 menu.hidden = true;
                 button.setAttribute('aria-expanded', 'false');
                 button.setAttribute('aria-label', 'Open menu');
-                document.body.classList.remove('menu-open');
+
             }
 
             button.addEventListener('click', function () {
@@ -135,7 +145,7 @@
                 menu.hidden = !opening;
                 button.setAttribute('aria-expanded', String(opening));
                 button.setAttribute('aria-label', opening ? 'Close menu' : 'Open menu');
-                document.body.classList.toggle('menu-open', opening);
+
             });
 
             menu.querySelectorAll('a').forEach(function (link) {

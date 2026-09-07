@@ -2,9 +2,9 @@
 {% load wagtailcore_tags %}
 
 {% block content %}
-<main class="blog-index">
+<div class="blog-index">
     <header class="blog-index__hero page-frame">
-        <p class="eyebrow"><span>01</span> Field notes</p>
+        <p class="eyebrow">{% include "home/tags/icon.html" with name="notes" only %} Field notes</p>
         <h1>{{ page.title }}</h1>
         {% if page.intro %}<div class="blog-index__intro">{{ page.intro|richtext }}</div>{% endif %}
     </header>
@@ -26,5 +26,5 @@
             {% if posts.has_previous %}<a href="?page={{ posts.previous_page_number }}{% if selected_category %}&amp;category={{ selected_category }}{% endif %}{% if selected_tag %}&amp;tag={{ selected_tag }}{% endif %}">← Previous</a>{% endif %}<span aria-current="page">Page {{ posts.number }}</span>{% if posts.has_next %}<a href="?page={{ posts.next_page_number }}{% if selected_category %}&amp;category={{ selected_category }}{% endif %}{% if selected_tag %}&amp;tag={{ selected_tag }}{% endif %}">Next →</a>{% endif %}
         </nav>{% endif %}
     </section>
-</main>
+</div>
 {% endblock %}

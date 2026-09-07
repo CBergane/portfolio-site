@@ -7,13 +7,14 @@ from django.template.loader import render_to_string
 from django.test import RequestFactory, TestCase
 from django.urls import reverse
 from wagtail.images import get_image_model
-from wagtail.models import Page, Site
+from wagtail.models import Page, PageViewRestriction, Site
 
 from .models import (
     BlogPage, BlogIndexPage, ContactPage, ContactSubmission, HomePage, HomePageProject, ProjectCategory, ProjectIndexPage,
     ProjectPage, ProjectPageTechStack, TechStack,
 )
 from .templatetags.navigation_tags import main_navigation
+from .navigation import public_site_pages, site_destinations
 
 
 class HomePageProjectSelectionTests(TestCase):
@@ -70,8 +71,7 @@ class HomePageProjectSelectionTests(TestCase):
         return note
 
     def get_home_context(self):
-        with patch('home.htb.get_htb_profile', return_value={}):
-            return self.home_page.get_context(self.request)
+        return self.home_page.get_context(self.request)
 
     def test_selected_projects_follow_editor_order(self):
         first = self.create_project('First selected', 'first-selected', date(2026, 1, 1))
@@ -309,7 +309,7 @@ class ProjectIndexFilteringTests(TestCase):
         image_rendered = self.render_index()
 
         self.assertIn('--archive-image:', image_rendered)
-        self.assertNotIn('<svg', image_rendered)
+        self.assertNotIn('class="project-record__routes"', image_rendered)
 
 
 class NavigationResolutionTests(TestCase):
@@ -342,3 +342,144 @@ class NavigationResolutionTests(TestCase):
         self.assertTrue(items[0]['is_active'])
         self.assertFalse(items[2]['is_active'])
         self.assertTrue(items[1]['url'].endswith('#operating-principle'))
+
+    def items(self, page=None):
+        return main_navigation({'request': self.request, 'page': page or self.home})['nav_items']
+
+    def test_notes_and_contact_activate_only_their_own_branches(self):
+        note = BlogPage(title='A note', slug='a-note', intro='Summary')
+        self.notes.add_child(instance=note)
+        child = Page(title='Contact details', slug='details')
+        self.contact.add_child(instance=child)
+        for current, expected in ((note, 'NOTES'), (self.contact, 'CONTACT'), (child, 'CONTACT')):
+            with self.subTest(expected=expected, page=current.title):
+                self.assertEqual([item['label'] for item in self.items(current) if item['is_active']], [expected])
+
+    def test_homepage_does_not_claim_about_is_the_current_page(self):
+        self.assertFalse(any(item['is_active'] for item in self.items()))
+
+    def test_destinations_do_not_depend_on_titles_slugs_or_direct_parent(self):
+        folder = Page(title='Container', slug='container')
+        self.home.add_child(instance=folder)
+        self.work.move(folder, pos='last-child')
+        self.work.refresh_from_db()
+        self.work.title = 'Renamed archive'
+        self.work.slug = 'a-different-address'
+        self.work.save()
+        work = next(item for item in self.items() if item['label'] == 'WORK')
+        self.assertEqual(work['url'], self.work.get_url(request=self.request))
+
+    def test_drafts_and_private_branches_are_omitted(self):
+        self.work.unpublish()
+        PageViewRestriction.objects.create(page=self.notes, restriction_type='password', password='test')
+        self.assertEqual([item['label'] for item in self.items()], ['ABOUT', 'CONTACT'])
+
+    def test_absent_optional_pages_do_not_render_empty_links(self):
+        for page in (self.work, self.notes, self.contact):
+            page.unpublish()
+        rendered = render_to_string('home/home_page.html', {'page': self.home}, request=self.request)
+        self.assertNotIn('href=""', rendered)
+        self.assertNotIn('Start a conversation', rendered)
+        self.assertNotIn('All projects', rendered)
+        self.assertEqual([item['label'] for item in self.items()], ['ABOUT'])
+
+    def test_another_site_cannot_supply_missing_destinations_or_content(self):
+        other = HomePage(title='Other site', slug='other-site')
+        self.home.get_parent().add_child(instance=other)
+        Site.objects.create(hostname='other.example', root_page=other)
+        other_work = ProjectIndexPage(title='Work', slug='work')
+        other.add_child(instance=other_work)
+        project = ProjectPage(title='Other project', slug='other-project', intro='Summary')
+        other_work.add_child(instance=project)
+        other_notes = BlogIndexPage(title='Notes', slug='notes')
+        other.add_child(instance=other_notes)
+        note = BlogPage(title='Other note', slug='other-note', intro='Summary')
+        other_notes.add_child(instance=note)
+        for page in (self.work, self.notes, self.contact):
+            page.unpublish()
+        HomePageProject.objects.create(home_page=self.home, project=project)
+        self.assertEqual([item['label'] for item in self.items()], ['ABOUT'])
+        context = self.home.get_context(self.request)
+        self.assertIsNone(context['primary_project'])
+        self.assertEqual(context['published_project_count'], 0)
+        self.assertEqual(context['published_note_count'], 0)
+
+    def test_nested_sites_own_their_subtrees(self):
+        nested = HomePage(title='Nested site', slug='nested')
+        self.home.add_child(instance=nested)
+        Site.objects.create(hostname='nested.example', root_page=nested)
+        nested_work = ProjectIndexPage(title='Nested work', slug='nested-work')
+        nested.add_child(instance=nested_work)
+        project = ProjectPage(title='Nested project', slug='nested-project', intro='Summary')
+        nested_work.add_child(instance=project)
+        self.work.unpublish()
+        self.assertNotIn('WORK', [item['label'] for item in self.items()])
+        self.assertFalse(public_site_pages(ProjectPage, self.request).exists())
+
+    def test_index_queries_are_limited_to_their_branch(self):
+        second_work = ProjectIndexPage(title='Second archive', slug='second-archive')
+        self.home.add_child(instance=second_work)
+        second_notes = BlogIndexPage(title='Second notes', slug='second-notes')
+        self.home.add_child(instance=second_notes)
+        project = ProjectPage(title='Second project', slug='second-project', intro='Summary')
+        second_work.add_child(instance=project)
+        note = BlogPage(title='Second note', slug='second-note', intro='Summary')
+        second_notes.add_child(instance=note)
+        self.assertEqual(list(self.work.get_context(self.request)['projects']), [])
+        self.assertEqual(list(self.notes.get_context(self.request)['posts']), [])
+        self.assertEqual(site_destinations(self.request, project)['work'].pk, second_work.pk)
+        self.assertEqual(site_destinations(self.request, note)['notes'].pk, second_notes.pk)
+
+    def test_site_root_with_a_url_prefix_is_used_for_brand_and_about(self):
+        from django.urls import get_script_prefix, set_script_prefix
+
+        previous = get_script_prefix()
+        try:
+            set_script_prefix('/portfolio/')
+            request = RequestFactory().get('/portfolio/', HTTP_HOST='testserver')
+            items = main_navigation({'request': request, 'page': self.home})['nav_items']
+            self.assertEqual(next(item['url'] for item in items if item['label'] == 'ABOUT'),
+                             '/portfolio/#operating-principle')
+            rendered = render_to_string('home/home_page.html', {'page': self.home}, request=request)
+            self.assertIn('href="/portfolio/" class="site-brand"', rendered)
+        finally:
+            set_script_prefix(previous)
+
+    def test_private_content_is_excluded_from_homepage_selection_and_registry(self):
+        project = ProjectPage(title='Private project', slug='private-project', intro='Summary')
+        self.work.add_child(instance=project)
+        PageViewRestriction.objects.create(page=project, restriction_type='password', password='test')
+        HomePageProject.objects.create(home_page=self.home, project=project)
+        context = self.home.get_context(self.request)
+        self.assertIsNone(context['primary_project'])
+        self.assertIsNone(context['latest_project'])
+        self.assertEqual(context['published_project_count'], 0)
+
+    def test_rendered_foundation_has_unique_ids_and_accessible_icons(self):
+        from bs4 import BeautifulSoup
+        from pathlib import Path
+        from django.template.loader import get_template
+
+        for path in (Path(__file__).parent / 'templates').rglob('*.html'):
+            get_template(path.relative_to(Path(__file__).parent / 'templates').as_posix())
+        context = self.home.get_context(self.request)
+        rendered = render_to_string('home/home_page.html', context, request=self.request)
+        soup = BeautifulSoup(rendered, 'html.parser')
+        ids = [element['id'] for element in soup.select('[id]')]
+        self.assertEqual(len(ids), len(set(ids)))
+        self.assertEqual(len(soup.select('.system-blueprint__layers li')), 4)
+        self.assertFalse(soup.select('.system-blueprint img'))
+        for svg in soup.select('svg'):
+            self.assertTrue(svg.get('viewbox'))
+            self.assertEqual(svg.get('aria-hidden'), 'true')
+        for link in soup.select('a'):
+            self.assertTrue(link.get('href'))
+            if link.get('href', '').startswith('/'):
+                self.assertNotEqual(link.get('target'), '_blank')
+            if link.get('target') == '_blank':
+                self.assertTrue({'noopener', 'noreferrer'}.issubset(link.get('rel', [])))
+        self.assertFalse(soup.select('#mobile-menu[hidden]'))
+        self.assertTrue(soup.select('#mobile-menu-btn[hidden]'))
+
+    def test_no_request_has_no_fabricated_navigation(self):
+        self.assertEqual(main_navigation({})['nav_items'], [])

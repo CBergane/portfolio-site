@@ -1,17 +1,18 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags navigation_tags %}
 
 {% block content %}
+{% get_site_navigation as navigation %}
 <article class="blog-page">
     <header class="blog-page__hero"><div class="page-frame">
-        <nav class="blog-page__breadcrumb" aria-label="Breadcrumb"><a href="{% pageurl page.get_parent %}">Blog</a><span aria-hidden="true">/</span><span aria-current="page">{{ page.title }}</span></nav>
+        <nav class="blog-page__breadcrumb" aria-label="Breadcrumb">{% if navigation.notes %}<a href="{% pageurl navigation.notes %}">NOTES</a>{% endif %}<span aria-hidden="true">/</span><span aria-current="page">{{ page.title }}</span></nav>
         <div class="blog-page__hero-copy">
             <dl class="blog-page__metadata">{% if page.categories %}<div><dt>Category</dt><dd>{{ page.categories.name }}</dd></div>{% endif %}<div><dt>Published</dt><dd><time datetime="{{ page.date|date:'Y-m-d' }}">{{ page.date|date:"d M Y" }}</time></dd></div>{% if page.reading_time %}<div><dt>Reading time</dt><dd>{{ page.reading_time }} min</dd></div>{% endif %}</dl>
             <h1>{{ page.title }}</h1>{% if page.intro %}<p class="blog-page__intro">{{ page.intro }}</p>{% endif %}
-            {% if page.tags.all %}<div class="blog-page__tags" aria-label="Tags">{% for tag in page.tags.all %}<a href="{% pageurl page.get_parent %}?tag={{ tag.slug }}">#{{ tag.name }}</a>{% endfor %}</div>{% endif %}
+            {% if page.tags.all %}<div class="blog-page__tags" aria-label="Tags">{% for tag in page.tags.all %}{% if navigation.notes %}<a href="{% pageurl navigation.notes %}?tag={{ tag.slug|urlencode }}">#{{ tag.name }}</a>{% endif %}{% endfor %}</div>{% endif %}
         </div>
     </div></header>
-    <div class="blog-page__main page-frame"><aside class="blog-page__aside"><a href="{% pageurl page.get_parent %}"><span aria-hidden="true">←</span> All entries</a><nav id="toc" aria-label="On this page"><p>On this page</p><div id="toc-nav"></div></nav></aside><section class="blog-page__content prose" aria-label="Article content">{% for block in page.body %}{% include_block block %}{% endfor %}</section></div>
+    <div class="blog-page__main page-frame"><aside class="blog-page__aside">{% if navigation.notes %}<a href="{% pageurl navigation.notes %}"><span aria-hidden="true">←</span> All entries</a>{% endif %}<nav id="toc" aria-label="On this page"><p>On this page</p><div id="toc-nav"></div></nav></aside><section class="blog-page__content prose" aria-label="Article content">{% for block in page.body %}{% include_block block %}{% endfor %}</section></div>
 </article>
 {% endblock %}
 
