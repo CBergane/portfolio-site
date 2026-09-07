@@ -1,9 +1,11 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags navigation_tags %}
+{% load static wagtailcore_tags wagtailimages_tags navigation_tags reading_tags %}
 
 {% block content %}
 {% get_site_navigation as navigation %}
-<article class="project-page">
+{% reading_neighbors navigation as neighbors %}
+{% with minutes=page|reading_minutes %}
+<article class="project-page reading-document" data-reading-document>
     <header class="project-page__hero">
         <div class="page-frame">
             <nav class="project-page__breadcrumb" aria-label="Breadcrumb">
@@ -16,6 +18,7 @@
                         <div><dt>Status</dt><dd class="project-page__status project-page__status--{{ page.status }}">{{ page.get_status_display }}</dd></div>
                         <div><dt>Date</dt><dd><time datetime="{{ page.date|date:'Y-m-d' }}">{{ page.date|date:"F Y" }}</time></dd></div>
                         {% if page.duration %}<div><dt>Duration</dt><dd>{{ page.duration }}</dd></div>{% endif %}
+                        {% if minutes %}<div><dt>Reading time</dt><dd>{{ minutes }} min read</dd></div>{% endif %}
                     </dl>
                     <h1>{{ page.title }}</h1>
                     <p class="project-page__intro">{{ page.intro }}</p>
@@ -35,15 +38,18 @@
             </div>
         </div>
     </header>
-    <section class="project-page__main page-frame" aria-label="Project details"><div class="project-page__layout"><div class="project-page__content">
+    <section class="project-page__main page-frame" aria-label="Project details"><div class="project-page__layout"><div class="project-page__rail"><aside class="project-page__facts" aria-labelledby="project-facts-title"><h2 id="project-facts-title">Project facts</h2><dl>
+        {% if page.category %}<div><dt>Category</dt><dd>{{ page.category.name }}</dd></div>{% endif %}<div><dt>Status</dt><dd class="project-page__status project-page__status--{{ page.status }}">{{ page.get_status_display }}</dd></div><div><dt>Released</dt><dd><time datetime="{{ page.date|date:'Y-m-d' }}">{{ page.date|date:"M Y" }}</time></dd></div>{% if page.duration %}<div><dt>Duration</dt><dd>{{ page.duration }}</dd></div>{% endif %}
+        {% with items=page.tech_stack_items.all %}{% if items %}<div class="project-page__facts-tech"><dt>Technology</dt><dd>{% for item in items|dictsortreversed:"is_primary" %}<span class="project-page__tech-tag">{{ item.tech.name }}</span>{% endfor %}</dd></div>{% endif %}{% endwith %}
+    </dl>{% if navigation.work %}<a class="project-page__back-link" href="{% pageurl navigation.work %}"><span aria-hidden="true">←</span> All projects</a>{% endif %}</aside>{% include "home/includes/reading_navigation.html" %}</div><div class="project-page__reading"><div class="project-page__content" data-reading-body>
         {% if page.problem or page.solution %}<section class="project-page__case-study" aria-label="Case study">
             {% if page.problem %}<section class="project-page__editorial-panel"><p class="eyebrow"><span>01</span> Problem</p><div>{{ page.problem|richtext }}</div></section>{% endif %}
             {% if page.solution %}<section class="project-page__editorial-panel"><p class="eyebrow"><span>02</span> Solution</p><div>{{ page.solution|richtext }}</div></section>{% endif %}
         </section>{% endif %}
         {% if page.body %}<section class="project-page__body prose" aria-label="Project documentation">{% for block in page.body %}{% include_block block %}{% endfor %}</section>{% endif %}
-    </div><aside class="project-page__facts" aria-labelledby="project-facts-title"><h2 id="project-facts-title">Project facts</h2><dl>
-        {% if page.category %}<div><dt>Category</dt><dd>{{ page.category.name }}</dd></div>{% endif %}<div><dt>Status</dt><dd class="project-page__status project-page__status--{{ page.status }}">{{ page.get_status_display }}</dd></div><div><dt>Released</dt><dd><time datetime="{{ page.date|date:'Y-m-d' }}">{{ page.date|date:"M Y" }}</time></dd></div>{% if page.duration %}<div><dt>Duration</dt><dd>{{ page.duration }}</dd></div>{% endif %}
-        {% with items=page.tech_stack_items.all %}{% if items %}<div class="project-page__facts-tech"><dt>Technology</dt><dd>{% for item in items|dictsortreversed:"is_primary" %}<span class="project-page__tech-tag">{{ item.tech.name }}</span>{% endfor %}</dd></div>{% endif %}{% endwith %}
-    </dl>{% if navigation.work %}<a class="project-page__back-link" href="{% pageurl navigation.work %}"><span aria-hidden="true">←</span> All projects</a>{% endif %}</aside></div></section>
+    </div>{% include "home/includes/reading_neighbors.html" %}</div></div></section>
 </article>
+{% endwith %}
 {% endblock %}
+
+{% block extra_js %}<script src="{% static 'js/reading.js' %}" defer></script>{% endblock %}

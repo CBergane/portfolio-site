@@ -1,0 +1,6 @@
+{% if neighbors.previous or neighbors.next %}
+<nav class="reading-neighbors" aria-label="Continue reading">
+    {% if neighbors.previous %}{% include "home/includes/reading_neighbor.html" with entry=neighbors.previous direction="Previous" %}{% endif %}
+    {% if neighbors.next %}{% include "home/includes/reading_neighbor.html" with entry=neighbors.next direction="Next" %}{% endif %}
+</nav>
+{% endif %}

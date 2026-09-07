@@ -387,13 +387,9 @@ class BlogPage(Page):
     reading_time = models.IntegerField(default=5, help_text="Minutes to read")
 
     def save(self, *args, **kwargs):
-        # Calculate reading time (average 200 words per minute)
-        word_count = 0
-        for block in self.body:
-            if block.block_type == 'markdown' and hasattr(block.value, 'source'):
-                word_count += len(block.value.source.split())
+        from .reading import reading_minutes
 
-        self.reading_time = max(1, round(word_count / 200))
+        self.reading_time = reading_minutes(self)
         super().save(*args, **kwargs)
 
     search_fields = Page.search_fields + [
