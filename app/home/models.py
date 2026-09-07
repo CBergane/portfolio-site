@@ -9,7 +9,7 @@ from wagtail.models import Orderable
 
 from wagtail.models import Page
 from wagtail.fields import RichTextField, StreamField
-from wagtail.admin.panels import FieldPanel, MultiFieldPanel, InlinePanel
+from wagtail.admin.panels import FieldPanel, MultiFieldPanel, InlinePanel, PageChooserPanel
 from wagtail.search import index
 from wagtail import blocks
 from wagtail.images.blocks import ImageChooserBlock
@@ -20,6 +20,7 @@ from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 from modelcluster.fields import ParentalKey
 from modelcluster.contrib.taggit import ClusterTaggableManager
 from taggit.models import TaggedItemBase
+from .navigation import public_site_pages
 
 
 # ============= SITE SETTINGS =============
@@ -262,14 +263,42 @@ class HomePage(Page):
 
     content_panels = Page.content_panels + [
         FieldPanel('body'),
+        InlinePanel('selected_projects', label='Selected project', max_num=3),
     ]
     
     def get_context(self, request, *args, **kwargs):
-        from .models import ProjectPage
-        from .htb import get_htb_profile
         context = super().get_context(request, *args, **kwargs)
-        context['total_projects'] = ProjectPage.objects.live().count()
-        context['htb_profile'] = get_htb_profile(request)
+        selected_project_ids = list(
+            self.selected_projects.order_by('sort_order').values_list('project_id', flat=True)
+        )
+
+        if selected_project_ids:
+            available_projects = public_site_pages(ProjectPage, request).filter(
+                id__in=selected_project_ids
+            ).select_related('category', 'hero_image')
+            projects_by_id = {project.id: project for project in available_projects}
+            selected_projects = [
+                projects_by_id[project_id]
+                for project_id in selected_project_ids
+                if project_id in projects_by_id
+            ]
+        else:
+            selected_projects = list(
+                public_site_pages(ProjectPage, request).select_related(
+                    'category', 'hero_image'
+                ).order_by('-date', '-first_published_at')[:3]
+            )
+
+        published_projects = public_site_pages(ProjectPage, request)
+        published_notes = public_site_pages(BlogPage, request)
+
+        context['primary_project'] = selected_projects[0] if selected_projects else None
+        context['supporting_projects'] = selected_projects[1:]
+        context['total_projects'] = published_projects.count()
+        context['published_project_count'] = context['total_projects']
+        context['published_note_count'] = published_notes.count()
+        context['latest_project'] = published_projects.order_by('-date', '-first_published_at').first()
+        context['latest_note'] = published_notes.order_by('-date', '-first_published_at').first()
         return context
 
     class Meta:
@@ -290,7 +319,7 @@ class BlogIndexPage(Page):
         context = super().get_context(request, *args, **kwargs)
         
         # Get all published blog posts
-        all_posts = BlogPage.objects.live().public().order_by('-first_published_at')
+        all_posts = public_site_pages(BlogPage, request).descendant_of(self).order_by('-first_published_at')
         
         # Filter by category if provided
         category = request.GET.get('category')
@@ -358,13 +387,9 @@ class BlogPage(Page):
     reading_time = models.IntegerField(default=5, help_text="Minutes to read")
 
     def save(self, *args, **kwargs):
-        # Calculate reading time (average 200 words per minute)
-        word_count = 0
-        for block in self.body:
-            if block.block_type == 'markdown' and hasattr(block.value, 'source'):
-                word_count += len(block.value.source.split())
+        from .reading import reading_minutes
 
-        self.reading_time = max(1, round(word_count / 200))
+        self.reading_time = reading_minutes(self)
         super().save(*args, **kwargs)
 
     search_fields = Page.search_fields + [
@@ -484,7 +509,7 @@ class ProjectIndexPage(Page):
         context = super().get_context(request, *args, **kwargs)
     
         # Base queryset
-        all_projects = ProjectPage.objects.live().public().order_by('-date')
+        all_projects = public_site_pages(ProjectPage, request).descendant_of(self).order_by('-date')
     
         def get_multi(key: str) -> list[str]:
             """
@@ -563,10 +588,16 @@ class ProjectIndexPage(Page):
             ("ongoing", "∞ ongoing"),
             ("archived", "📦 archived"),
         ]
-        status_label_map = dict(status_defs)
+        status_label_map = {
+            "completed": "COMPLETED",
+            "in_progress": "IN PROGRESS",
+            "ongoing": "ONGOING",
+            "archived": "ARCHIVED",
+        }
     
         status_links = []
-        for value, label in status_defs:
+        for value, _legacy_label in status_defs:
+            label = status_label_map[value]
             is_active = (selected_status == value)
             # klick på aktiv status -> toggla av status (behåll övriga filter)
             qs = build_qs(status="" if is_active else value)
@@ -765,6 +796,27 @@ class ProjectPage(Page):
     class Meta:
         verbose_name = "Project"
         ordering = ['-date']
+
+
+class HomePageProject(Orderable):
+    """An editor-curated, ordered project selection for the homepage."""
+    home_page = ParentalKey(
+        'home.HomePage',
+        related_name='selected_projects',
+        on_delete=models.CASCADE,
+    )
+    project = models.ForeignKey(
+        'home.ProjectPage',
+        related_name='+',
+        on_delete=models.CASCADE,
+    )
+
+    panels = [
+        PageChooserPanel('project', ['home.ProjectPage']),
+    ]
+
+    def __str__(self):
+        return self.project.title
 
 
 # ============= CONTACT FORM =============

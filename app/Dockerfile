@@ -62,11 +62,9 @@ COPY --from=pybuilder /opt/venv /opt/venv
 
 WORKDIR /app
 
-COPY --chown=appuser:appuser entrypoint.sh /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
-
-# app code
+# Copy application code, then normalize executable scripts for Windows checkouts.
 COPY --chown=appuser:appuser . .
+RUN sed -i 's/\r$//' /app/entrypoint.sh && chmod +x /app/entrypoint.sh
 
 # overwrite output.css with freshly built Tailwind
 COPY --from=nodebuilder /src/static/css/output.css /app/static/css/output.css

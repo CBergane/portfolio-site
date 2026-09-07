@@ -81,24 +81,30 @@ is_default = os.environ.get("SITE_DEFAULT","true").lower() in ("1","true","yes")
 with transaction.atomic():
     root = Page.get_first_root_node()
 
-    # 1) försök hitta en HomePage
-    home = Page.objects.type(HomePage).first() if HomePage else None
-    # 2) annars återanvänd valfri sida med slug 'home'
-    if not home:
-        home = Page.objects.filter(slug='home', path__startswith=root.path).specific().first()
-    # 3) annars skapa en ny HomePage
+    # Reuse only a real HomePage. Wagtail's initial welcome Page also uses slug "home".
+    home = Page.objects.type(HomePage).specific().first() if HomePage else None
+
     if not home and HomePage:
-        home = HomePage(title="Home", slug="home")
+        slug = "home"
+        if Page.objects.filter(slug=slug, path__startswith=root.path).exists():
+            slug = "portfolio-home"
+        home = HomePage(title="Home", slug=slug)
         root.add_child(instance=home)
         home.save_revision().publish()
 
     site, created = Site.objects.get_or_create(
-        hostname=host, port=port,
-        defaults={"site_name": site_name, "root_page": home or root, "is_default_site": is_default}
+        hostname=host,
+        port=port,
+        defaults={"site_name": site_name, "root_page": home or root, "is_default_site": False},
     )
-    if not created and home and site.root_page_id != home.id:
-        site.root_page = home
-        site.save()
+
+    if is_default:
+        Site.objects.exclude(pk=site.pk).update(is_default_site=False)
+
+    site.site_name = site_name
+    site.root_page = home or root
+    site.is_default_site = is_default
+    site.save()
 print("✅ Wagtail Site ok")
 PY
 else
