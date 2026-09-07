@@ -7,7 +7,7 @@
     <header class="project-page__hero">
         <div class="page-frame">
             <nav class="project-page__breadcrumb" aria-label="Breadcrumb">
-                {% if navigation.work %}<a href="{% pageurl navigation.work %}">WORK</a>{% endif %}<span aria-hidden="true">/</span><span aria-current="page">{{ page.title }}</span>
+                {% if navigation.work %}<a href="{% pageurl navigation.work %}">WORK</a><span aria-hidden="true">/</span>{% endif %}<span aria-current="page">{{ page.title }}</span>
             </nav>
             <div class="project-page__hero-grid">
                 <div class="project-page__hero-copy">

@@ -12,6 +12,7 @@
             <li><a href="#capabilities"><span>04</span>{% include "home/tags/icon.html" with name="infrastructure" only %}<b>Capabilities</b></a></li>
             <li><a href="#current-signal"><span>05</span>{% include "home/tags/icon.html" with name="signal" only %}<b>Signal</b></a></li>
         </ol>
+        <p class="section-rail__status" hidden aria-hidden="true"></p>
     </nav>
 
     <section id="overview" class="signal-hero" data-motion="trace" aria-labelledby="hero-title">
@@ -47,13 +48,6 @@
                 <figure class="system-blueprint__diagram">
                     <figcaption>Network topology for the Edge, Origin, Application and Data layers.</figcaption>
                     <svg class="blueprint-field" viewBox="0 0 920 620" aria-hidden="true">
-                        <defs>
-                            <pattern id="bp-grid" width="42" height="42" patternUnits="userSpaceOnUse">
-                                <path d="M42 0H0V42" fill="none" stroke="currentColor" stroke-width="0.7" opacity="0.22"/>
-                            </pattern>
-
-                        </defs>
-                        <rect width="920" height="620" fill="url(#bp-grid)"/>
                         <g class="blueprint-field__contours">
                             <path d="M560 25C685 53 870 109 852 205C835 303 711 318 708 404C703 502 825 518 902 592"/>
                             <path d="M632 48C725 88 795 127 782 194C767 270 713 298 731 365C750 440 819 452 884 505"/>

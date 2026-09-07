@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.template.loader import render_to_string
-from django.test import RequestFactory, TestCase
+from django.test import RequestFactory, TestCase, override_settings
 from django.urls import reverse
 from wagtail.images import get_image_model
 from wagtail.models import Page, PageViewRestriction, Site
@@ -483,3 +483,146 @@ class NavigationResolutionTests(TestCase):
 
     def test_no_request_has_no_fabricated_navigation(self):
         self.assertEqual(main_navigation({})['nav_items'], [])
+
+
+@override_settings(ALLOWED_HOSTS=['testserver', 'work.example', 'notes.example',
+                                'nested-site.example', 'other-site.example'])
+class DetailIndexNavigationTests(TestCase):
+    """Legacy sibling details remain siblings; only navigation is resolved."""
+
+    def setUp(self):
+        self.request = RequestFactory().get('/', HTTP_HOST='testserver')
+        Site.objects.all().delete()
+        self.home = Page.get_first_root_node().add_child(
+            instance=HomePage(title='Home', slug='detail-navigation')
+        )
+        self.site = Site.objects.create(
+            hostname='testserver', root_page=self.home, is_default_site=True
+        )
+        self.cases = (
+            (ProjectPage, ProjectIndexPage, 'work', 'home/project_page.html',
+             '.project-page__breadcrumb a, .project-page__back-link'),
+            (BlogPage, BlogIndexPage, 'notes', 'home/blog_page.html',
+             '.blog-page__breadcrumb a, .blog-page__aside > a'),
+        )
+
+    def add(self, parent, model, slug, **kwargs):
+        return parent.add_child(instance=model(title=slug, slug=slug, **kwargs))
+
+    def assert_destination(self, case, detail, expected, request=None):
+        from bs4 import BeautifulSoup
+
+        _, _, key, template, selector = case
+        request = request or self.request
+        self.assertEqual(site_destinations(request, detail)[key], expected)
+        rendered = render_to_string(template, detail.get_context(request), request=request)
+        soup = BeautifulSoup(rendered, 'html.parser')
+        links = soup.select(selector)
+        if expected is None:
+            self.assertEqual(links, [])
+        else:
+            self.assertEqual(len(links), 2)
+            self.assertEqual([link['href'] for link in links],
+                             [expected.get_url(request=request)] * 2)
+        root_url = Site.find_for_request(request).root_page.get_url(request=request)
+        for link in links + soup.select('[data-nav-label="WORK"], [data-nav-label="NOTES"]'):
+            self.assertNotEqual(link['href'], root_url)
+            self.assertNotEqual(link.get('target'), '_blank')
+
+    def test_correctly_nested_project_page(self):
+        case = self.cases[0]
+        index = self.add(self.home, case[1], 'engineering-archive')
+        detail = self.add(index, case[0], 'case-study', intro='Summary')
+        self.assert_destination(case, detail, index)
+
+    def test_correctly_nested_blog_page(self):
+        case = self.cases[1]
+        index = self.add(self.home, case[1], 'field-journal')
+        detail = self.add(index, case[0], 'entry', intro='Summary')
+        self.assert_destination(case, detail, index)
+
+    def test_legacy_project_sibling_uses_site_index_without_moving(self):
+        case = self.cases[0]
+        detail = self.add(self.home, case[0], 'testing', intro='Summary')
+        index = self.add(self.home, case[1], 'engineering-archive')
+        self.assert_destination(case, detail, index)
+        detail.refresh_from_db()
+        self.assertEqual(detail.get_parent().pk, self.home.pk)
+
+    def test_legacy_blog_sibling_uses_site_index_without_moving(self):
+        case = self.cases[1]
+        detail = self.add(self.home, case[0], 'testing-notes', intro='Summary')
+        index = self.add(self.home, case[1], 'field-journal')
+        self.assert_destination(case, detail, index)
+        detail.refresh_from_db()
+        self.assertEqual(detail.get_parent().pk, self.home.pk)
+
+    def test_nearest_matching_ancestor_wins_over_site_default_and_parent(self):
+        for case in self.cases:
+            with self.subTest(kind=case[2]):
+                outer = self.add(self.home, case[1], case[2] + '-outer')
+                nearest = self.add(outer, case[1], 'nearest')
+                folder = self.add(nearest, Page, 'folder')
+                detail = self.add(folder, case[0], 'detail', intro='Summary')
+                self.assert_destination(case, detail, nearest)
+
+    def test_missing_indexes_omit_breadcrumb_and_back_links(self):
+        for case in self.cases:
+            with self.subTest(kind=case[2]):
+                detail = self.add(self.home, case[0], case[2] + '-detail', intro='Summary')
+                self.assert_destination(case, detail, None)
+
+    def test_draft_or_private_indexes_cannot_supply_fallback(self):
+        for case in self.cases:
+            with self.subTest(kind=case[2]):
+                self.add(self.home, case[1], case[2] + '-draft', live=False)
+                private = self.add(self.home, case[1], case[2] + '-private')
+                PageViewRestriction.objects.create(page=private, restriction_type='password', password='test')
+                detail = self.add(self.home, case[0], case[2] + '-detail', intro='Summary')
+                self.assert_destination(case, detail, None)
+
+    def test_invalid_nearest_ancestor_uses_valid_site_fallback(self):
+        for case in self.cases:
+            for state in ('draft', 'private'):
+                with self.subTest(kind=case[2], state=state):
+                    fallback = self.add(self.home, case[1], case[2] + '-' + state)
+                    invalid = self.add(fallback, case[1], 'invalid', live=state != 'draft')
+                    if state == 'private':
+                        PageViewRestriction.objects.create(page=invalid, restriction_type='password', password='test')
+                    detail = self.add(invalid, case[0], 'detail', intro='Summary')
+                    self.assert_destination(case, detail, fallback)
+
+    def test_multiple_sites_cannot_supply_missing_indexes(self):
+        for nested in (False, True):
+            other = self.add(self.home if nested else self.home.get_parent(), HomePage,
+                             'nested-site' if nested else 'other-site')
+            Site.objects.create(hostname=other.slug + '.example', root_page=other)
+            for case in self.cases:
+                with self.subTest(kind=case[2], nested=nested):
+                    other_index = self.add(other, case[1], case[2] + '-archive')
+                    detail = self.add(self.home, case[0], other.slug + '-' + case[2], intro='Summary')
+                    self.assert_destination(case, detail, None)
+                    other_detail = self.add(other, case[0], case[2] + '-detail', intro='Summary')
+                    request = RequestFactory().get('/', HTTP_HOST=other.slug + '.example')
+                    self.assert_destination(case, other_detail, other_index, request)
+
+    def test_nested_site_detail_cannot_use_outer_site_ancestor(self):
+        for case in self.cases:
+            with self.subTest(kind=case[2]):
+                outer = self.add(self.home, case[1], case[2] + '-outer')
+                nested = self.add(outer, HomePage, 'nested')
+                Site.objects.create(hostname=case[2] + '.example', root_page=nested)
+                detail = self.add(nested, case[0], 'detail', intro='Summary')
+                request = RequestFactory().get('/', HTTP_HOST=case[2] + '.example')
+                self.assert_destination(case, detail, None, request)
+                own_index = self.add(nested, case[1], 'own-archive')
+                self.assert_destination(case, detail, own_index, request)
+
+    def test_index_typed_site_root_never_renders_under_index_label(self):
+        for case in self.cases:
+            with self.subTest(kind=case[2]):
+                index_root = self.add(self.home, case[1], case[2] + '-site-root')
+                Site.objects.create(hostname=case[2] + '.example', root_page=index_root)
+                detail = self.add(index_root, case[0], 'detail', intro='Summary')
+                request = RequestFactory().get('/', HTTP_HOST=case[2] + '.example')
+                self.assert_destination(case, detail, None, request)
