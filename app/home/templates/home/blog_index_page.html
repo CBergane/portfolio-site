@@ -1,12 +1,22 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags %}
+{% load static wagtailcore_tags %}
 
 {% block content %}
 <div class="blog-index">
-    <header class="blog-index__hero page-frame">
+    <header class="blog-index__hero index-hero page-frame">
+        <div class="index-hero__art" aria-hidden="true">
+            <picture>
+                <source media="(max-width: 767px)" type="image/avif" srcset="{% static 'images/nordic-signal/notes-signal-archive-960.avif' %}">
+                <source media="(max-width: 767px)" type="image/webp" srcset="{% static 'images/nordic-signal/notes-signal-archive-960.webp' %}">
+                <source type="image/avif" srcset="{% static 'images/nordic-signal/notes-signal-archive-960.avif' %} 960w, {% static 'images/nordic-signal/notes-signal-archive-1916.avif' %} 1916w" sizes="(min-width: 1740px) 1740px, 100vw">
+                <img src="{% static 'images/nordic-signal/notes-signal-archive-1916.webp' %}" srcset="{% static 'images/nordic-signal/notes-signal-archive-960.webp' %} 960w, {% static 'images/nordic-signal/notes-signal-archive-1916.webp' %} 1916w" sizes="(min-width: 1740px) 1740px, 100vw" width="1916" height="821" alt="" aria-hidden="true" decoding="async" loading="eager" fetchpriority="high">
+            </picture>
+        </div>
+        <div class="index-hero__copy">
         <p class="eyebrow">{% include "home/tags/icon.html" with name="notes" only %} Field notes</p>
         <h1>{{ page.title }}</h1>
         {% if page.intro %}<div class="blog-index__intro">{{ page.intro|richtext }}</div>{% endif %}
+        </div>
     </header>
     <nav class="blog-index__filters" aria-label="Filter posts by category"><div class="page-frame">
         <a class="blog-index__filter{% if not selected_category %} is-active{% endif %}" href="{% pageurl page %}">All entries</a>

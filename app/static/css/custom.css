@@ -32,7 +32,13 @@
 
 html {
     scroll-behavior: smooth;
+    /* Keep fixed navigation and page frames stable across short/long archives. */
+    scrollbar-gutter: stable;
     background: var(--carbon-950);
+}
+
+@supports not (scrollbar-gutter: stable) {
+    html { overflow-y: scroll; }
 }
 
 body.site-shell {
@@ -2160,3 +2166,104 @@ button, input, textarea, select { font: inherit; }
 @media (max-width: 767px) { .project-index { padding-top: 4.4rem; }.project-index h1 { font-size: clamp(3.1rem,16vw,5rem); }.project-index__filter-panel summary { display: flex; padding: .65rem 0; align-items: center; justify-content: space-between; color: var(--frost-200); font: .67rem var(--font-mono); letter-spacing: .1em; text-transform: uppercase; cursor: pointer; }.project-index__filter-panel summary span { color: var(--arctic); }.project-index__filter-panel:not([open]) .project-index__filter-rows { display: none; }.project-index__filter-row { grid-template-columns: 1fr; gap: .55rem; }.project-index__filter-row p { margin: 0; }.project-record { grid-template-columns: 3.2rem minmax(0,1fr); }.project-record__sequence { padding: 1.2rem .55rem; }.project-record__copy { padding: 1.35rem; }.project-record__visual { min-height: 13rem; grid-column: 1 / -1; border-top: 1px solid var(--line-strong); border-left: 0; }.project-record h2 { font-size: clamp(1.9rem,10vw,3.2rem); }.project-index__active .project-index__reset { margin-left: 0; }
 }
 .project-record__visual { background: #090c0f; background-image: none; aspect-ratio: 1.35; }.project-record__visual::before { content: none; }.project-record__visual::after { z-index: 2; }.project-record__visual svg { z-index: 0; }.project-record__visual--image::before { position: absolute; z-index: 0; inset: 0; background-image: var(--archive-image); background-position: center; background-size: cover; background-repeat: no-repeat; content: ''; pointer-events: none; }.project-record__visual--image::after { position: absolute; z-index: 1; inset: .8rem; border-top: 1px solid rgba(232, 237, 240, .32); border-left: 1px solid rgba(118, 184, 216, .3); background: linear-gradient(90deg, rgba(118, 184, 216, .28) 0 2.5rem, transparent 2.5rem) right bottom / 3.6rem 1px no-repeat; content: ''; pointer-events: none; }
+
+/* Permanent index art shares the content frame, with live HTML above the fade. */
+.project-index, .blog-index { background: var(--carbon-950); }
+.project-index .index-hero, .blog-index .index-hero {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    min-height: clamp(22rem, 30vw, 30rem);
+    padding-block: clamp(2.8rem, 5vw, 4.5rem);
+    align-items: center;
+    border-bottom: 1px solid var(--line-strong);
+}
+.index-hero__copy {
+    position: relative;
+    z-index: 1;
+    width: 40%;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+.index-hero__art {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    width: 100%;
+    overflow: hidden;
+    aspect-ratio: 1942 / 809;
+    height: 100%;
+    pointer-events: none;
+}
+.blog-index .index-hero__art { aspect-ratio: 1916 / 821; }
+.index-hero__art picture { display: block; width: 100%; height: 100%; }
+.index-hero__art img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 75% 50%;
+}
+.index-hero__art::after {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, var(--carbon-950) 0%, rgba(8,10,13,.97) 34%, rgba(8,10,13,.65) 44%, transparent 64%),
+                linear-gradient(0deg, var(--carbon-950), transparent 18%, transparent 88%, rgba(8,10,13,.45));
+    content: '';
+}
+/* A single static acquisition line; no script or motion required. */
+.index-hero__art::before {
+    position: absolute;
+    z-index: 1;
+    right: var(--page-pad);
+    bottom: 1.5rem;
+    width: clamp(3rem, 7%, 7rem);
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(240,169,40,.5));
+    content: '';
+}
+.blog-index .index-hero__art::after {
+    background: linear-gradient(90deg, var(--carbon-950) 0%, rgba(8,10,13,.96) 34%, rgba(8,10,13,.5) 45%, transparent 62%),
+                linear-gradient(0deg, var(--carbon-950), transparent 16%, transparent 90%, rgba(8,10,13,.35));
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+    .index-hero__copy { width: 48%; }
+}
+@media (max-width: 767px) {
+    .project-index, .blog-index { padding-top: 4.4rem; }
+    .project-index .index-hero, .blog-index .index-hero {
+        display: flex;
+        min-height: 0;
+        padding-block: 2rem 0;
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .index-hero__copy { width: 100%; }
+    .index-hero__copy .eyebrow { margin-bottom: 1.25rem; }
+    .index-hero__copy .project-index__summary { margin-top: 1.25rem; }
+    .index-hero__art {
+        position: relative;
+        inset: auto;
+        order: 1;
+        height: clamp(9rem, 28vw, 12rem);
+        margin-top: 1rem;
+        aspect-ratio: 2.4;
+    }
+    .index-hero__art img {
+        position: relative;
+        left: -80%;
+        width: 180%;
+        max-width: none;
+        object-position: 78% 50%;
+    }
+    .project-index .index-hero__art::after, .blog-index .index-hero__art::after {
+        background: linear-gradient(0deg, var(--carbon-950), transparent 22%, transparent 80%, var(--carbon-950)),
+                    linear-gradient(90deg, rgba(8,10,13,.3), transparent 22%);
+    }
+    .index-hero__art::before { right: 0; bottom: .7rem; }
+    html:not(.navigation-ready) .project-index,
+    html:not(.navigation-ready) .blog-index { padding-top: 0; }
+}
+
+/* Constrain the archive visual to its grid track; its ratio must not widen it. */
+.project-record__visual { width: 100%; }
