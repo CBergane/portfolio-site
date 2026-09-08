@@ -4,15 +4,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Server error</title>
+    <meta name="theme-color" content="#080a0d">
+    <title>500 / Temporarily unavailable | CBergane</title>
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
 </head>
-<body class="site-shell">
+<body class="site-shell error-shell">
     {# Django's 500 handler has no request context; stay independent of database/Site queries. #}
-    <main class="contact-cta page-frame">
-        <p class="eyebrow">500 / Server error</p>
-        <h1>This page is temporarily unavailable.</h1>
-        <p>Please try reloading the page later or use your browser's back button.</p>
+    <header class="error-shell__header page-frame">
+        <span class="site-brand">CBERGANE</span>
+        <span class="meta-label">Web / Infrastructure / Security</span>
+    </header>
+    <main id="main-content" class="error-page error-page--interruption page-frame" aria-labelledby="error-title">
+        <div class="error-page__index">
+            <p class="eyebrow">Signal interruption</p>
+            <span class="meta-label">System unavailable</span>
+        </div>
+        <div class="error-page__grid">
+            <div class="error-page__copy">
+                <p class="error-page__code">500</p>
+                <h1 id="error-title">Temporarily unavailable.</h1>
+                <p class="error-page__lead">The server could not complete your request.</p>
+                <p class="error-page__help">Please try reloading the page in a moment, or use your browser's back button to return to the previous page.</p>
+            </div>
+            <div class="error-page__visual" aria-hidden="true">
+                <svg class="error-page__diagram" viewBox="0 0 640 480" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                    <g class="error-page__field">
+                        <path d="M80 40V440M160 40V440M240 40V440M320 40V440M400 40V440M480 40V440M560 40V440M40 80H600M40 160H600M40 240H600M40 320H600M40 400H600"/>
+                        <path d="M40 56V40H56M584 40H600V56M600 424V440H584M56 440H40V424"/>
+                    </g>
+                    <g class="error-page__contour">
+                        <path d="M64 280L192 152H288M384 152H576L448 280H368M272 280H64Z"/>
+                        <path d="M64 328L192 200H288M384 200H576L448 328H368M272 328H64Z"/>
+                        <path d="M64 376L192 248H288M384 248H576L448 376H368M272 376H64Z"/>
+                        <path d="M64 280V376M576 152V248M448 280V376"/>
+                    </g>
+                    <g class="error-page__path">
+                        <path d="M64 240H144L176 208L208 272L240 240H280"/>
+                        <path d="M392 240H424L456 208L488 272L520 240H576" opacity=".55"/>
+                        <circle cx="64" cy="240" r="5"/>
+                        <circle cx="576" cy="240" r="5"/>
+                    </g>
+                    <g class="error-page__signal">
+                        <path d="M296 224V256M376 224V256"/>
+                        <path d="M312 240H360" stroke-dasharray="2 7" opacity=".5"/>
+                    </g>
+                </svg>
+            </div>
+        </div>
     </main>
 </body>
 </html>
