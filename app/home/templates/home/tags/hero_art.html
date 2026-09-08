@@ -1,0 +1,34 @@
+{% load static %}
+<div class="hero-art" aria-hidden="true">
+    <div class="hero-art__exit">
+        <div class="hero-art__stage">
+            <picture>
+                <source type="image/avif"
+                        srcset="{% static 'images/nordic-signal/home-hero-960.avif' %} 960w, {% static 'images/nordic-signal/home-hero-1600.avif' %} 1600w, {% static 'images/nordic-signal/home-hero-1916.avif' %} 1916w"
+                        sizes="(max-width: 767px) 210vw, (max-width: 1199px) 145vw, (max-width: 1428px) 1600px, (max-width: 2142px) 112vw, 2400px">
+                <source type="image/webp"
+                        srcset="{% static 'images/nordic-signal/home-hero-960.webp' %} 960w, {% static 'images/nordic-signal/home-hero-1600.webp' %} 1600w, {% static 'images/nordic-signal/home-hero-1916.webp' %} 1916w"
+                        sizes="(max-width: 767px) 210vw, (max-width: 1199px) 145vw, (max-width: 1428px) 1600px, (max-width: 2142px) 112vw, 2400px">
+                <img class="hero-art__image" src="{% static 'images/nordic-signal/home-hero-1600.webp' %}"
+                     srcset="{% static 'images/nordic-signal/home-hero-960.webp' %} 960w, {% static 'images/nordic-signal/home-hero-1600.webp' %} 1600w, {% static 'images/nordic-signal/home-hero-1916.webp' %} 1916w"
+                     sizes="(max-width: 767px) 210vw, (max-width: 1199px) 145vw, (max-width: 1428px) 1600px, (max-width: 2142px) 112vw, 2400px"
+                     width="1916" height="821" alt="" loading="eager" fetchpriority="high">
+            </picture>
+            <div class="hero-art__shade"></div>
+            {% comment %}Coordinates follow the master, not viewport pixels. No SVG text or interaction.{% endcomment %}
+            <svg class="hero-art__overlay" viewBox="0 0 1916 821" aria-hidden="true" focusable="false">
+                <path class="hero-art__plane" d="M668 385L997 283L1601 562L1340 768Z"/>
+                <path class="hero-art__trace" d="M804 135L1120 258L1394 153M730 264L1189 479L1458 366M1010 18V312M1558 24V310"/>
+                <path class="hero-art__route" d="M789 394C822 362 851 343 887 333S966 325 992 348S1053 385 1088 394C1185 410 1280 314 1370 329C1431 330 1459 351 1470 287S1515 225 1543 225C1596 228 1637 253 1698 231C1741 213 1734 155 1805 150"/>
+                <path class="hero-art__packet" pathLength="100" d="M887 333C940 319 966 325 992 348S1053 385 1088 394C1185 410 1280 314 1370 329C1431 330 1459 351 1470 287S1515 225 1543 225"/>
+                <circle class="hero-art__node" cx="1088" cy="394" r="8"/>
+                <circle class="hero-art__node hero-art__node--core" cx="1370" cy="329" r="13"/>
+                <g class="hero-art__core">
+                    <circle cx="1370" cy="329" r="20"/>
+                    <path d="M1370 267V312M1370 346V428"/>
+                </g>
+                <circle class="hero-art__ack" cx="1370" cy="329" r="28"/>
+            </svg>
+        </div>
+    </div>
+</div>

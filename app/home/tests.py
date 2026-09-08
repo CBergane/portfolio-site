@@ -598,8 +598,7 @@ class NavigationResolutionTests(TestCase):
         soup = BeautifulSoup(rendered, 'html.parser')
         ids = [element['id'] for element in soup.select('[id]')]
         self.assertEqual(len(ids), len(set(ids)))
-        self.assertEqual(len(soup.select('.system-blueprint__layers li')), 4)
-        self.assertFalse(soup.select('.system-blueprint img'))
+        self.assertFalse(soup.select('.system-blueprint'))
         for svg in soup.select('svg'):
             self.assertTrue(svg.get('viewbox'))
             self.assertEqual(svg.get('aria-hidden'), 'true')
@@ -611,6 +610,47 @@ class NavigationResolutionTests(TestCase):
                 self.assertTrue({'noopener', 'noreferrer'}.issubset(link.get('rel', [])))
         self.assertFalse(soup.select('#mobile-menu[hidden]'))
         self.assertTrue(soup.select('#mobile-menu-btn[hidden]'))
+
+    def test_home_hero_keeps_responsive_art_decorative_and_content_semantic(self):
+        from bs4 import BeautifulSoup
+        from django.contrib.staticfiles import finders
+
+        rendered = render_to_string('home/home_page.html', self.home.get_context(self.request),
+                                    request=self.request)
+        soup = BeautifulSoup(rendered, 'html.parser')
+        hero = soup.select_one('#overview')
+        art = hero.select_one('.hero-art')
+        self.assertEqual(art['aria-hidden'], 'true')
+        picture = art.select_one('picture')
+        sources = picture.select('source')
+        self.assertEqual([source['type'] for source in sources], ['image/avif', 'image/webp'])
+        image = picture.img
+        self.assertEqual(image['alt'], '')
+        self.assertEqual(image['loading'], 'eager')
+        self.assertEqual(image['fetchpriority'], 'high')
+        self.assertEqual((image['width'], image['height']), ('1916', '821'))
+        for source in [*sources, image]:
+            candidates = [candidate.strip().split() for candidate in source['srcset'].split(',')]
+            self.assertEqual([size for _, size in candidates], ['960w', '1600w', '1916w'])
+            for url, _ in candidates:
+                self.assertIsNotNone(finders.find(url.removeprefix('/static/')))
+            self.assertEqual(source['sizes'], image['sizes'])
+        self.assertNotIn('.png', str(picture))
+        self.assertEqual(art.svg['aria-hidden'], 'true')
+        self.assertEqual(art.svg['focusable'], 'false')
+        self.assertFalse(art.select('text, a, button, [tabindex]'))
+        self.assertEqual(hero.h1.get_text(' ', strip=True), 'Christian Bergane')
+        self.assertIn('I build systems that remain understandable when they fail.', hero.get_text())
+        self.assertIn('Web development, Infrastructure, Security', hero.get_text())
+        self.assertIsNone(art.find(id='hero-title'))
+        self.assertEqual(hero.select_one('.signal-hero__actions a')['href'], '#selected-systems')
+        self.assertEqual(hero.select('.signal-hero__actions a')[1]['href'], self.contact.get_url(self.request))
+        section_ids = ['overview', 'selected-systems', 'operating-principle', 'capabilities', 'current-signal']
+        self.assertEqual([link['href'] for link in soup.select('.section-rail a')],
+                         ['#' + section_id for section_id in section_ids])
+        for section_id in section_ids:
+            self.assertIsNotNone(soup.find('section', id=section_id))
+        self.assertIsNotNone(soup.select_one('script[src$="js/home.js"]'))
 
     def test_no_request_has_no_fabricated_navigation(self):
         self.assertEqual(main_navigation({})['nav_items'], [])
