@@ -1,6 +1,7 @@
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django_ratelimit.decorators import ratelimit
+from .contact_security import contact_ratelimit_key, get_client_ip
 import requests
 import os
 
@@ -41,24 +42,27 @@ def send_discord_notification(submission):
 
 
 @require_http_methods(["POST"])
-@ratelimit(key='ip', rate='3/h', method='POST', block=True)
+@ratelimit(
+    key=contact_ratelimit_key,
+    rate="3/h",
+    method="POST",
+    block=False,
+)
 def contact_form_submit(request):
     """
     Handle contact form submission with rate limiting
     """
-    print("🔥 CONTACT FORM CALLED!")  # Debug
     
     from .forms import ContactForm
     from .models import ContactSubmission
     import time
     
-    # DEBUG
-    print("="*50)
-    print(f"Request IP: {request.META.get('REMOTE_ADDR')}")
-    print(f"Rate limited: {getattr(request, 'limited', False)}")
-    print(f"Session key: {request.session.session_key}")
-    print(f"Last submission: {request.session.get('last_contact_submission', 'Never')}")
-    print("="*50)
+    # Silently discard obvious bot submissions caught by the honeypot.
+    if request.POST.get("website", "").strip():
+        return JsonResponse({
+            "success": True,
+            "message": "Thank you! Your message has been sent.",
+        })
     
     # Check rate limit
     if getattr(request, 'limited', False):
@@ -85,12 +89,9 @@ def contact_form_submit(request):
     if form.is_valid():
         submission = form.save(commit=False)
         
-        # Get IP
-        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-        if x_forwarded_for:
-            submission.ip_address = x_forwarded_for.split(',')[0]
-        else:
-            submission.ip_address = request.META.get('REMOTE_ADDR')
+        # Use the same trusted client-IP resolution as rate limiting.
+        client_ip = get_client_ip(request)
+        submission.ip_address = client_ip or None
         
         submission.user_agent = request.META.get('HTTP_USER_AGENT', '')
         submission.save()

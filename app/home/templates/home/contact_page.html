@@ -23,6 +23,16 @@
             <div class="contact-page__form-heading"><p class="eyebrow"><span>01</span> Brief</p><h2>Send a message</h2><p>Fields marked <span aria-hidden="true">*</span><span class="sr-only">required</span> are required.</p></div>
             <form id="contact-form" class="contact-page__form" method="post" action="{% url 'contact_submit' %}" hx-post="{% url 'contact_submit' %}" hx-swap="none" novalidate>
                 {% csrf_token %}
+                <div class="contact-page__honeypot" aria-hidden="true">
+                    <label for="id_website">Website</label>
+                    <input
+                        id="id_website"
+                        name="website"
+                        type="text"
+                        tabindex="-1"
+                        autocomplete="off"
+                    >
+                </div>
                 <div id="form-response" class="contact-page__response" aria-live="polite" aria-atomic="true" tabindex="-1"></div>
                 <div class="contact-page__field"><label for="id_name">Name <span aria-hidden="true">*</span><span class="sr-only">required</span></label><input id="id_name" name="name" type="text" required autocomplete="name" placeholder="Your name"></div>
                 <div class="contact-page__field"><label for="id_email">Email <span aria-hidden="true">*</span><span class="sr-only">required</span></label><input id="id_email" name="email" type="email" required autocomplete="email" inputmode="email" placeholder="you@example.com"></div>
