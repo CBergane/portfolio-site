@@ -644,10 +644,12 @@ select {
 .signal-hero {
     position: relative;
     display: grid;
-    overflow: visible;
+    overflow: clip;
+    isolation: isolate;
     align-items: center;
     min-width: 0;
     padding: 8rem 0 3rem;
+    min-height: min(900px, 100svh);
     background: radial-gradient(ellipse at 85% 35%, rgba(118, 184, 216, .045), transparent 55%);
 }
 
@@ -667,12 +669,16 @@ select {
     z-index: 2;
     display: grid;
     align-items: center;
-    grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr);
+    grid-template-columns: minmax(0, 1fr);
+    pointer-events: none;
     gap: clamp(2rem, 3vw, 4rem);
     min-width: 0;
 }
 
 .signal-hero__content {
+    position: relative;
+    max-width: 47%;
+    pointer-events: auto;
     min-width: 0;
     padding-left: clamp(.75rem, 1.4vw, 1.5rem);
 }
@@ -943,269 +949,106 @@ select {
     min-width: 0;
 }
 
-/* System blueprint */
+/* Nordic Signal artwork. The shared aspect-ratio stage keeps raster and SVG
+   in the same coordinate system at every crop. Static is the default state. */
 
-.system-blueprint {
-    position: relative;
-    border: 1px solid var(--line-strong);
-    isolation: isolate;
-    background: radial-gradient(ellipse at 90% 10%, rgba(118, 184, 216, .08), transparent 65%), var(--carbon-900);
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-    min-height: 0;
-    overflow: visible;
-    box-shadow: 0 18px 40px rgba(0, 0, 0, .28), inset 0 1px 0 rgba(215, 217, 213, .08);
-    font-family: var(--font-mono);
-}
-
-/* Static depth: coordinate field, secondary topology, foreground layers. */
-
-.system-blueprint::before {
+.hero-art {
     position: absolute;
     inset: 0;
-    z-index: 0;
-    background-image: linear-gradient(rgba(118, 184, 216, .045) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(118, 184, 216, .045) 1px, transparent 1px);
-    background-size: 42px 42px;
-    content: "";
-    pointer-events: none;
-}
-
-.system-blueprint::after {
-    position: absolute;
-    inset: 0;
-    z-index: 5;
-    border: 1px solid rgba(118, 184, 216, 0.04);
-    content: "";
-    pointer-events: none;
-}
-
-.system-blueprint__header {
-    position: relative;
-    z-index: 4;
-    display: flex;
-    min-height: 3.25rem;
-    padding: 0.8rem 1.15rem;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--line);
-    color: var(--frost-500);
-    font-size: 0.57rem;
-    font-weight: 650;
-    letter-spacing: 0.12em;
-    min-width: 0;
-    flex-wrap: wrap;
-    gap: .6rem;
-}
-
-.system-blueprint__footer {
-    z-index: 4;
-    display: flex;
-    padding: 0.8rem 1.15rem;
-    align-items: center;
-    justify-content: space-between;
-    color: var(--frost-500);
-    font-size: 0.57rem;
-    font-weight: 650;
-    letter-spacing: 0.12em;
-    min-height: 3rem;
-    border-top: 1px solid var(--line);
-    border-bottom: 0;
-    min-width: 0;
-    position: relative;
-    flex-wrap: wrap;
-    gap: .5rem;
-}
-
-.system-blueprint__location {
-    color: var(--arctic);
-}
-
-.system-blueprint__diagram {
-    position: absolute;
-    z-index: 1;
-    margin: 0;
-    pointer-events: none;
-    max-width: 100%;
-    inset: 3.5rem 0 3rem;
-    width: auto;
-    height: auto;
-    overflow: visible;
-}
-
-.system-blueprint__diagram figcaption {
-    position: absolute;
-    width: 1px;
-    height: 1px;
     overflow: hidden;
-    clip: rect(0 0 0 0);
-    clip-path: inset(50%);
-    white-space: nowrap;
+    z-index: 0;
+    --depth-x: 0;
+    --depth-y: 0;
+    --exit-y: 0px;
+    --exit-opacity: 1;
 }
 
-.blueprint-field {
+.hero-art__exit {
     position: absolute;
-    z-index: 0;
+    inset: 0;
+    transform: translateY(var(--exit-y));
+    opacity: var(--exit-opacity);
+}
+
+.hero-art__stage {
+    position: absolute;
+    top: 50%;
+    right: max(-40px, calc((100vw - 2400px) / 2));
+    width: clamp(1600px, 112vw, 2400px);
+    aspect-ratio: 1916 / 821;
+    transform: translateY(-50%);
+    /* Protect the copy and blend the raster edges into the carbon surface. */
+    mask-image: linear-gradient(to right, transparent 26%, #000 50%, #000 96%, transparent),
+                linear-gradient(to bottom, transparent, #000 13%, #000 85%, transparent);
+    mask-composite: intersect;
+}
+
+.hero-art__image,
+.hero-art__overlay,
+.hero-art__shade {
+    position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
-    color: var(--arctic);
-    opacity: 0.88;
 }
 
-.blueprint-field__contours path {
+.hero-art__image,
+.hero-art__overlay {
+    transform: translate(calc(var(--depth-x) * 2px), calc(var(--depth-y) * 2px));
+}
+
+.hero-art__image {
+    display: block;
+}
+.hero-art__overlay {
+    overflow: visible;
     fill: none;
-    stroke: currentColor;
+    pointer-events: none;
+}
+.hero-art__shade {
+    background: var(--carbon-950);
+    opacity: 0;
+    pointer-events: none;
+}
+.hero-art__trace {
+    stroke: var(--arctic);
     stroke-width: 1;
-    opacity: 0.26;
+    opacity: .16;
 }
-
-.blueprint-field__coordinates circle {
-    fill: var(--carbon-900);
-    stroke: currentColor;
-    stroke-width: 1.5;
-}
-
-.blueprint-field__coordinates path {
-    fill: none;
-    stroke: currentColor;
-    stroke-dasharray: 4 7;
-    opacity: 0.4;
-}
-
-.blueprint-field__mesh path {
-    fill: none;
-    stroke: currentColor;
-    stroke-dasharray: 2 7;
-    stroke-width: 0.85;
-    opacity: 0.3;
-}
-
-.blueprint-field__signal {
-    fill: none;
-    stroke-width: 2;
-    stroke-dasharray: none;
-    stroke-dashoffset: 0;
-    color: var(--signal);
-    stroke: currentColor;
-    filter: drop-shadow(0 0 3px rgba(240, 169, 40, .3));
-}
-
-.blueprint-field__nodes circle {
-    fill: var(--carbon-950);
-    stroke-width: 2;
-    opacity: 1;
-    color: var(--arctic);
-    stroke: currentColor;
-}
-
-.blueprint-field text {
+.hero-art__plane {
     fill: var(--arctic);
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.14em;
-    opacity: 0.58;
+    fill-opacity: .015;
+    stroke: var(--arctic);
+    stroke-width: .7;
+    opacity: .18;
 }
-
-.system-blueprint__layers {
-    position: relative;
-    z-index: 3;
-    list-style: none;
-    width: 100%;
-    padding: .5rem 0;
-    margin: 0;
+.hero-art__route {
+    stroke: #efbc72;
+    stroke-width: 1.5;
+    opacity: .18;
 }
-
-.system-blueprint__layers li {
-    display: grid;
-    align-items: center;
-    border-bottom: 1px solid var(--line);
-    grid-template-columns: 1.5rem 3.25rem minmax(0, 1fr);
-    min-width: 0;
-    padding: 1.15rem clamp(.8rem, 2vw, 1.5rem);
-    column-gap: .85rem;
-}
-
-.system-blueprint__layers li:first-child {
-    border-top: 1px solid var(--line);
-}
-
-.layer-number {
-    color: var(--signal);
-    font-size: 0.66rem;
-    font-weight: 700;
-}
-
-.layer-icon {
-    display: grid;
-    place-items: center;
-    width: 3.25rem;
-    height: 3.25rem;
-    color: var(--arctic);
-    background: var(--carbon-900);
-    border: 1px solid var(--line-strong);
-}
-
-.system-blueprint__layers [data-state="active"] .layer-icon svg {
-    filter: drop-shadow(0 0 3px rgba(118, 184, 216, .35));
-}
-
-.layer-icon svg {
-    fill: none;
+.hero-art__packet {
+    stroke: #ffe1a8;
+    stroke-width: 2.5;
     stroke-linecap: round;
-    stroke-linejoin: round;
-    width: 2rem;
-    height: 2rem;
-    stroke: currentColor;
-    stroke-width: 2;
+    stroke-dasharray: 2 98;
+    opacity: 0;
 }
-
-.layer-copy {
-    display: grid;
-    gap: 0.5rem;
-    min-width: 0;
+.hero-art__node {
+    stroke: #ffcf88;
+    stroke-width: 1.5;
+    opacity: 0;
 }
-
-.layer-copy strong {
-    color: var(--frost-200);
-    font-size: 0.83rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    overflow-wrap: anywhere;
+.hero-art__core {
+    stroke: #ffce86;
+    stroke-width: 1.5;
+    opacity: .22;
 }
-
-.layer-copy em {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    font-size: 0.625rem;
-    font-style: normal;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--arctic);
-}
-
-.system-blueprint__footer span:nth-child(2) {
-    color: var(--arctic);
-}
-
-.system-blueprint__diagram svg {
-    max-width: 100%;
-    width: 100%;
-    height: 100%;
-}
-
-.system-blueprint__header span {
-    min-width: 0;
-    overflow-wrap: anywhere;
-}
-
-.system-blueprint__footer span {
-    min-width: 0;
-    overflow-wrap: anywhere;
+.hero-art__ack {
+    stroke: #ffce86;
+    stroke-width: 1;
+    opacity: 0;
+    transform-origin: 1370px 329px;
 }
 
 /* Selected systems */
@@ -4398,6 +4241,33 @@ select {
     }
 }
 
+/* Homepage: artwork becomes a separate editorial band on tablet and mobile. */
+
+@media (max-width: 1199px) {
+    .signal-hero {
+        min-height: 0;
+    }
+    .signal-hero__grid {
+        grid-row: 1;
+    }
+    .hero-art {
+        position: relative;
+        inset: auto;
+        grid-row: 2;
+        height: clamp(320px, 44vw, 480px);
+        margin-top: 1rem;
+        mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
+    }
+    .hero-art__stage {
+        width: 145%;
+        right: -4%;
+    }
+    .signal-hero__index {
+        grid-row: 3;
+        margin-top: 0;
+    }
+}
+
 /* Homepage: compact desktop */
 
 @media (max-width: 1199px) {
@@ -4407,10 +4277,6 @@ select {
 
     .signal-hero__content {
         max-width: 48rem;
-    }
-
-    .system-blueprint {
-        max-width: 52rem;
     }
 
     .signal-hero h1 {
@@ -4475,6 +4341,15 @@ select {
         padding-block: 7rem 3rem;
     }
 
+    .hero-art {
+        height: clamp(250px, 72vw, 460px);
+        margin-top: 1rem;
+    }
+    .hero-art__stage {
+        width: 210%;
+        right: -12%;
+    }
+
     .signal-hero__grid {
         gap: 3rem;
     }
@@ -4499,43 +4374,6 @@ select {
     .hero-meta div {
         grid-template-columns: 4rem minmax(0, 1fr);
         gap: .5rem;
-    }
-
-    .system-blueprint__header,
-    .system-blueprint__footer {
-        padding: .85rem;
-    }
-
-    .system-blueprint__location {
-        display: none;
-    }
-
-    .system-blueprint__layers li {
-        padding: .75rem .85rem;
-        grid-template-columns: 1.2rem 2.5rem minmax(0, 1fr);
-        column-gap: .5rem;
-    }
-
-    .layer-icon {
-        width: 2.5rem;
-        height: 2.5rem;
-    }
-
-    .layer-icon svg {
-        width: 1.5rem;
-        height: 1.5rem;
-    }
-
-    .layer-copy {
-        gap: .25rem;
-    }
-
-    .system-blueprint__diagram {
-        display: none;
-    }
-
-    .layer-copy strong {
-        font-size: .75rem;
     }
 
     .signal-hero__index {
@@ -5083,17 +4921,86 @@ select {
    18. Motion and input preferences
    ========================================================================== */
 
+/* Hero motion is opt-in, entirely decorative, and finite. */
+@media (prefers-reduced-motion: no-preference) {
+    .hero-art__image, .hero-art__overlay, .hero-art__plane, .hero-art__trace, .hero-art__core {
+        transition: transform 650ms cubic-bezier(.2, .65, .3, 1), opacity 500ms ease;
+    }
+    .hero-art__trace {
+        transform: translate(calc(var(--depth-x) * 1px), calc(var(--depth-y) * 1px));
+    }
+    .hero-art__plane {
+        transform: translate(calc(var(--depth-x) * 2px), calc(var(--depth-y) * 2px));
+    }
+    .hero-art__core {
+        transform: translate(calc(var(--depth-x) * 2.5px), calc(var(--depth-y) * 2.5px));
+    }
+    .hero-art.is-loading .hero-art__shade {
+        opacity: .68;
+    }
+    .hero-art.is-booting .hero-art__shade {
+        animation: hero-resolve 1500ms ease-out both;
+    }
+    .hero-art.is-booting .hero-art__trace {
+        animation: hero-trace 1200ms ease-out both;
+    }
+    .hero-art.is-booting .hero-art__plane {
+        animation: hero-plane 1400ms ease-out both;
+    }
+    .hero-art.is-booting .hero-art__core {
+        animation: hero-core 450ms 1000ms ease-out both;
+    }
+    .hero-art.is-signalling .hero-art__packet {
+        animation: hero-packet 1800ms cubic-bezier(.3, .1, .6, 1) both;
+    }
+    .hero-art.is-signalling .hero-art__node {
+        animation: hero-node 600ms 500ms ease-out both;
+    }
+    .hero-art.is-signalling .hero-art__node--core {
+        animation-delay: 1050ms;
+    }
+    .hero-art.is-hovered .hero-art__core {
+        opacity: .42;
+    }
+    .hero-art.is-acknowledging .hero-art__ack {
+        animation: hero-ack 1000ms ease-out both;
+    }
+
+    @keyframes hero-resolve { from { opacity: .68; } to { opacity: 0; } }
+    @keyframes hero-trace { from { opacity: 0; } to { opacity: .16; } }
+    @keyframes hero-plane { from { opacity: 0; transform: translateY(4px); } to { opacity: .18; transform: translateY(0); } }
+    @keyframes hero-core { from { opacity: 0; } to { opacity: .22; } }
+    @keyframes hero-packet {
+        0% {
+            stroke-dashoffset: 2;
+            opacity: 0;
+        }
+        12%, 80% {
+            opacity: .8;
+        }
+        100% {
+            stroke-dashoffset: -98;
+            opacity: 0;
+        }
+    }
+    @keyframes hero-node { 0%, 100% { opacity: 0; } 40% { opacity: .55; } }
+    @keyframes hero-ack { from { opacity: .3; transform: scale(.9); } to { opacity: 0; transform: scale(1.25); } }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-art__exit, .hero-art__image, .hero-art__overlay {
+        transform: none;
+        opacity: 1;
+    }
+    .hero-art__shade, .hero-art__packet, .hero-art__node, .hero-art__ack {
+        opacity: 0;
+    }
+}
+
 /* One-time state assembly. Keyframes exist only while the element is assembled;
    no pending class ever hides content, and the base styles are the final state. */
 
 @media (prefers-reduced-motion: no-preference) {
-    .is-assembled .blueprint-field__signal {
-        animation: route-assembly 460ms ease both;
-    }
-
-    .is-assembled .blueprint-field__nodes circle {
-        animation: node-assembly 360ms ease both;
-    }
 
     .position-section.is-assembled::before {
         animation: rule-assembly 400ms ease;
@@ -5116,17 +5023,6 @@ select {
         to {
             stroke-dasharray: 1600;
             stroke-dashoffset: 0;
-        }
-    }
-
-    @keyframes node-assembly {
-        from {
-            opacity: .4;
-            filter: none;
-        }
-
-        to {
-            opacity: 1;
         }
     }
 

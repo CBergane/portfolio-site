@@ -17,8 +17,9 @@
 
     <section id="overview" class="signal-hero" data-motion="trace" aria-labelledby="hero-title">
 
+        {% include "home/tags/hero_art.html" %}
         <div class="page-frame signal-hero__grid">
-            <div class="signal-hero__content" data-motion="document">
+            <div class="signal-hero__content">
                 <p class="eyebrow"><span>01</span> Stockholm / Web development · Infrastructure · Security</p>
                 <h1 id="hero-title">Christian<br>Bergane</h1>
                 <span class="hero-rule" aria-hidden="true"></span>
@@ -39,75 +40,6 @@
                 </div>
             </div>
 
-            <aside class="system-blueprint" data-motion="document" aria-label="System architecture trace">
-                <div class="system-blueprint__header">
-                    <span>SYSTEM ARCHITECTURE / ILLUSTRATIVE</span>
-                    <span class="system-blueprint__location">59.3293° N&nbsp;&nbsp;18.0686° E</span>
-                </div>
-
-                <figure class="system-blueprint__diagram">
-                    <figcaption>Network topology for the Edge, Origin, Application and Data layers.</figcaption>
-                    <svg class="blueprint-field" viewBox="0 0 920 620" aria-hidden="true">
-                        <g class="blueprint-field__contours">
-                            <path d="M560 25C685 53 870 109 852 205C835 303 711 318 708 404C703 502 825 518 902 592"/>
-                            <path d="M632 48C725 88 795 127 782 194C767 270 713 298 731 365C750 440 819 452 884 505"/>
-                            <path d="M510 76C596 114 632 158 612 216C590 285 510 302 529 374C544 435 626 464 668 544"/>
-                            <path d="M748 23L708 94L731 154L689 215L715 281L674 347L727 411L692 486L776 561"/>
-                        </g>
-                        <g class="blueprint-field__mesh">
-                            <path d="M510 118L612 216L689 215L782 194M529 374L674 347L731 365M668 544L692 486L884 505"/>
-                            <path d="M560 25L612 216M632 48L689 215M708 404L674 347M703 502L692 486"/>
-                        </g>
-                        <g class="blueprint-field__coordinates">
-                            <circle cx="731" cy="206" r="6"/>
-                            <circle cx="674" cy="347" r="6"/>
-                            <circle cx="692" cy="486" r="6"/>
-                            <path d="M731 206H852M674 347H852M692 486H852"/>
-                        </g>
-                        <path class="blueprint-field__signal"
-                              d="M430 118H550L620 174V263L570 299V401L646 452V558H905"/>
-                        <g class="blueprint-field__nodes">
-                            <circle cx="430" cy="118" r="9"/><circle cx="570" cy="299" r="9"/>
-                            <circle cx="646" cy="452" r="9"/><circle cx="905" cy="558" r="9"/>
-                        </g>
-                    </svg>
-                </figure>
-
-                <ol class="system-blueprint__layers">
-                    <li>
-                        <span class="layer-number">01</span>
-                        <span class="layer-icon" aria-hidden="true">
-                            {% include "home/tags/icon.html" with name="signal" only %}
-                        </span>
-                        <span class="layer-copy"><strong>EDGE</strong><em>Ingress</em></span>
-                    </li>
-                    <li>
-                        <span class="layer-number">02</span>
-                        <span class="layer-icon" aria-hidden="true">
-                            {% include "home/tags/icon.html" with name="infrastructure" only %}
-                        </span>
-                        <span class="layer-copy"><strong>ORIGIN</strong><em>Hosting</em></span>
-                    </li>
-                    <li>
-                        <span class="layer-number">03</span>
-                        <span class="layer-icon" aria-hidden="true">
-                            {% include "home/tags/icon.html" with name="web" only %}
-                        </span>
-                        <span class="layer-copy"><strong>APPLICATION</strong><em>Web service</em></span>
-                    </li>
-                    <li data-state="active">
-                        <span class="layer-number">04</span>
-                        <span class="layer-icon" aria-hidden="true">
-                            {% include "home/tags/icon.html" with name="data" only %}
-                        </span>
-                        <span class="layer-copy"><strong>DATA</strong><em>Persistence</em></span>
-                    </li>
-                </ol>
-
-                <div class="system-blueprint__footer">
-                    <span>SYS-04 / GRID A2</span><span>STOCKHOLM</span><span>REQUEST PATH</span>
-                </div>
-            </aside>
         </div>
 
         <div class="page-frame signal-hero__index" aria-hidden="true">
