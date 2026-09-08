@@ -1,13 +1,52 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags navigation_tags %}
 {% block title %}Page not found{% endblock %}
+{% block meta_description %}The requested route could not be resolved. Return to the portfolio or get in touch.{% endblock %}
 {% block content %}
 {% get_site_navigation as navigation %}
-<section class="contact-cta page-frame" aria-labelledby="error-title">
-    <p class="eyebrow">404 / Page not found</p>
-    <h1 id="error-title">This page could not be found.</h1>
-    <p>It may have moved or may no longer be published.</p>
-    {% if navigation.root %}<a class="button button--primary" href="{% pageurl navigation.root %}">Go home</a>{% endif %}
-    {% if navigation.contact %}<a class="button button--quiet" href="{% pageurl navigation.contact %}">Contact</a>{% endif %}
+<section class="error-page error-page--route page-frame" aria-labelledby="error-title">
+    <div class="error-page__index">
+        <p class="eyebrow">Lost signal</p>
+        <span class="meta-label">Route unresolved</span>
+    </div>
+    <div class="error-page__grid">
+        <div class="error-page__copy">
+            <p class="error-page__code">404</p>
+            <h1 id="error-title">Page not found.</h1>
+            <p class="error-page__lead">The requested route could not be resolved.</p>
+            <p class="error-page__help">The page may have moved, or the address may be incomplete.</p>
+            {% if navigation.root or navigation.contact %}
+            <nav class="error-page__actions" aria-label="Error recovery">
+                {% if navigation.root %}<a class="button button--quiet" href="{% pageurl navigation.root %}">Back to home <span aria-hidden="true">&rarr;</span></a>{% endif %}
+                {% if navigation.contact %}<a class="error-page__link" href="{% pageurl navigation.contact %}">Get in touch</a>{% endif %}
+            </nav>
+            {% endif %}
+        </div>
+        <div class="error-page__visual" aria-hidden="true">
+            <svg class="error-page__diagram" viewBox="0 0 640 480" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                <g class="error-page__field">
+                    <path d="M80 40V440M160 40V440M240 40V440M320 40V440M400 40V440M480 40V440M560 40V440M40 80H600M40 160H600M40 240H600M40 320H600M40 400H600"/>
+                    <path d="M40 56V40H56M584 40H600V56M600 424V440H584M56 440H40V424"/>
+                </g>
+                <g class="error-page__contour">
+                    <path d="M40 352L144 248V120L224 40M80 408L192 296V152L304 40M160 440L240 360V200L400 40M264 440L288 416V248L480 56"/>
+                    <path d="M360 440V320L456 224H600M440 440V368L520 288H600"/>
+                </g>
+                <g class="error-page__path">
+                    <path d="M80 320H176L272 224V160H368L416 208"/>
+                    <path d="M176 320V384H256M272 224H352" opacity=".4"/>
+                    <circle cx="80" cy="320" r="5"/>
+                    <circle cx="176" cy="320" r="5"/>
+                    <circle cx="272" cy="224" r="5"/>
+                    <circle cx="368" cy="160" r="5"/>
+                </g>
+                <g class="error-page__signal">
+                    <path d="M432 224L452 244" stroke-dasharray="2 7"/>
+                    <circle cx="480" cy="272" r="12"/>
+                    <path d="M480 244V250M480 294V300M452 272H458M502 272H508"/>
+                </g>
+            </svg>
+        </div>
+    </div>
 </section>
 {% endblock %}
