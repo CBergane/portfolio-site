@@ -4,7 +4,8 @@ from unittest.mock import patch
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.template.loader import render_to_string
-from django.test import RequestFactory, TestCase, override_settings
+from django.test import Client, RequestFactory, TestCase, override_settings
+from django.core.cache import cache
 from django.urls import reverse
 from wagtail.images import get_image_model
 from wagtail.models import Page, PageViewRestriction, Site
@@ -164,6 +165,9 @@ class HomePageProjectSelectionTests(TestCase):
 
 
 class ContactSubmissionTests(TestCase):
+    def setUp(self):
+        cache.clear()
+
     def valid_payload(self):
         return {
             'name': 'Ada Lovelace',
@@ -174,7 +178,11 @@ class ContactSubmissionTests(TestCase):
 
     @patch('home.views.send_discord_notification')
     def test_valid_contact_submission_is_stored_and_notified(self, notify):
-        response = self.client.post(reverse('contact_submit'), self.valid_payload())
+        response = self.client.post(
+            reverse('contact_submit'),
+            self.valid_payload(),
+            secure=True,
+        )
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()['success'], True)
@@ -188,13 +196,136 @@ class ContactSubmissionTests(TestCase):
         payload = self.valid_payload()
         payload['message'] = 'Too short'
 
-        response = self.client.post(reverse('contact_submit'), payload)
+        response = self.client.post(
+            reverse('contact_submit'),
+            payload,
+            secure=True,
+        )
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json()['success'], False)
         self.assertIn('message', response.json()['errors'])
         self.assertFalse(ContactSubmission.objects.exists())
         notify.assert_not_called()
+
+    @patch('home.views.send_discord_notification')
+    def test_trusted_proxy_uses_forwarded_client_ip(self, notify):
+        response = self.client.post(
+            reverse('contact_submit'),
+            self.valid_payload(),
+            secure=True,
+            REMOTE_ADDR='10.89.0.4',
+            HTTP_X_FORWARDED_FOR='203.0.113.10, 10.89.0.1',
+        )
+
+        self.assertEqual(response.status_code, 200)
+        submission = ContactSubmission.objects.get()
+        self.assertEqual(submission.ip_address, '203.0.113.10')
+        notify.assert_called_once_with(submission)
+
+    @patch('home.views.send_discord_notification')
+    def test_untrusted_client_cannot_spoof_forwarded_ip(self, notify):
+        response = self.client.post(
+            reverse('contact_submit'),
+            self.valid_payload(),
+            secure=True,
+            REMOTE_ADDR='198.51.100.25',
+            HTTP_X_FORWARDED_FOR='203.0.113.99',
+        )
+
+        self.assertEqual(response.status_code, 200)
+        submission = ContactSubmission.objects.get()
+        self.assertEqual(submission.ip_address, '198.51.100.25')
+        notify.assert_called_once_with(submission)
+
+    @patch('home.views.send_discord_notification')
+    def test_trusted_proxy_ignores_spoofed_leftmost_forwarded_ip(self, notify):
+        response = self.client.post(
+            reverse('contact_submit'),
+            self.valid_payload(),
+            secure=True,
+            REMOTE_ADDR='10.89.0.4',
+            HTTP_X_FORWARDED_FOR=(
+                '192.0.2.123, 203.0.113.10, 10.89.0.1'
+            ),
+        )
+
+        self.assertEqual(response.status_code, 200)
+        submission = ContactSubmission.objects.get()
+        self.assertEqual(submission.ip_address, '203.0.113.10')
+        notify.assert_called_once_with(submission)
+
+    @patch('home.views.send_discord_notification')
+    def test_url_in_name_is_rejected(self, notify):
+        payload = self.valid_payload()
+        payload['name'] = 'Dear http://cbergane.se/fekal0911 Admin'
+
+        response = self.client.post(
+            reverse('contact_submit'),
+            payload,
+            secure=True,
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json()['success'], False)
+        self.assertIn('name', response.json()['errors'])
+        self.assertFalse(ContactSubmission.objects.exists())
+        notify.assert_not_called()
+
+    @patch('home.views.send_discord_notification')
+    def test_honeypot_is_silently_discarded(self, notify):
+        payload = self.valid_payload()
+        payload['website'] = 'https://spam.example/'
+
+        response = self.client.post(
+            reverse('contact_submit'),
+            payload,
+            secure=True,
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['success'], True)
+        self.assertFalse(ContactSubmission.objects.exists())
+        notify.assert_not_called()
+
+    @patch('home.views.send_discord_notification')
+    def test_rate_limit_is_per_real_client_ip(self, notify):
+        url = reverse('contact_submit')
+
+        for _ in range(3):
+            client = Client()
+            response = client.post(
+                url,
+                self.valid_payload(),
+                secure=True,
+                REMOTE_ADDR='10.89.0.4',
+                HTTP_X_FORWARDED_FOR='203.0.113.20, 10.89.0.1',
+            )
+            self.assertEqual(response.status_code, 200)
+
+        fourth_client = Client()
+        response = fourth_client.post(
+            url,
+            self.valid_payload(),
+            secure=True,
+            REMOTE_ADDR='10.89.0.4',
+            HTTP_X_FORWARDED_FOR='203.0.113.20, 10.89.0.1',
+        )
+
+        self.assertEqual(response.status_code, 429)
+        self.assertEqual(ContactSubmission.objects.count(), 3)
+
+        other_client = Client()
+        response = other_client.post(
+            url,
+            self.valid_payload(),
+            secure=True,
+            REMOTE_ADDR='10.89.0.4',
+            HTTP_X_FORWARDED_FOR='203.0.113.21, 10.89.0.1',
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(ContactSubmission.objects.count(), 4)
 
 
 class ProjectIndexFilteringTests(TestCase):

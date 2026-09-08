@@ -30,6 +30,16 @@ ALLOWED_HOSTS = [
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 USE_X_FORWARDED_HOST = True
 
+CONTACT_TRUSTED_PROXY_NETWORKS = tuple(
+    network.strip()
+    for network in os.getenv(
+        "CONTACT_TRUSTED_PROXY_NETWORKS",
+        "127.0.0.0/8,::1/128,10.89.0.0/16",
+    ).split(",")
+    if network.strip()
+)
+
+
 # Styr https-redirect via env; default = på i prod (dvs när DEBUG=False)
 SECURE_SSL_REDIRECT = env_bool("SECURE_SSL_REDIRECT", not DEBUG)
 SESSION_COOKIE_SECURE = not DEBUG
@@ -144,6 +154,25 @@ DATABASES = {
     )
 }
 
+# -------------------------------------------------
+# Cache / rate limiting
+# -------------------------------------------------
+if DEBUG:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+            "LOCATION": "portfolio-development",
+        }
+    }
+else:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": os.getenv("CACHE_URL", "redis://redis:6379/1"),
+        }
+    }
+
+RATELIMIT_USE_CACHE = "default"
 
 
 # -------------------------------------------------
