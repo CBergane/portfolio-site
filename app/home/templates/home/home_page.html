@@ -15,8 +15,9 @@
         <p class="section-rail__status" hidden aria-hidden="true"></p>
     </nav>
 
-    <section id="overview" class="signal-hero" data-motion="trace" aria-labelledby="hero-title">
+    <section id="overview" class="signal-hero" aria-labelledby="hero-title">
 
+        {% include "home/tags/hero_art.html" %}
         <div class="page-frame signal-hero__grid">
             <div class="signal-hero__content">
                 <p class="eyebrow"><span>01</span> Stockholm / Web development · Infrastructure · Security</p>
@@ -41,7 +42,6 @@
 
         </div>
 
-        {% include "home/tags/hero_art.html" %}
         <div class="page-frame signal-hero__index" aria-hidden="true">
             <span>CB / {% now "Y" %}</span><span>SCROLL TO INSPECT</span>
         </div>
