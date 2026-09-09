@@ -38,6 +38,9 @@
                 <div class="contact-page__field"><label for="id_email">Email <span aria-hidden="true">*</span><span class="sr-only">required</span></label><input id="id_email" name="email" type="email" required autocomplete="email" inputmode="email" placeholder="you@example.com"></div>
                 <div class="contact-page__field"><label for="id_subject">Subject</label><input id="id_subject" name="subject" type="text" autocomplete="off" placeholder="What can I help with?"></div>
                 <div class="contact-page__field"><label for="id_message">Message <span aria-hidden="true">*</span><span class="sr-only">required</span></label><textarea id="id_message" name="message" required rows="7" minlength="10" aria-describedby="message-hint" placeholder="Add enough context to make the first reply useful."></textarea><p id="message-hint" class="contact-page__hint">At least 10 characters. Please do not include credentials or secrets.</p></div>
+                {% if turnstile_site_key %}
+                <div id="contact-turnstile" class="cf-turnstile" data-sitekey="{{ turnstile_site_key }}" data-action="contact" data-theme="dark" data-size="flexible" data-refresh-expired="auto" data-refresh-timeout="auto"></div>
+                {% endif %}
                 <button class="contact-page__submit" type="submit"><span class="contact-page__submit-label">Send message</span><span class="contact-page__submit-busy" hidden>Sending…</span><span aria-hidden="true">→</span></button>
             </form>
             {% endif %}
@@ -119,6 +122,11 @@
         showSummary(messages.length ? messages : ['Unable to send your message. Please try again.'], 'error');
     }
     function parseResponse(xhr) { try { return JSON.parse(xhr.responseText); } catch (error) { return null; } }
+    function resetVerification() {
+        if (!window.turnstile || !document.getElementById('contact-turnstile')) return;
+        // The API may still be loading if the form was submitted immediately.
+        try { window.turnstile.reset('#contact-turnstile'); } catch (error) { /* Await widget initialization. */ }
+    }
 
     form.addEventListener('submit', function (event) {
         if (form.getAttribute('aria-busy') === 'true') event.preventDefault();
@@ -139,8 +147,13 @@
             window.setTimeout(function () { window.location.assign('{% pageurl page %}?submitted=true'); }, 900);
             return;
         }
+        resetVerification();
         if (data && data.errors) { renderErrors(data.errors); return; }
         showSummary(['The message could not be sent. Please try again later.'], 'error');
     });
 })();
-</script>{% endblock %}
+</script>
+{% if turnstile_site_key and not form_submitted %}
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+{% endif %}
+{% endblock %}
