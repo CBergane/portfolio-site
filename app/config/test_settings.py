@@ -3,8 +3,6 @@ import tempfile
 
 from .settings import *  # noqa: F403
 
-globals().pop('STATICFILES_STORAGE', None)
-
 SECRET_KEY = 'local-validation-only'
 DEBUG = True
 ALLOWED_HOSTS = ['testserver', 'localhost', '127.0.0.1']
