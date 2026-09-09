@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils import timezone
 from urllib.parse import urlencode
@@ -864,6 +865,7 @@ class ContactPage(Page):
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
         context['form_submitted'] = request.GET.get('submitted') == 'true'
+        context['turnstile_site_key'] = settings.TURNSTILE_SITE_KEY
         return context
     
     class Meta:
