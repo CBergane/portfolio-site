@@ -5,18 +5,18 @@
             <picture>
                 <source type="image/avif"
                         srcset="{% static 'images/nordic-signal/home-hero-960.avif' %} 960w, {% static 'images/nordic-signal/home-hero-1600.avif' %} 1600w, {% static 'images/nordic-signal/home-hero-1916.avif' %} 1916w"
-                        sizes="(max-width: 767px) 210vw, (max-width: 1199px) 145vw, (max-width: 1428px) 1600px, (max-width: 2142px) 112vw, 2400px">
+                        sizes="(max-width: 519px) calc(100vw + 120px), (max-width: 767px) 640px, (max-width: 1916px) 100vw, 1916px">
                 <source type="image/webp"
                         srcset="{% static 'images/nordic-signal/home-hero-960.webp' %} 960w, {% static 'images/nordic-signal/home-hero-1600.webp' %} 1600w, {% static 'images/nordic-signal/home-hero-1916.webp' %} 1916w"
-                        sizes="(max-width: 767px) 210vw, (max-width: 1199px) 145vw, (max-width: 1428px) 1600px, (max-width: 2142px) 112vw, 2400px">
+                        sizes="(max-width: 519px) calc(100vw + 120px), (max-width: 767px) 640px, (max-width: 1916px) 100vw, 1916px">
                 <img class="hero-art__image" src="{% static 'images/nordic-signal/home-hero-1600.webp' %}"
                      srcset="{% static 'images/nordic-signal/home-hero-960.webp' %} 960w, {% static 'images/nordic-signal/home-hero-1600.webp' %} 1600w, {% static 'images/nordic-signal/home-hero-1916.webp' %} 1916w"
-                     sizes="(max-width: 767px) 210vw, (max-width: 1199px) 145vw, (max-width: 1428px) 1600px, (max-width: 2142px) 112vw, 2400px"
+                     sizes="(max-width: 519px) calc(100vw + 120px), (max-width: 767px) 640px, (max-width: 1916px) 100vw, 1916px"
                      width="1916" height="821" alt="" loading="eager" fetchpriority="high">
             </picture>
             <div class="hero-art__shade"></div>
             {% comment %}Coordinates follow the master, not viewport pixels. No SVG text or interaction.{% endcomment %}
-            <svg class="hero-art__overlay" viewBox="0 0 1916 821" aria-hidden="true" focusable="false">
+            <svg class="hero-art__overlay" viewBox="0 0 1916 821" fill="none" aria-hidden="true" focusable="false">
                 <path class="hero-art__plane" d="M668 385L997 283L1601 562L1340 768Z"/>
                 <path class="hero-art__trace" d="M804 135L1120 258L1394 153M730 264L1189 479L1458 366M1010 18V312M1558 24V310"/>
                 <path class="hero-art__route" d="M789 394C822 362 851 343 887 333S966 325 992 348S1053 385 1088 394C1185 410 1280 314 1370 329C1431 330 1459 351 1470 287S1515 225 1543 225C1596 228 1637 253 1698 231C1741 213 1734 155 1805 150"/>
