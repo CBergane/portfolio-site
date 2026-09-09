@@ -22,7 +22,10 @@
     <meta name="twitter:title" content="{% block twitter_title %}{{ page.title }} | {{ settings.home.SEOSettings.site_name }}{% endblock %}">
     <meta name="twitter:description" content="{% block twitter_description %}{{ settings.home.SEOSettings.meta_description }}{% endblock %}">
 
-    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+    <link rel="icon" href="{% static 'images/brand/favicon.ico' %}" sizes="16x16 32x32 48x48">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/brand/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/brand/favicon-16x16.png' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/brand/apple-touch-icon.png' %}">
     <link rel="stylesheet" href="{% static 'css/output.css' %}">
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
 
