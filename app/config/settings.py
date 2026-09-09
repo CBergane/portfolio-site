@@ -203,7 +203,12 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 if not DEBUG:
     # Hashade & komprimerade statiska filer i prod
-    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    STORAGES = {
+        "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+        },
+    }
 
 # -------------------------------------------------
 # CSRF-trusted origins (lägg till egen domän när du kör live)
