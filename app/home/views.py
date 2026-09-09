@@ -1,9 +1,38 @@
 from django.http import JsonResponse
+from django.conf import settings
 from django.views.decorators.http import require_http_methods
 from django_ratelimit.decorators import ratelimit
 from .contact_security import contact_ratelimit_key, get_client_ip
 import requests
 import os
+
+
+def verify_turnstile(token, client_ip):
+    if not token or len(token) > 2048 or not settings.TURNSTILE_SECRET_KEY:
+        return False
+
+    try:
+        response = requests.post(
+            "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+            data={
+                "secret": settings.TURNSTILE_SECRET_KEY,
+                "response": token,
+                "remoteip": client_ip,
+            },
+            timeout=5,
+        )
+        response.raise_for_status()
+        result = response.json()
+    except (requests.RequestException, ValueError):
+        return False
+
+    return (
+        isinstance(result, dict)
+        and result.get("success") is True
+        and result.get("hostname") == "cbergane.se"
+        and result.get("action") == "contact"
+    )
+
 
 def send_discord_notification(submission):
     """
@@ -87,10 +116,17 @@ def contact_form_submit(request):
     form = ContactForm(request.POST)
     
     if form.is_valid():
+        client_ip = get_client_ip(request)
+        token = request.POST.get('cf-turnstile-response', '').strip()
+        if not verify_turnstile(token, client_ip):
+            return JsonResponse({
+                'success': False,
+                'errors': {'__all__': ['Verification failed. Please try again.']},
+            }, status=400)
+
         submission = form.save(commit=False)
         
         # Use the same trusted client-IP resolution as rate limiting.
-        client_ip = get_client_ip(request)
         submission.ip_address = client_ip or None
         
         submission.user_agent = request.META.get('HTTP_USER_AGENT', '')

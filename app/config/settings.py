@@ -39,6 +39,9 @@ CONTACT_TRUSTED_PROXY_NETWORKS = tuple(
     if network.strip()
 )
 
+TURNSTILE_SITE_KEY = os.getenv("TURNSTILE_SITE_KEY", "").strip()
+TURNSTILE_SECRET_KEY = os.getenv("TURNSTILE_SECRET_KEY", "").strip()
+
 
 # Styr https-redirect via env; default = på i prod (dvs när DEBUG=False)
 SECURE_SSL_REDIRECT = env_bool("SECURE_SSL_REDIRECT", not DEBUG)
