@@ -643,13 +643,14 @@ select {
 
 .signal-hero {
     position: relative;
-    display: grid;
+    display: flex;
+    flex-direction: column;
     overflow: clip;
     isolation: isolate;
-    align-items: center;
+    justify-content: center;
     min-width: 0;
-    padding: 8rem 0 3rem;
-    min-height: min(900px, 100svh);
+    padding: clamp(6.5rem, 13svh, 8rem) 0 2rem;
+    min-height: min(100svh, clamp(620px, 55vw, 820px));
     background: radial-gradient(ellipse at 85% 35%, rgba(118, 184, 216, .045), transparent 55%);
 }
 
@@ -677,7 +678,7 @@ select {
 
 .signal-hero__content {
     position: relative;
-    max-width: 47%;
+    max-width: min(52%, 38rem);
     pointer-events: auto;
     min-width: 0;
     padding-left: clamp(.75rem, 1.4vw, 1.5rem);
@@ -691,7 +692,7 @@ select {
     letter-spacing: -0.068em;
     padding-block: .08em .14em;
     max-width: none;
-    font-size: clamp(3.5rem, 6.7vw, 7.5rem);
+    font-size: clamp(3.25rem, 5.5vw, 6.25rem);
     line-height: 1;
     background: none;
     color: var(--frost-100);
@@ -734,7 +735,7 @@ select {
     font-size: 0.55rem;
     letter-spacing: 0.12em;
     position: relative;
-    margin-top: 2.5rem;
+    margin-top: 2rem;
     padding-top: 0;
 }
 
@@ -949,8 +950,9 @@ select {
     min-width: 0;
 }
 
-/* Nordic Signal artwork. The shared aspect-ratio stage keeps raster and SVG
-   in the same coordinate system at every crop. Static is the default state. */
+/* Nordic Signal artwork stays outside document flow at every breakpoint.
+   Only the narrow-screen hero reserves a compact supporting window below copy.
+   The shared stage keeps raster and SVG in the same coordinate system. */
 
 .hero-art {
     position: absolute;
@@ -973,14 +975,20 @@ select {
 .hero-art__stage {
     position: absolute;
     top: 50%;
-    right: max(-40px, calc((100vw - 2400px) / 2));
-    width: clamp(1600px, 112vw, 2400px);
+    right: max(0px, calc((100% - 1916px) / 2));
+    width: min(100%, 1916px);
     aspect-ratio: 1916 / 821;
     transform: translateY(-50%);
-    /* Protect the copy and blend the raster edges into the carbon surface. */
-    mask-image: linear-gradient(to right, transparent 26%, #000 50%, #000 96%, transparent),
-                linear-gradient(to bottom, transparent, #000 13%, #000 85%, transparent);
-    mask-composite: intersect;
+}
+
+/* Ordinary alpha gradients protect the copy without composited CSS masks. */
+.hero-art::after {
+    position: absolute;
+    inset: 0;
+    content: "";
+    pointer-events: none;
+    background: linear-gradient(90deg, var(--carbon-950) 12%, rgba(8, 10, 13, .95) 28%, rgba(8, 10, 13, .6) 42%, transparent 62%),
+                linear-gradient(0deg, var(--carbon-950), transparent 20%, transparent 82%, var(--carbon-950));
 }
 
 .hero-art__image,
@@ -4241,48 +4249,30 @@ select {
     }
 }
 
-/* Homepage: artwork becomes a separate editorial band on tablet and mobile. */
+/* Homepage: short desktop viewports retain heading, statement and actions. */
 
-@media (max-width: 1199px) {
-    .signal-hero {
-        min-height: 0;
+@media (min-width: 768px) and (max-height: 800px) {
+    .signal-hero h1 {
+        font-size: clamp(3.25rem, 5vw, 5rem);
     }
-    .signal-hero__grid {
-        grid-row: 1;
+
+    .signal-hero .hero-rule,
+    .signal-hero__statement,
+    .signal-hero .hero-meta,
+    .signal-hero__actions {
+        margin-top: 1.25rem;
     }
-    .hero-art {
-        position: relative;
-        inset: auto;
-        grid-row: 2;
-        height: clamp(320px, 44vw, 480px);
-        margin-top: 1rem;
-        mask-image: linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent);
-    }
-    .hero-art__stage {
-        width: 145%;
-        right: -4%;
-    }
-    .signal-hero__index {
-        grid-row: 3;
-        margin-top: 0;
+}
+
+@media (min-width: 768px) and (max-width: 899px) {
+    .signal-hero__content {
+        max-width: 58%;
     }
 }
 
 /* Homepage: compact desktop */
 
 @media (max-width: 1199px) {
-    .signal-hero__grid {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    .signal-hero__content {
-        max-width: 48rem;
-    }
-
-    .signal-hero h1 {
-        font-size: clamp(3.5rem, 10vw, 7rem);
-    }
-
     .featured-system {
         grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
     }
@@ -4338,16 +4328,23 @@ select {
     }
 
     .signal-hero {
-        padding-block: 7rem 3rem;
+        --hero-window: clamp(160px, 40vw, 240px);
+        min-height: 0;
+        padding-block: 6.5rem calc(var(--hero-window) + 2rem);
     }
 
     .hero-art {
-        height: clamp(250px, 72vw, 460px);
-        margin-top: 1rem;
+        inset: auto 0 1rem;
+        height: var(--hero-window);
     }
+
     .hero-art__stage {
-        width: 210%;
-        right: -12%;
+        width: min(640px, calc(100% + 120px));
+        right: 0;
+    }
+
+    .hero-art::after {
+        background: linear-gradient(0deg, var(--carbon-950), transparent 22%, transparent 78%, var(--carbon-950));
     }
 
     .signal-hero__grid {
@@ -4359,6 +4356,7 @@ select {
     }
 
     .signal-hero__content {
+        max-width: 100%;
         padding-left: .75rem;
     }
 
