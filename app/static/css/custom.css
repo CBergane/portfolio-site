@@ -645,13 +645,13 @@ select {
     position: relative;
     display: flex;
     flex-direction: column;
-    overflow: clip;
+    overflow: hidden;
     isolation: isolate;
     justify-content: center;
     min-width: 0;
     padding: clamp(6.5rem, 13svh, 8rem) 0 2rem;
     min-height: min(100svh, clamp(620px, 55vw, 820px));
-    background: radial-gradient(ellipse at 85% 35%, rgba(118, 184, 216, .045), transparent 55%);
+    background: var(--carbon-950);
 }
 
 .signal-hero::before {
@@ -671,15 +671,13 @@ select {
     display: grid;
     align-items: center;
     grid-template-columns: minmax(0, 1fr);
-    pointer-events: none;
     gap: clamp(2rem, 3vw, 4rem);
     min-width: 0;
 }
 
 .signal-hero__content {
     position: relative;
-    max-width: min(52%, 38rem);
-    pointer-events: auto;
+    max-width: min(48%, 38rem);
     min-width: 0;
     padding-left: clamp(.75rem, 1.4vw, 1.5rem);
 }
@@ -950,113 +948,34 @@ select {
     min-width: 0;
 }
 
-/* Nordic Signal artwork stays outside document flow at every breakpoint.
-   Only the narrow-screen hero reserves a compact supporting window below copy.
-   The shared stage keeps raster and SVG in the same coordinate system. */
-
-.hero-art {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-    z-index: 0;
-    --depth-x: 0;
-    --depth-y: 0;
-    --exit-y: 0px;
-    --exit-opacity: 1;
-}
-
-.hero-art__exit {
-    position: absolute;
-    inset: 0;
-    transform: translateY(var(--exit-y));
-    opacity: var(--exit-opacity);
-}
-
-.hero-art__stage {
-    position: absolute;
-    top: 50%;
-    right: max(0px, calc((100% - 1916px) / 2));
-    width: min(100%, 1916px);
-    aspect-ratio: 1916 / 821;
-    transform: translateY(-50%);
-}
-
-/* Ordinary alpha gradients protect the copy without composited CSS masks. */
-.hero-art::after {
-    position: absolute;
-    inset: 0;
-    content: "";
-    pointer-events: none;
-    background: linear-gradient(90deg, var(--carbon-950) 12%, rgba(8, 10, 13, .95) 28%, rgba(8, 10, 13, .6) 42%, transparent 62%),
-                linear-gradient(0deg, var(--carbon-950), transparent 20%, transparent 82%, var(--carbon-950));
-}
-
-.hero-art__image,
-.hero-art__overlay,
-.hero-art__shade {
+/* Static hero background: picture fills the hero, gradient protects the copy,
+   and the content sits above both. The image never contributes to layout. */
+.hero-art,
+.hero-art__image {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
+    display: block;
+    pointer-events: none;
 }
 
-.hero-art__image,
-.hero-art__overlay {
-    transform: translate(calc(var(--depth-x) * 2px), calc(var(--depth-y) * 2px));
+.hero-art {
+    z-index: 0;
 }
 
 .hero-art__image {
-    display: block;
+    object-fit: cover;
+    object-position: 70% center;
 }
-.hero-art__overlay {
-    overflow: visible;
-    fill: none;
+
+.signal-hero::after {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    content: "";
     pointer-events: none;
-}
-.hero-art__shade {
-    background: var(--carbon-950);
-    opacity: 0;
-    pointer-events: none;
-}
-.hero-art__trace {
-    stroke: var(--arctic);
-    stroke-width: 1;
-    opacity: .16;
-}
-.hero-art__plane {
-    fill: var(--arctic);
-    fill-opacity: .015;
-    stroke: var(--arctic);
-    stroke-width: .7;
-    opacity: .18;
-}
-.hero-art__route {
-    stroke: #efbc72;
-    stroke-width: 1.5;
-    opacity: .18;
-}
-.hero-art__packet {
-    stroke: #ffe1a8;
-    stroke-width: 2.5;
-    stroke-linecap: round;
-    stroke-dasharray: 2 98;
-    opacity: 0;
-}
-.hero-art__node {
-    stroke: #ffcf88;
-    stroke-width: 1.5;
-    opacity: 0;
-}
-.hero-art__core {
-    stroke: #ffce86;
-    stroke-width: 1.5;
-    opacity: .22;
-}
-.hero-art__ack {
-    stroke: #ffce86;
-    stroke-width: 1;
-    opacity: 0;
-    transform-origin: 1370px 329px;
+    background: linear-gradient(90deg, var(--carbon-950) 8%, rgba(8, 10, 13, .92) 30%, rgba(8, 10, 13, .55) 48%, transparent 72%);
 }
 
 /* Selected systems */
@@ -4328,23 +4247,12 @@ select {
     }
 
     .signal-hero {
-        --hero-window: clamp(160px, 40vw, 240px);
         min-height: 0;
-        padding-block: 6.5rem calc(var(--hero-window) + 2rem);
+        padding-block: 6.5rem 2rem;
     }
 
-    .hero-art {
-        inset: auto 0 1rem;
-        height: var(--hero-window);
-    }
-
-    .hero-art__stage {
-        width: min(640px, calc(100% + 120px));
-        right: 0;
-    }
-
-    .hero-art::after {
-        background: linear-gradient(0deg, var(--carbon-950), transparent 22%, transparent 78%, var(--carbon-950));
+    .hero-art__image {
+        opacity: .25;
     }
 
     .signal-hero__grid {
@@ -4918,82 +4826,6 @@ select {
 /* ==========================================================================
    18. Motion and input preferences
    ========================================================================== */
-
-/* Hero motion is opt-in, entirely decorative, and finite. */
-@media (prefers-reduced-motion: no-preference) {
-    .hero-art__image, .hero-art__overlay, .hero-art__plane, .hero-art__trace, .hero-art__core {
-        transition: transform 650ms cubic-bezier(.2, .65, .3, 1), opacity 500ms ease;
-    }
-    .hero-art__trace {
-        transform: translate(calc(var(--depth-x) * 1px), calc(var(--depth-y) * 1px));
-    }
-    .hero-art__plane {
-        transform: translate(calc(var(--depth-x) * 2px), calc(var(--depth-y) * 2px));
-    }
-    .hero-art__core {
-        transform: translate(calc(var(--depth-x) * 2.5px), calc(var(--depth-y) * 2.5px));
-    }
-    .hero-art.is-loading .hero-art__shade {
-        opacity: .68;
-    }
-    .hero-art.is-booting .hero-art__shade {
-        animation: hero-resolve 1500ms ease-out both;
-    }
-    .hero-art.is-booting .hero-art__trace {
-        animation: hero-trace 1200ms ease-out both;
-    }
-    .hero-art.is-booting .hero-art__plane {
-        animation: hero-plane 1400ms ease-out both;
-    }
-    .hero-art.is-booting .hero-art__core {
-        animation: hero-core 450ms 1000ms ease-out both;
-    }
-    .hero-art.is-signalling .hero-art__packet {
-        animation: hero-packet 1800ms cubic-bezier(.3, .1, .6, 1) both;
-    }
-    .hero-art.is-signalling .hero-art__node {
-        animation: hero-node 600ms 500ms ease-out both;
-    }
-    .hero-art.is-signalling .hero-art__node--core {
-        animation-delay: 1050ms;
-    }
-    .hero-art.is-hovered .hero-art__core {
-        opacity: .42;
-    }
-    .hero-art.is-acknowledging .hero-art__ack {
-        animation: hero-ack 1000ms ease-out both;
-    }
-
-    @keyframes hero-resolve { from { opacity: .68; } to { opacity: 0; } }
-    @keyframes hero-trace { from { opacity: 0; } to { opacity: .16; } }
-    @keyframes hero-plane { from { opacity: 0; transform: translateY(4px); } to { opacity: .18; transform: translateY(0); } }
-    @keyframes hero-core { from { opacity: 0; } to { opacity: .22; } }
-    @keyframes hero-packet {
-        0% {
-            stroke-dashoffset: 2;
-            opacity: 0;
-        }
-        12%, 80% {
-            opacity: .8;
-        }
-        100% {
-            stroke-dashoffset: -98;
-            opacity: 0;
-        }
-    }
-    @keyframes hero-node { 0%, 100% { opacity: 0; } 40% { opacity: .55; } }
-    @keyframes hero-ack { from { opacity: .3; transform: scale(.9); } to { opacity: 0; transform: scale(1.25); } }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .hero-art__exit, .hero-art__image, .hero-art__overlay {
-        transform: none;
-        opacity: 1;
-    }
-    .hero-art__shade, .hero-art__packet, .hero-art__node, .hero-art__ack {
-        opacity: 0;
-    }
-}
 
 /* One-time state assembly. Keyframes exist only while the element is assembled;
    no pending class ever hides content, and the base styles are the final state. */

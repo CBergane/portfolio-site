@@ -622,7 +622,8 @@ class NavigationResolutionTests(TestCase):
         self.assertIn('signal-hero__grid', hero.find('div', recursive=False)['class'])
         art = hero.select_one('.hero-art')
         self.assertEqual(art['aria-hidden'], 'true')
-        picture = art.select_one('picture')
+        picture = art
+        self.assertEqual(picture.name, 'picture')
         sources = picture.select('source')
         self.assertEqual([source['type'] for source in sources], ['image/avif', 'image/webp'])
         image = picture.img
@@ -637,9 +638,7 @@ class NavigationResolutionTests(TestCase):
                 self.assertIsNotNone(finders.find(url.removeprefix('/static/')))
             self.assertEqual(source['sizes'], image['sizes'])
         self.assertNotIn('.png', str(picture))
-        self.assertEqual(art.svg['aria-hidden'], 'true')
-        self.assertEqual(art.svg['focusable'], 'false')
-        self.assertEqual(art.svg['fill'], 'none')
+        self.assertIsNone(art.svg)
         self.assertFalse(art.select('text, a, button, [tabindex]'))
         self.assertEqual(hero.h1.get_text(' ', strip=True), 'Christian Bergane')
         self.assertIn('I build systems that remain understandable when they fail.', hero.get_text())
