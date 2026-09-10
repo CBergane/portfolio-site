@@ -751,9 +751,29 @@ class ProjectPage(Page):
         ('quote', QuoteBlock()),
     ], use_json_field=True, blank=True)
     
-    # Problem/Solution (for case studies)
+    # Optional structured case study
     problem = RichTextField(blank=True, help_text="What problem did this solve?")
     solution = RichTextField(blank=True, help_text="How did you solve it?")
+    architecture = RichTextField(
+        blank=True,
+        help_text="System architecture, design and important technical decisions"
+    )
+    security_considerations = RichTextField(
+        blank=True,
+        help_text="Security considerations, controls, risks and design decisions"
+    )
+    testing_validation = RichTextField(
+        blank=True,
+        help_text="How the project was tested, validated or verified"
+    )
+    outcome = RichTextField(
+        blank=True,
+        help_text="Result, outcome or current state of the project"
+    )
+    lessons_learned = RichTextField(
+        blank=True,
+        help_text="Important lessons, trade-offs or improvements identified"
+    )
     
     # Metadata
     duration = models.CharField(
@@ -761,10 +781,22 @@ class ProjectPage(Page):
         blank=True,
         help_text="e.g. '2 weeks', '3 months'"
     )
+    role = models.CharField(
+        max_length=120,
+        blank=True,
+        help_text="Your role or responsibility in the project"
+    )
     
     search_fields = Page.search_fields + [
         index.SearchField('intro'),
         index.SearchField('body'),
+        index.SearchField('problem'),
+        index.SearchField('solution'),
+        index.SearchField('architecture'),
+        index.SearchField('security_considerations'),
+        index.SearchField('testing_validation'),
+        index.SearchField('outcome'),
+        index.SearchField('lessons_learned'),
     ]
     
     content_panels = Page.content_panels + [
@@ -779,6 +811,7 @@ class ProjectPage(Page):
             FieldPanel('status'),
             InlinePanel("tech_stack_items", label="Tech stack"),
             FieldPanel('duration'),
+            FieldPanel('role'),
         ], heading="Project Details"),
         
         MultiFieldPanel([
@@ -786,12 +819,19 @@ class ProjectPage(Page):
             FieldPanel('live_url'),
         ], heading="Links"),
         
-        FieldPanel('body'),
-        
         MultiFieldPanel([
             FieldPanel('problem'),
             FieldPanel('solution'),
-        ], heading="Case Study (Optional)"),
+            FieldPanel('architecture'),
+            FieldPanel('security_considerations'),
+            FieldPanel('testing_validation'),
+            FieldPanel('outcome'),
+            FieldPanel('lessons_learned'),
+        ], heading="Case Study"),
+
+        MultiFieldPanel([
+            FieldPanel('body'),
+        ], heading="Technical Documentation"),
     ]
     
     class Meta:

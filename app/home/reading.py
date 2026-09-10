@@ -19,8 +19,8 @@ def visible_text(value, *, is_markdown=False):
 def reading_minutes(page):
     """200 words/minute, rounded up; empty readable content returns zero.
 
-    Count body text, code, image captions and quotes, plus project problem and
-    solution prose. Never render image renditions or count page metadata/TOC.
+    Count body text, code, image captions and quotes, plus project case-study
+    prose. Never render image renditions or count page metadata/TOC.
     This helper is side-effect free; callers decide whether to persist the result.
     """
     parts = []
@@ -33,7 +33,10 @@ def reading_minutes(page):
             parts.extend(visible_text(value.get(key, '')) for key in keys)
         else:
             parts.append(visible_text(value, is_markdown=block.block_type == 'markdown'))
-    for field in ('problem', 'solution'):
+    for field in (
+        'problem', 'solution', 'architecture', 'security_considerations',
+        'testing_validation', 'outcome', 'lessons_learned',
+    ):
         parts.append(visible_text(getattr(page, field, '')))
     words = re.findall(r"\b\w+(?:['’\-]\w+)*\b", ' '.join(parts), flags=re.UNICODE)
     return math.ceil(len(words) / 200) if words else 0
