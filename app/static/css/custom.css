@@ -433,6 +433,13 @@ select {
     color: var(--frost-200);
 }
 
+.prose strong,
+.block-paragraph strong,
+.block-markdown strong {
+    color: inherit;
+    font-weight: 700;
+}
+
 .prose h2,
 .prose h3,
 .block-heading,
