@@ -42,11 +42,18 @@ class ReadingTimeTests(SimpleTestCase):
                          problem='<p>Problem</p>', solution='<p>Solution</p>')
         self.assertEqual(reading_minutes(page), 2)
 
+
+class ReadingTimeModelTests(TestCase):
     def test_estimate_ignores_saved_reading_time_and_intro_without_writing(self):
-        page = BlogPage(title='Title', intro='word ' * 100, reading_time=99,
-                        body=[('markdown', 'word ' * 201)])
+        page = BlogPage(
+            title='Title',
+            intro='word ' * 100,
+            reading_time=99,
+            body=[('markdown', 'word ' * 201)],
+        )
         self.assertEqual(reading_minutes(page), 2)
         self.assertEqual(page.reading_time, 99)
+
 
 class ReadingTimePersistenceTests(TestCase):
     def setUp(self):

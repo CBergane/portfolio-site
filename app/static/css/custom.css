@@ -2494,6 +2494,10 @@ select {
     margin-top: 0;
 }
 
+.project-page__body + .project-page__body {
+    margin-top: clamp(3rem,5vw,5rem);
+}
+
 .project-page__body .block-heading {
     margin-top: 3rem;
     font-size: clamp(1.75rem,3vw,2.6rem);
