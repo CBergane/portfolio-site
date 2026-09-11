@@ -302,7 +302,8 @@ class ProjectCaseStudyMigrationTests(TransactionTestCase):
         new_target = [('home', '0005_projectpage_case_study')]
         executor = MigrationExecutor(connection)
         # Restore the latest schema even when an assertion fails.
-        self.addCleanup(lambda: MigrationExecutor(connection).migrate(new_target))
+        latest_targets = executor.loader.graph.leaf_nodes()
+        self.addCleanup(lambda: MigrationExecutor(connection).migrate(latest_targets))
         executor.migrate(old_target)
         old_apps = executor.loader.project_state(old_target).apps
         old_model = old_apps.get_model('home', 'ProjectPage')
