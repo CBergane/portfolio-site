@@ -284,6 +284,9 @@ class ProjectCaseStudyConfigurationTests(SimpleTestCase):
 
 @override_settings(CACHES={'default': {'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'}})
 class ProjectCaseStudyMigrationTests(TransactionTestCase):
+    # Restore Wagtail's seeded root even after another migration test flushes it.
+    serialized_rollback = True
+
     def test_existing_project_data_and_tree_survive_field_additions(self):
         page = Page.get_first_root_node().add_child(instance=ProjectPage(
             title='Existing project', slug='existing-project', intro='Keep introduction',

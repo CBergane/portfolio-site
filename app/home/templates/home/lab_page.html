@@ -35,5 +35,33 @@
         </div>
     </div>
     {% endif %}
+
+    {% if lab_entries %}
+    <section class="lab-projects page-frame" aria-labelledby="lab-projects-title">
+        <h2 id="lab-projects-title">Lab Projects</h2>
+        <ul class="lab-projects-list">
+            {% for entry in lab_entries %}
+            <li class="lab-projects-record{% if entry.hero_image %} lab-projects-record--illustrated{% endif %}">
+                {% if entry.hero_image %}
+                <figure class="lab-projects-image">
+                    {% image entry.hero_image width-640 as entry_image %}
+                    <img src="{{ entry_image.url }}" width="{{ entry_image.width }}" height="{{ entry_image.height }}" alt="{{ entry.hero_image.title }}" loading="lazy">
+                </figure>
+                {% endif %}
+                <div class="lab-projects-copy">
+                    <p class="eyebrow">{{ entry.get_status_display }}</p>
+                    <h3><a href="{% pageurl entry %}">{{ entry.title }} <span aria-hidden="true">&rarr;</span></a></h3>
+                    <p class="lab-projects-summary">{{ entry.intro }}</p>
+                    {% with items=entry.tech_stack_items.all %}{% if items %}
+                    <ul class="lab-entry-technologies" aria-label="Technologies">
+                        {% for item in items|dictsortreversed:"is_primary" %}<li>{{ item.tech.name }}</li>{% endfor %}
+                    </ul>
+                    {% endif %}{% endwith %}
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
 </article>
 {% endblock %}
