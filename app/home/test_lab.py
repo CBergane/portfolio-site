@@ -14,7 +14,7 @@ from wagtail.images import get_image_model
 from wagtail.models import Page, PageViewRestriction, Site
 from wagtail.search import index
 
-from .models import BlogIndexPage, BlogPage, ContactPage, HomePage, LabPage, ProjectIndexPage, ProjectPage
+from .models import BlogIndexPage, BlogPage, ContactPage, HomePage, LabEntryPage, LabPage, ProjectIndexPage, ProjectPage
 from .navigation import site_destinations
 from .templatetags.navigation_tags import main_navigation
 
@@ -146,7 +146,7 @@ class LabPageTests(TestCase):
         self.assertFalse(LabPage.can_create_at(self.home.get_parent()))
         self.assertFalse(Page.can_create_at(self.lab))
         self.assertEqual(LabPage.allowed_parent_page_models(), [HomePage])
-        self.assertEqual(LabPage.allowed_subpage_models(), [])
+        self.assertEqual(LabPage.allowed_subpage_models(), [LabEntryPage])
         other_home.add_child(instance=LabPage(title='Other lab', slug='lab'))
         self.assertEqual(LabPage.objects.count(), 2)
 

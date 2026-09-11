@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<article class="lab-page lab-entry-page">
+    <header class="lab-hero page-frame">
+        <a class="lab-entry-back" href="{% pageurl lab_parent %}"><span aria-hidden="true">&larr;</span> {{ lab_parent.title }}</a>
+        <p class="eyebrow"><span>Lab</span> / {{ page.get_status_display }}</p>
+        <h1>{{ page.title }}</h1>
+        <p class="lab-intro lab-entry-summary">{{ page.intro }}</p>
+        {% if tech_items %}
+        <ul class="lab-entry-technologies" aria-label="Technologies">
+            {% for item in tech_items %}<li>{{ item.tech.name }}</li>{% endfor %}
+        </ul>
+        {% endif %}
+        {% if page.github_url %}<a class="lab-entry-repository" href="{{ page.github_url }}" target="_blank" rel="noopener noreferrer">View repository <span aria-hidden="true">&nearr;</span></a>{% endif %}
+        {% if page.hero_image %}
+        <figure class="lab-visual">
+            {% image page.hero_image width-1600 as entry_hero %}
+            <img src="{{ entry_hero.url }}" width="{{ entry_hero.width }}" height="{{ entry_hero.height }}" alt="{{ page.hero_image.title }}">
+        </figure>
+        {% endif %}
+    </header>
+
+    {% if lab_entry_sections %}
+    <div class="lab-layout page-frame">
+        <nav class="lab-index" aria-label="Lab project sections">
+            <p class="eyebrow">In this project</p>
+            <ul>
+                {% for section in lab_entry_sections %}
+                <li><a href="#{{ section.id }}">{{ section.title }}</a></li>
+                {% endfor %}
+            </ul>
+        </nav>
+        <div class="lab-content">
+            {% for section in lab_entry_sections %}
+            <section class="lab-section" aria-labelledby="{{ section.id }}">
+                <h2 id="{{ section.id }}" tabindex="-1">{{ section.title }}</h2>
+                <div class="prose">
+                    {% if section.field == 'body' %}
+                        {% for block in section.content %}{% include_block block %}{% endfor %}
+                    {% else %}
+                        {{ section.content|richtext }}
+                    {% endif %}
+                </div>
+            </section>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</article>
+{% endblock %}

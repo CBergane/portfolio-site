@@ -3388,6 +3388,118 @@ select {
     padding-left: 1rem;
 }
 
+/* Lab project records and detail metadata */
+
+.lab-projects {
+    margin-top: clamp(3rem,6vw,6rem);
+}
+
+.lab-projects > h2 {
+    margin: 0 0 2rem;
+    color: var(--frost-100);
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem,3vw,2.4rem);
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+}
+
+.lab-projects-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--line-strong);
+}
+
+.lab-projects-record {
+    display: grid;
+    gap: clamp(1.5rem,3vw,3rem);
+    padding-block: clamp(1.5rem,3vw,3rem);
+    border-bottom: 1px solid var(--line);
+}
+
+.lab-projects-record--illustrated {
+    grid-template-columns: minmax(0,220px) minmax(0,1fr);
+}
+
+.lab-projects-image {
+    margin: 0;
+}
+
+.lab-projects-image img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--line);
+}
+
+.lab-projects-copy {
+    min-width: 0;
+}
+
+.lab-projects-copy .eyebrow {
+    margin-bottom: 0.75rem;
+}
+
+.lab-projects-copy h3 {
+    margin: 0 0 1rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem,2.5vw,2rem);
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
+
+.lab-projects-copy h3 a:hover,
+.lab-projects-copy h3 a:focus-visible {
+    color: var(--arctic);
+}
+
+.lab-projects-copy h3 span {
+    color: var(--arctic);
+}
+
+.lab-projects-summary,
+.lab-entry-summary {
+    max-width: 65ch;
+    color: var(--frost-200);
+    overflow-wrap: anywhere;
+}
+
+.lab-entry-technologies {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    list-style: none;
+    color: var(--arctic);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    overflow-wrap: anywhere;
+}
+
+.lab-entry-back,
+.lab-entry-repository {
+    display: inline-block;
+    color: var(--arctic);
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    text-underline-offset: 0.25em;
+}
+
+.lab-entry-back {
+    margin-bottom: 2rem;
+}
+
+.lab-entry-repository {
+    margin-top: 1.5rem;
+}
+
+.lab-entry-back:hover,
+.lab-entry-repository:hover {
+    color: var(--signal-bright);
+    text-decoration: underline;
+}
+
 /* Editorial integration with project content */
 
 .prose h2,
@@ -4902,6 +5014,12 @@ select {
 }
 
 /* Lab: tablet and mobile */
+
+@media (max-width: 767px) {
+    .lab-projects-record--illustrated {
+        grid-template-columns: minmax(0,1fr);
+    }
+}
 
 @media (max-width: 1023px) {
     .lab-layout {
