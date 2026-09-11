@@ -22,7 +22,7 @@ def main_navigation(context):
     current_page = context.get('page')
     destinations = get_site_navigation(context)
     nav_items = []
-    for label, key in (('WORK', 'work'), ('ABOUT', 'root'), ('NOTES', 'notes'), ('CONTACT', 'contact')):
+    for label, key in (('WORK', 'work'), ('LAB', 'lab'), ('ABOUT', 'root'), ('NOTES', 'notes'), ('CONTACT', 'contact')):
         destination = destinations[key]
         url = destination.get_url(request=request) if destination else None
         if not url:
