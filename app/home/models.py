@@ -306,6 +306,77 @@ class HomePage(Page):
         verbose_name = "Home Page"
 
 
+class LabPage(Page):
+    """A living infrastructure document owned by a single site homepage."""
+
+    parent_page_types = ["home.HomePage"]
+    subpage_types = []
+    max_count_per_parent = 1
+
+    intro = RichTextField(blank=True, help_text="Introduce the lab and its purpose.")
+    hero_image = models.ForeignKey(
+        'wagtailimages.Image', null=True, blank=True,
+        on_delete=models.SET_NULL, related_name='+',
+        help_text="Optional image or diagram suitable for public viewing."
+    )
+    overview = RichTextField(blank=True, help_text="The environment's purpose and scope.")
+    platform_architecture = RichTextField(blank=True, help_text="Platform design and architectural decisions.")
+    networking = RichTextField(blank=True, help_text="Networking principles and design, without private connection details.")
+    containerization = RichTextField(blank=True, help_text="Workloads, containers and how they are managed.")
+    security_controls = RichTextField(blank=True, help_text="Security practices and controls suitable for public documentation.")
+    operations_recovery = RichTextField(blank=True, help_text="Operational practices, validation and recovery approach.")
+    current_experiments = RichTextField(blank=True, help_text="Current investigations, experiments and learning.")
+
+    # One ordered definition keeps the document and its anchor index in sync.
+    section_definitions = (
+        ('overview', 'lab-overview', 'System Overview'),
+        ('platform_architecture', 'lab-platform', 'Platform Architecture'),
+        ('networking', 'lab-networking', 'Networking'),
+        ('containerization', 'lab-containers', 'Workloads & Containers'),
+        ('security_controls', 'lab-security', 'Security Controls'),
+        ('operations_recovery', 'lab-operations', 'Operations & Recovery'),
+        ('current_experiments', 'lab-experiments', 'Current Experiments'),
+    )
+
+    search_fields = Page.search_fields + [
+        index.SearchField('intro'),
+        index.SearchField('overview'),
+        index.SearchField('platform_architecture'),
+        index.SearchField('networking'),
+        index.SearchField('containerization'),
+        index.SearchField('security_controls'),
+        index.SearchField('operations_recovery'),
+        index.SearchField('current_experiments'),
+    ]
+
+    content_panels = Page.content_panels + [
+        MultiFieldPanel([
+            FieldPanel('intro'), FieldPanel('hero_image'),
+        ], heading="Basic Info"),
+        MultiFieldPanel([FieldPanel('overview')], heading="Lab Overview"),
+        MultiFieldPanel([
+            FieldPanel('platform_architecture'), FieldPanel('networking'),
+            FieldPanel('containerization'),
+        ], heading="Infrastructure"),
+        MultiFieldPanel([
+            FieldPanel('security_controls'), FieldPanel('operations_recovery'),
+        ], heading="Security & Operations"),
+        MultiFieldPanel([FieldPanel('current_experiments')], heading="Current Work"),
+    ]
+
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+        context['lab_sections'] = [
+            {'id': section_id, 'title': title, 'content': getattr(self, field)}
+            for field, section_id, title in self.section_definitions
+            if getattr(self, field)
+        ]
+        return context
+
+    class Meta:
+        verbose_name = "Lab Page"
+
+
 class BlogIndexPage(Page):
     """
     Blog listing page

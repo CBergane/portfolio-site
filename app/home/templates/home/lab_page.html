@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+<article class="lab-page">
+    <header class="lab-hero page-frame">
+        <p class="eyebrow"><span>Lab</span> / Infrastructure</p>
+        <h1>{{ page.title }}</h1>
+        {% if page.intro %}<div class="lab-intro prose">{{ page.intro|richtext }}</div>{% endif %}
+        {% if page.hero_image %}
+        <figure class="lab-visual">
+            {% image page.hero_image width-1600 as lab_hero %}
+            <img src="{{ lab_hero.url }}" width="{{ lab_hero.width }}" height="{{ lab_hero.height }}" alt="{{ page.hero_image.title }}">
+        </figure>
+        {% endif %}
+    </header>
+
+    {% if lab_sections %}
+    <div class="lab-layout page-frame">
+        <nav class="lab-index" aria-label="Lab sections">
+            <p class="eyebrow">In this lab</p>
+            <ul>
+                {% for section in lab_sections %}
+                <li><a href="#{{ section.id }}">{{ section.title }}</a></li>
+                {% endfor %}
+            </ul>
+        </nav>
+        <div class="lab-content">
+            {% for section in lab_sections %}
+            <section class="lab-section" aria-labelledby="{{ section.id }}">
+                <h2 id="{{ section.id }}" tabindex="-1">{{ section.title }}</h2>
+                <div class="prose">{{ section.content|richtext }}</div>
+            </section>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</article>
+{% endblock %}
