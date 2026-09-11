@@ -22,12 +22,13 @@ def public_site_pages(model, request):
 
 
 def site_destinations(request, current_page=None):
-    from .models import BlogIndexPage, ContactPage, ProjectIndexPage
+    from .models import BlogIndexPage, ContactPage, LabPage, ProjectIndexPage
 
     site = site_for_request(request)
     destinations = {'root': site.root_page if site else None}
     for name, model in (
-        ('work', ProjectIndexPage), ('notes', BlogIndexPage), ('contact', ContactPage),
+        ('work', ProjectIndexPage), ('lab', LabPage),
+        ('notes', BlogIndexPage), ('contact', ContactPage),
     ):
         candidates = public_site_pages(model, request).order_by('path')
         # An index label must never lead to the Site root, even if that root
