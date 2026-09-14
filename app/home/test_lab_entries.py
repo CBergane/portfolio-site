@@ -1,9 +1,11 @@
 """Lab project documents and child discovery preserve the existing Lab overview."""
 from importlib import import_module
 from io import BytesIO
+from unittest.mock import patch
 
 from bs4 import BeautifulSoup
 from PIL import Image
+from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import connection, migrations
 from django.db.migrations.executor import MigrationExecutor
@@ -19,6 +21,7 @@ from .models import (
     LabPage, ProjectIndexPage, ProjectPage, TechStack,
 )
 from .templatetags.navigation_tags import main_navigation
+from .navigation import public_site_pages
 
 
 SECTIONS = (
@@ -31,6 +34,11 @@ SECTIONS = (
     ('next_steps', 'lab-entry-next-steps', 'Next Steps'),
 )
 LOCAL_CACHE = {'default': {'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'}}
+LAB_TYPES = [
+    ('infrastructure', 'Infrastructure'), ('security', 'Security'),
+    ('automation', 'Automation'), ('observability', 'Observability'),
+    ('research', 'Research'),
+]
 
 
 @override_settings(CACHES=LOCAL_CACHE, ALLOWED_HOSTS=['testserver', 'other.example', 'nested.example'])
@@ -85,6 +93,106 @@ class LabEntryTests(TestCase):
         self.assertTrue(LabEntryPage.can_create_at(self.lab))
         second = self.create_entry('second')
         self.assertEqual(self.entries(), [first, second])
+
+    def test_classification_defaults_are_saved_for_entries_without_new_fields(self):
+        field = LabEntryPage._meta.get_field('lab_type')
+        self.assertEqual(field.max_length, 20)
+        self.assertEqual(field.choices, LAB_TYPES)
+        self.assertEqual(field.default, 'research')
+        self.assertIs(LabEntryPage._meta.get_field('is_featured').default, False)
+        entry = self.create_entry()
+        entry.refresh_from_db()
+        self.assertEqual(entry.lab_type, 'research')
+        self.assertIs(entry.is_featured, False)
+
+    def test_every_lab_type_can_be_validated_published_and_rendered(self):
+        for lab_type, label in LAB_TYPES:
+            with self.subTest(lab_type=lab_type):
+                entry = self.create_entry(lab_type, lab_type=lab_type, is_featured=True, live=False)
+                entry.full_clean()
+                entry.save_revision().publish()
+                entry.refresh_from_db()
+                self.assertEqual(entry.lab_type, lab_type)
+                self.assertEqual(entry.get_lab_type_display(), label)
+                self.assertTrue(entry.is_featured)
+                self.assertTrue(entry.live)
+                self.assertEqual(self.client.get(entry.url).status_code, 200)
+
+    def test_invalid_lab_type_is_rejected(self):
+        entry = LabEntryPage(title='Invalid', slug='invalid', intro='Summary', lab_type='invalid')
+        with self.assertRaises(ValidationError) as error:
+            entry.full_clean()
+        self.assertIn('lab_type', error.exception.message_dict)
+
+    def assert_context_entries(self, expected, lab=None, request=None):
+        context = (lab or self.lab).get_context(request or self.request())
+        self.assertEqual(list(context['lab_entries']), expected)
+        self.assertEqual(context['featured_lab_entries'], [entry for entry in expected if entry.is_featured])
+        self.assertEqual(context['lab_type_choices'], LAB_TYPES)
+        self.assertEqual(list(context['lab_entries_by_type']), [key for key, _ in LAB_TYPES])
+        for lab_type, _ in LAB_TYPES:
+            self.assertEqual(
+                context['lab_entries_by_type'][lab_type],
+                [entry for entry in expected if entry.lab_type == lab_type],
+            )
+
+    def test_featured_and_category_context_preserves_editorial_order(self):
+        first = self.create_entry('z-first', lab_type='security', is_featured=True)
+        ordinary = self.create_entry('ordinary')
+        last = self.create_entry('a-last', lab_type='security', is_featured=True)
+        self.assert_context_entries([first, ordinary, last])
+        last.move(first, pos='left')
+        self.assert_context_entries([last, first, ordinary])
+
+    def test_new_context_is_empty_without_public_entries(self):
+        self.assert_context_entries([])
+        self.create_entry(live=False, is_featured=True)
+        self.assert_context_entries([])
+
+    def test_new_context_excludes_drafts_restrictions_and_indirect_children(self):
+        public = self.create_entry('public', is_featured=True)
+        self.create_entry('draft', live=False, is_featured=True)
+        for restriction in ('login', 'password', 'groups'):
+            private = self.create_entry(restriction, lab_type='security', is_featured=True)
+            PageViewRestriction.objects.create(page=private, restriction_type=restriction, password='test-only')
+        self.create_entry('indirect', parent=public, is_featured=True)
+        self.assert_context_entries([public])
+        PageViewRestriction.objects.create(page=self.lab, restriction_type='login')
+        self.assert_context_entries([])
+
+    def test_new_context_only_contains_current_lab_and_site_children(self):
+        local = self.create_entry('local', is_featured=True)
+        # Legacy sibling Lab pages must remain isolated even within the same Site.
+        sibling = self.home.add_child(instance=LabPage(title='Sibling', slug='sibling'))
+        sibling_entry = self.create_entry('sibling-entry', parent=sibling, is_featured=True)
+        other_home = self.home.get_parent().add_child(instance=HomePage(title='Other', slug='other'))
+        Site.objects.create(hostname='other.example', root_page=other_home)
+        other_lab = other_home.add_child(instance=LabPage(title='Other Lab', slug='other-lab'))
+        foreign = self.create_entry('foreign', parent=other_lab, is_featured=True)
+        nested = self.create_entry('nested', is_featured=True)
+        Site.objects.create(hostname='nested.example', root_page=nested)
+        self.assert_context_entries([local])
+        self.assert_context_entries([sibling_entry], lab=sibling)
+        self.assert_context_entries([], lab=other_lab)
+        self.assert_context_entries([foreign], lab=other_lab, request=self.request('other.example'))
+
+    def test_missing_request_does_not_expose_entries_in_any_context(self):
+        self.create_entry(is_featured=True)
+        context = self.lab.get_context(None)
+        self.assertEqual(list(context['lab_entries']), [])
+        self.assertEqual(context['featured_lab_entries'], [])
+        self.assertTrue(all(not entries for entries in context['lab_entries_by_type'].values()))
+
+    def test_unpublished_revision_does_not_change_public_classification(self):
+        entry = self.create_entry(lab_type='infrastructure')
+        entry.save_revision().publish()
+        entry.lab_type = 'security'
+        entry.is_featured = True
+        entry.save_revision()
+        entry.refresh_from_db()
+        self.assertEqual(entry.lab_type, 'infrastructure')
+        self.assertFalse(entry.is_featured)
+        self.assert_context_entries([entry])
 
     def test_detail_serves_with_one_h1_and_actual_parent_back_link(self):
         entry = self.create_entry()
@@ -191,30 +299,34 @@ class LabEntryTests(TestCase):
         self.assertGreater(int(image['width']), 0)
         self.assertGreater(int(image['height']), 0)
 
-    def test_no_index_listing_when_no_public_children(self):
+    def test_index_empty_state_when_no_public_children(self):
         self.create_entry(live=False)
         soup = self.render(self.lab)
-        self.assertFalse(soup.select('.lab-projects'))
-        self.assertIsNone(soup.find(id='lab-projects-title'))
-        self.assertEqual(soup.find(id='lab-overview').get_text(), 'System Overview')
+        self.assertFalse(soup.select('.lab-record'))
+        self.assertEqual(soup.select_one('.lab-empty').string, 'No published lab entries yet.')
+        self.assertEqual(soup.find(id='lab-foundation-title').get_text(), 'Lab Foundation')
 
-    def test_live_direct_children_appear_after_existing_overview_without_changing_index(self):
+    def test_live_direct_children_appear_after_foundation_and_areas(self):
         entry = self.create_entry(status='experimenting')
         soup = self.render(self.lab)
-        records = soup.select('.lab-projects-record')
+        records = soup.select('.lab-all .lab-record')
         self.assertEqual(len(records), 1)
         self.assertEqual(records[0].h3.a['href'], entry.url)
         self.assertIn(entry.title, records[0].h3.get_text())
         self.assertIn(entry.intro, records[0].get_text())
         self.assertIn('Experimenting', records[0].get_text())
-        self.assertEqual([h.get_text() for h in soup.select('.lab-page h2')], ['System Overview', 'Lab Projects'])
-        self.assertEqual([a['href'] for a in soup.select('.lab-index a')], ['#lab-overview'])
+        self.assertIn('Research', records[0].get_text())
+        self.assertEqual([h.get_text() for h in soup.select('.lab-page h2')], [
+            'Lab Foundation', 'Lab Areas', 'All Labs', 'Operating Principles',
+        ])
+        self.assertEqual(soup.select_one('.lab-foundation a')['href'], '#lab-all-title')
+        self.assertFalse(soup.select('.lab-index'))
 
     def test_index_shows_children_even_when_overview_sections_are_empty(self):
         self.lab.overview = ''
         self.create_entry()
         soup = self.render(self.lab)
-        self.assertIsNotNone(soup.select_one('.lab-projects'))
+        self.assertIsNotNone(soup.select_one('.lab-all .lab-record'))
         self.assertIsNone(soup.select_one('.lab-index'))
 
     def test_draft_and_restricted_entries_never_appear(self):
@@ -224,7 +336,7 @@ class LabEntryTests(TestCase):
             private = self.create_entry(restriction)
             PageViewRestriction.objects.create(page=private, restriction_type=restriction, password='test-only')
         self.assertEqual(self.entries(), [public])
-        self.assertEqual(len(self.render(self.lab).select('.lab-projects-record')), 1)
+        self.assertEqual(len(self.render(self.lab).select('.lab-all .lab-record')), 1)
 
     def test_inherited_restrictions_hide_child_listing(self):
         self.create_entry()
@@ -252,7 +364,7 @@ class LabEntryTests(TestCase):
         nested = self.create_entry('nested')
         Site.objects.create(hostname='nested.example', root_page=nested)
         self.assertEqual(self.entries(), [local])
-        self.assertNotIn(nested.title, self.render(self.lab).select_one('.lab-projects').get_text())
+        self.assertNotIn(nested.title, self.render(self.lab).select_one('.lab-all').get_text())
 
     def test_editor_page_tree_reordering_is_respected(self):
         first = self.create_entry('z-first')
@@ -260,24 +372,111 @@ class LabEntryTests(TestCase):
         self.assertEqual([entry.pk for entry in self.entries()], [first.pk, second.pk])
         second.move(first, pos='left')
         self.assertEqual([entry.pk for entry in self.entries()], [second.pk, first.pk])
+        self.assertEqual([link['href'] for link in self.render(self.lab).select('.lab-all h3 a')], [second.url, first.url])
 
     def test_index_optional_image_and_technologies_render(self):
         entry = self.create_entry(hero_image=self.image())
         self.add_technologies(entry)
-        card = self.render(self.lab).select_one('.lab-projects-record')
+        card = self.render(self.lab).select_one('.lab-all .lab-record')
         self.assertEqual(card.img['alt'], 'Public diagram')
         self.assertEqual(card.img['loading'], 'lazy')
         self.assertEqual([item.string for item in card.select('.lab-entry-technologies li')], ['Django', 'Python'])
 
+    def test_focus_is_optional_and_limited_to_first_two_in_editorial_order(self):
+        ordinary = self.create_entry('ordinary')
+        self.assertFalse(self.render(self.lab).select('.lab-focus'))
+        featured = [self.create_entry(f'featured-{number}', is_featured=True) for number in range(3)]
+        featured[2].move(featured[0], pos='left')
+        soup = self.render(self.lab)
+        self.assertEqual([link['href'] for link in soup.select('.lab-focus h3 a')], [featured[2].url, featured[0].url])
+        self.assertEqual([link['href'] for link in soup.select('.lab-all h3 a')], [
+            ordinary.url, featured[2].url, featured[0].url, featured[1].url,
+        ])
+
+    def test_focus_and_all_labs_share_summary_metadata_image_and_tech_stack(self):
+        entry = self.create_entry(
+            lab_type='observability', status='experimenting', is_featured=True,
+            hero_image=self.image(), architecture='<p>Private implementation detail marker</p>',
+            implementation='<p>Detailed build marker</p>', security_considerations='<p>Detailed security marker</p>',
+        )
+        self.add_technologies(entry)
+        soup = self.render(self.lab)
+        for selector in ('.lab-focus', '.lab-all'):
+            record = soup.select_one(f'{selector} .lab-record')
+            self.assertEqual(record.h3.a['href'], entry.url)
+            self.assertIn(entry.title, record.h3.get_text())
+            self.assertIn(entry.intro, record.get_text())
+            self.assertEqual(record.select_one('.eyebrow').get_text(), 'Observability / Experimenting')
+            self.assertEqual(record.img['alt'], 'Public diagram')
+            self.assertGreater(int(record.img['width']), 0)
+            self.assertGreater(int(record.img['height']), 0)
+            self.assertEqual([li.string for li in record.select('.lab-entry-technologies li')], ['Django', 'Python'])
+        for marker in ('Private implementation detail marker', 'Detailed build marker', 'Detailed security marker'):
+            self.assertNotIn(marker, soup.get_text())
+
+    def test_rendered_focus_counts_and_all_labs_do_not_leak_nonpublic_or_foreign_entries(self):
+        public = self.create_entry('public', is_featured=True, lab_type='security')
+        self.create_entry('draft', is_featured=True, lab_type='security', live=False)
+        for restriction in ('login', 'password', 'groups'):
+            private = self.create_entry(restriction, is_featured=True, lab_type='security')
+            PageViewRestriction.objects.create(page=private, restriction_type=restriction, password='test-only')
+        sibling = self.home.add_child(instance=LabPage(title='Sibling', slug='sibling'))
+        self.create_entry('foreign', parent=sibling, is_featured=True, lab_type='security')
+        nested = self.create_entry('nested', is_featured=True, lab_type='security')
+        Site.objects.create(hostname='nested.example', root_page=nested)
+        soup = self.render(self.lab)
+        for selector in ('.lab-focus', '.lab-all'):
+            self.assertEqual([link['href'] for link in soup.select(f'{selector} h3 a')], [public.get_url(request=self.request())])
+        counts = {area.dt.string: area.dd.string for area in soup.select('.lab-area-list > div')}
+        self.assertEqual(counts['Security'], '1 published entry')
+        self.assertEqual([count for label, count in counts.items() if label != 'Security'], ['0 published entries'] * 4)
+        PageViewRestriction.objects.create(page=self.lab, restriction_type='login')
+        soup = self.render(self.lab)
+        self.assertFalse(soup.select('.lab-focus, .lab-record'))
+        self.assertEqual([area.dd.string for area in soup.select('.lab-area-list > div')], ['0 published entries'] * 5)
+
+    def test_populated_index_has_valid_structure_and_resolving_links(self):
+        entry = self.create_entry(is_featured=True)
+        soup = self.render(self.lab)
+        self.assertEqual(len(soup.find_all('h1')), 1)
+        self.assertEqual([h.get_text() for h in soup.select('.lab-landing h2')], [
+            'Current Focus', 'Lab Foundation', 'Lab Areas', 'All Labs', 'Operating Principles',
+        ])
+        ids = [element['id'] for element in soup.select('[id]')]
+        self.assertEqual(len(ids), len(set(ids)))
+        for section in soup.select('.lab-landing-section'):
+            self.assertEqual(section.h2['id'], section['aria-labelledby'])
+            self.assertIsNone(section.find_parent(['p', 'h1', 'h2']))
+        for listing in soup.select('.lab-records'):
+            self.assertTrue(listing.find_all('li', recursive=False))
+            self.assertFalse([child for child in listing.find_all(recursive=False) if child.name != 'li'])
+        for link in soup.select('.lab-landing a'):
+            self.assertTrue(link.get_text(strip=True))
+            if link['href'].startswith('#'):
+                self.assertIsNotNone(soup.find(id=link['href'][1:]))
+            else:
+                self.assertEqual(link['href'], entry.url)
+                self.assertEqual(self.client.get(link['href']).status_code, 200)
+
     def test_listing_prefetches_technologies_and_images_without_per_entry_queries(self):
         for number in range(3):
-            entry = self.create_entry(f'entry-{number}')
+            entry = self.create_entry(f'entry-{number}', is_featured=True)
             self.add_technologies(entry)
-        queryset = self.lab.get_context(self.request())['lab_entries']
-        with self.assertNumQueries(2):
-            for entry in queryset:
-                self.assertIsNone(entry.hero_image)
-                self.assertEqual([item.tech.name for item in entry.tech_stack_items.all()], ['Python', 'Django'])
+        request = self.request()
+        public_entries = public_site_pages(LabEntryPage, request)
+        # Isolate listing queries from Site resolution and public-filter setup.
+        with patch('home.models.public_site_pages', return_value=public_entries), self.assertNumQueries(2):
+            context = self.lab.get_context(request)
+        with self.assertNumQueries(0):
+            collections = [context['lab_entries'], context['featured_lab_entries'], context['lab_entries_by_type']['research']]
+            for entries in collections:
+                self.assertEqual(len(entries), 3)
+                for entry in entries:
+                    self.assertIsNone(entry.hero_image)
+                    self.assertEqual([item.tech.name for item in entry.tech_stack_items.all()], ['Python', 'Django'])
+            for entry, featured, grouped in zip(*collections):
+                self.assertIs(entry, featured)
+                self.assertIs(entry, grouped)
 
     def test_lab_navigation_stays_active_for_parent_and_entry(self):
         entry = self.create_entry()
@@ -310,14 +509,18 @@ class LabEntryTests(TestCase):
         self.assertEqual([(panel.heading, [
             child.relation_name if isinstance(child, InlinePanel) else child.field_name for child in panel.children
         ]) for panel in groups], [
-            ('Basic Info', ['intro', 'status', 'hero_image']),
-            ('Technology', ['tech_stack_items']), ('Links', ['github_url']),
+            ('Basic Info', ['intro', 'hero_image']),
+            ('Lab Classification & Technology', ['lab_type', 'status', 'is_featured', 'tech_stack_items']),
+            ('Links', ['github_url']),
             ('Lab Documentation', ['objective', 'architecture', 'implementation', 'security_considerations', 'findings', 'next_steps']),
             ('Technical Documentation', ['body']),
         ])
         form = LabEntryPage.get_edit_handler().get_form_class()
         self.assertTrue(form.base_fields['intro'].required)
         self.assertEqual(form.base_fields['intro'].max_length, 300)
+        self.assertTrue(form.base_fields['lab_type'].required)
+        self.assertEqual(list(form.base_fields['lab_type'].choices), LAB_TYPES)
+        self.assertFalse(form.base_fields['is_featured'].required)
         self.assertEqual(LabEntryPage._meta.get_field('status').default, 'active')
         for field in ['hero_image', 'github_url', *[field for field, _, _ in SECTIONS]]:
             self.assertFalse(form.base_fields[field].required)
@@ -343,11 +546,82 @@ class LabEntryTests(TestCase):
         for operation in migration.operations:
             self.assertIsInstance(operation, migrations.CreateModel)
 
+    def test_classification_migration_only_adds_fields_with_safe_defaults(self):
+        migration = import_module('home.migrations.0008_lab_entry_classification').Migration
+        self.assertEqual(migration.dependencies, [('home', '0007_lab_entry_pages')])
+        self.assertEqual(len(migration.operations), 2)
+        for operation in migration.operations:
+            self.assertIsInstance(operation, migrations.AddField)
+            self.assertEqual(operation.model_name, 'labentrypage')
+        fields = {operation.name: operation.field for operation in migration.operations}
+        self.assertEqual(set(fields), {'lab_type', 'is_featured'})
+        self.assertEqual(fields['lab_type'].default, 'research')
+        self.assertEqual(fields['lab_type'].choices, LAB_TYPES)
+        self.assertIs(fields['is_featured'].default, False)
+
 
 @override_settings(CACHES=LOCAL_CACHE)
 class LabEntryMigrationTests(TransactionTestCase):
     # TransactionTestCase flushes the root page seeded by Wagtail migrations.
     serialized_rollback = True
+
+    def test_classification_migration_preserves_existing_rows_tech_stack_and_revisions(self):
+        home = Page.get_first_root_node().add_child(instance=HomePage(title='Home', slug='classification-home'))
+        lab = home.add_child(instance=LabPage(
+            title='Lab', slug='lab', intro='<p>Original intro.</p>',
+            **{field: f'<p>Original {field}.</p>' for field, _, _ in LabPage.section_definitions},
+        ))
+        revisions = [lab.save_revision()]
+        entries = []
+        tech = TechStack.objects.create(name='Proxmox', slug='proxmox')
+        for live in (False, True):
+            entry = lab.add_child(instance=LabEntryPage(
+                title=f'Existing {live}', slug=f'existing-{live}'.lower(), live=live,
+                intro='Original summary', status='documented', github_url='https://github.com/example/lab',
+                **{field: [('markdown', '**Original documentation**')] if field == 'body' else f'<p>Original {field}.</p>'
+                   for field, _, _ in SECTIONS},
+            ))
+            LabEntryPageTechStack.objects.create(page=entry, tech=tech, sort_order=0, is_primary=True)
+            revision = entry.save_revision()
+            # Reproduce the revision JSON stored before these fields existed.
+            revision.content.pop('lab_type')
+            revision.content.pop('is_featured')
+            revision.save(update_fields=['content'])
+            revisions.append(revision)
+            entries.append(entry)
+        revision_contents = {revision.pk: revision.content for revision in revisions}
+        executor = MigrationExecutor(connection)
+        latest_targets = executor.loader.graph.leaf_nodes()
+        self.addCleanup(lambda: MigrationExecutor(connection).migrate(latest_targets))
+        old_target = [('home', '0007_lab_entry_pages')]
+        executor.migrate(old_target)
+        old_apps = executor.loader.project_state(old_target).apps
+        lab_before = old_apps.get_model('home', 'LabPage').objects.values().get(pk=lab.pk)
+        entries_before = list(old_apps.get_model('home', 'LabEntryPage').objects.order_by('pk').values())
+        technologies_before = list(old_apps.get_model('home', 'LabEntryPageTechStack').objects.order_by('pk').values())
+        pages_before = list(Page.objects.order_by('pk').values())
+
+        MigrationExecutor(connection).migrate([('home', '0008_lab_entry_classification')])
+
+        self.assertEqual(LabPage.objects.values().get(pk=lab.pk), lab_before)
+        self.assertEqual(list(Page.objects.order_by('pk').values()), pages_before)
+        self.assertEqual(list(LabEntryPageTechStack.objects.order_by('pk').values()), technologies_before)
+        for before in entries_before:
+            after = LabEntryPage.objects.values().get(pk=before['page_ptr_id'])
+            self.assertEqual(after.pop('lab_type'), 'research')
+            self.assertIs(after.pop('is_featured'), False)
+            self.assertEqual(after, before)
+        for revision in revisions:
+            revision.refresh_from_db()
+            self.assertEqual(revision.content, revision_contents[revision.pk])
+            restored = revision.as_object()
+            if isinstance(restored, LabEntryPage):
+                self.assertEqual(restored.lab_type, 'research')
+                self.assertIs(restored.is_featured, False)
+                self.assertEqual(restored.tech_stack_items.get().tech_id, tech.pk)
+        for entry, live in zip(entries, (False, True)):
+            entry.refresh_from_db()
+            self.assertIs(entry.live, live)
 
     def test_existing_unpublished_lab_and_editorial_revision_survive_migration(self):
         home = Page.get_first_root_node().add_child(instance=HomePage(title='Home', slug='migration-home'))

@@ -1,10 +1,10 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags wagtailimages_tags lab_tags %}
 
 {% block content %}
-<article class="lab-page">
+<article class="lab-page lab-landing">
     <header class="lab-hero page-frame">
-        <p class="eyebrow"><span>Lab</span> / Infrastructure</p>
+        <p class="eyebrow"><span>LAB</span> / EXPERIMENTAL SYSTEMS</p>
         <h1>{{ page.title }}</h1>
         {% if page.intro %}<div class="lab-intro prose">{{ page.intro|richtext }}</div>{% endif %}
         {% if page.hero_image %}
@@ -15,53 +15,67 @@
         {% endif %}
     </header>
 
-    {% if lab_sections %}
-    <div class="lab-layout page-frame">
-        <nav class="lab-index" aria-label="Lab sections">
-            <p class="eyebrow">In this lab</p>
-            <ul>
-                {% for section in lab_sections %}
-                <li><a href="#{{ section.id }}">{{ section.title }}</a></li>
-                {% endfor %}
-            </ul>
-        </nav>
-        <div class="lab-content">
-            {% for section in lab_sections %}
-            <section class="lab-section" aria-labelledby="{{ section.id }}">
-                <h2 id="{{ section.id }}" tabindex="-1">{{ section.title }}</h2>
-                <div class="prose">{{ section.content|richtext }}</div>
-            </section>
-            {% endfor %}
-        </div>
-    </div>
-    {% endif %}
-
-    {% if lab_entries %}
-    <section class="lab-projects page-frame" aria-labelledby="lab-projects-title">
-        <h2 id="lab-projects-title">Lab Projects</h2>
-        <ul class="lab-projects-list">
-            {% for entry in lab_entries %}
-            <li class="lab-projects-record{% if entry.hero_image %} lab-projects-record--illustrated{% endif %}">
-                {% if entry.hero_image %}
-                <figure class="lab-projects-image">
-                    {% image entry.hero_image width-640 as entry_image %}
-                    <img src="{{ entry_image.url }}" width="{{ entry_image.width }}" height="{{ entry_image.height }}" alt="{{ entry.hero_image.title }}" loading="lazy">
-                </figure>
-                {% endif %}
-                <div class="lab-projects-copy">
-                    <p class="eyebrow">{{ entry.get_status_display }}</p>
-                    <h3><a href="{% pageurl entry %}">{{ entry.title }} <span aria-hidden="true">&rarr;</span></a></h3>
-                    <p class="lab-projects-summary">{{ entry.intro }}</p>
-                    {% with items=entry.tech_stack_items.all %}{% if items %}
-                    <ul class="lab-entry-technologies" aria-label="Technologies">
-                        {% for item in items|dictsortreversed:"is_primary" %}<li>{{ item.tech.name }}</li>{% endfor %}
-                    </ul>
-                    {% endif %}{% endwith %}
-                </div>
-            </li>
+    {% if featured_lab_entries %}
+    <section class="lab-landing-section lab-focus page-frame" aria-labelledby="lab-focus-title">
+        <h2 id="lab-focus-title">Current Focus</h2>
+        <ul class="lab-records lab-focus-list">
+            {% for entry in featured_lab_entries|slice:":2" %}
+                {% include "home/includes/lab_index_entry.html" with entry=entry %}
             {% endfor %}
         </ul>
     </section>
     {% endif %}
+
+    {% with foundation=page.overview|richtext|lab_summary_text|truncatewords:80 %}
+    {% if foundation %}
+    <section class="lab-landing-section lab-foundation page-frame" aria-labelledby="lab-foundation-title">
+        <h2 id="lab-foundation-title">Lab Foundation</h2>
+        <div class="lab-foundation-copy">
+            <p class="lab-foundation-summary">{{ foundation }}</p>
+            {% if lab_entries %}<a class="text-link" href="#lab-all-title">Explore the lab entries <span aria-hidden="true">&darr;</span></a>{% endif %}
+        </div>
+    </section>
+    {% endif %}
+    {% endwith %}
+
+    <section class="lab-landing-section lab-areas page-frame" aria-labelledby="lab-areas-title">
+        <h2 id="lab-areas-title">Lab Areas</h2>
+        <dl class="lab-area-list">
+            {% for lab_type, label in lab_type_choices %}
+            {% with count=lab_entries_by_type|lab_area_count:lab_type %}
+            <div>
+                <dt>{{ label }}</dt>
+                <dd>{{ count }} published {{ count|pluralize:"entry,entries" }}</dd>
+            </div>
+            {% endwith %}
+            {% endfor %}
+        </dl>
+    </section>
+
+    <section class="lab-landing-section lab-all page-frame" aria-labelledby="lab-all-title">
+        <h2 id="lab-all-title" tabindex="-1">All Labs</h2>
+        {% if lab_entries %}
+        <ul class="lab-records">
+            {% for entry in lab_entries %}
+                {% include "home/includes/lab_index_entry.html" with entry=entry %}
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="lab-empty">No published lab entries yet.</p>
+        {% endif %}
+    </section>
+
+    <section class="lab-landing-section lab-principles page-frame" aria-labelledby="lab-principles-title">
+        <h2 id="lab-principles-title">Operating Principles</h2>
+        <p class="lab-principles-intro">Principles that guide the work.</p>
+        <ul class="lab-principle-list">
+            <li>Isolation</li>
+            <li>Reproducibility</li>
+            <li>Observability</li>
+            <li>Least privilege</li>
+            <li>Documentation</li>
+            <li>Safe and authorised testing</li>
+        </ul>
+    </section>
 </article>
 {% endblock %}
