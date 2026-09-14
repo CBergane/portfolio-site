@@ -299,30 +299,34 @@ class LabEntryTests(TestCase):
         self.assertGreater(int(image['width']), 0)
         self.assertGreater(int(image['height']), 0)
 
-    def test_no_index_listing_when_no_public_children(self):
+    def test_index_empty_state_when_no_public_children(self):
         self.create_entry(live=False)
         soup = self.render(self.lab)
-        self.assertFalse(soup.select('.lab-projects'))
-        self.assertIsNone(soup.find(id='lab-projects-title'))
-        self.assertEqual(soup.find(id='lab-overview').get_text(), 'System Overview')
+        self.assertFalse(soup.select('.lab-record'))
+        self.assertEqual(soup.select_one('.lab-empty').string, 'No published lab entries yet.')
+        self.assertEqual(soup.find(id='lab-foundation-title').get_text(), 'Lab Foundation')
 
-    def test_live_direct_children_appear_after_existing_overview_without_changing_index(self):
+    def test_live_direct_children_appear_after_foundation_and_areas(self):
         entry = self.create_entry(status='experimenting')
         soup = self.render(self.lab)
-        records = soup.select('.lab-projects-record')
+        records = soup.select('.lab-all .lab-record')
         self.assertEqual(len(records), 1)
         self.assertEqual(records[0].h3.a['href'], entry.url)
         self.assertIn(entry.title, records[0].h3.get_text())
         self.assertIn(entry.intro, records[0].get_text())
         self.assertIn('Experimenting', records[0].get_text())
-        self.assertEqual([h.get_text() for h in soup.select('.lab-page h2')], ['System Overview', 'Lab Projects'])
-        self.assertEqual([a['href'] for a in soup.select('.lab-index a')], ['#lab-overview'])
+        self.assertIn('Research', records[0].get_text())
+        self.assertEqual([h.get_text() for h in soup.select('.lab-page h2')], [
+            'Lab Foundation', 'Lab Areas', 'All Labs', 'Operating Principles',
+        ])
+        self.assertEqual(soup.select_one('.lab-foundation a')['href'], '#lab-all-title')
+        self.assertFalse(soup.select('.lab-index'))
 
     def test_index_shows_children_even_when_overview_sections_are_empty(self):
         self.lab.overview = ''
         self.create_entry()
         soup = self.render(self.lab)
-        self.assertIsNotNone(soup.select_one('.lab-projects'))
+        self.assertIsNotNone(soup.select_one('.lab-all .lab-record'))
         self.assertIsNone(soup.select_one('.lab-index'))
 
     def test_draft_and_restricted_entries_never_appear(self):
@@ -332,7 +336,7 @@ class LabEntryTests(TestCase):
             private = self.create_entry(restriction)
             PageViewRestriction.objects.create(page=private, restriction_type=restriction, password='test-only')
         self.assertEqual(self.entries(), [public])
-        self.assertEqual(len(self.render(self.lab).select('.lab-projects-record')), 1)
+        self.assertEqual(len(self.render(self.lab).select('.lab-all .lab-record')), 1)
 
     def test_inherited_restrictions_hide_child_listing(self):
         self.create_entry()
@@ -360,7 +364,7 @@ class LabEntryTests(TestCase):
         nested = self.create_entry('nested')
         Site.objects.create(hostname='nested.example', root_page=nested)
         self.assertEqual(self.entries(), [local])
-        self.assertNotIn(nested.title, self.render(self.lab).select_one('.lab-projects').get_text())
+        self.assertNotIn(nested.title, self.render(self.lab).select_one('.lab-all').get_text())
 
     def test_editor_page_tree_reordering_is_respected(self):
         first = self.create_entry('z-first')
@@ -368,14 +372,91 @@ class LabEntryTests(TestCase):
         self.assertEqual([entry.pk for entry in self.entries()], [first.pk, second.pk])
         second.move(first, pos='left')
         self.assertEqual([entry.pk for entry in self.entries()], [second.pk, first.pk])
+        self.assertEqual([link['href'] for link in self.render(self.lab).select('.lab-all h3 a')], [second.url, first.url])
 
     def test_index_optional_image_and_technologies_render(self):
         entry = self.create_entry(hero_image=self.image())
         self.add_technologies(entry)
-        card = self.render(self.lab).select_one('.lab-projects-record')
+        card = self.render(self.lab).select_one('.lab-all .lab-record')
         self.assertEqual(card.img['alt'], 'Public diagram')
         self.assertEqual(card.img['loading'], 'lazy')
         self.assertEqual([item.string for item in card.select('.lab-entry-technologies li')], ['Django', 'Python'])
+
+    def test_focus_is_optional_and_limited_to_first_two_in_editorial_order(self):
+        ordinary = self.create_entry('ordinary')
+        self.assertFalse(self.render(self.lab).select('.lab-focus'))
+        featured = [self.create_entry(f'featured-{number}', is_featured=True) for number in range(3)]
+        featured[2].move(featured[0], pos='left')
+        soup = self.render(self.lab)
+        self.assertEqual([link['href'] for link in soup.select('.lab-focus h3 a')], [featured[2].url, featured[0].url])
+        self.assertEqual([link['href'] for link in soup.select('.lab-all h3 a')], [
+            ordinary.url, featured[2].url, featured[0].url, featured[1].url,
+        ])
+
+    def test_focus_and_all_labs_share_summary_metadata_image_and_tech_stack(self):
+        entry = self.create_entry(
+            lab_type='observability', status='experimenting', is_featured=True,
+            hero_image=self.image(), architecture='<p>Private implementation detail marker</p>',
+            implementation='<p>Detailed build marker</p>', security_considerations='<p>Detailed security marker</p>',
+        )
+        self.add_technologies(entry)
+        soup = self.render(self.lab)
+        for selector in ('.lab-focus', '.lab-all'):
+            record = soup.select_one(f'{selector} .lab-record')
+            self.assertEqual(record.h3.a['href'], entry.url)
+            self.assertIn(entry.title, record.h3.get_text())
+            self.assertIn(entry.intro, record.get_text())
+            self.assertEqual(record.select_one('.eyebrow').get_text(), 'Observability / Experimenting')
+            self.assertEqual(record.img['alt'], 'Public diagram')
+            self.assertGreater(int(record.img['width']), 0)
+            self.assertGreater(int(record.img['height']), 0)
+            self.assertEqual([li.string for li in record.select('.lab-entry-technologies li')], ['Django', 'Python'])
+        for marker in ('Private implementation detail marker', 'Detailed build marker', 'Detailed security marker'):
+            self.assertNotIn(marker, soup.get_text())
+
+    def test_rendered_focus_counts_and_all_labs_do_not_leak_nonpublic_or_foreign_entries(self):
+        public = self.create_entry('public', is_featured=True, lab_type='security')
+        self.create_entry('draft', is_featured=True, lab_type='security', live=False)
+        for restriction in ('login', 'password', 'groups'):
+            private = self.create_entry(restriction, is_featured=True, lab_type='security')
+            PageViewRestriction.objects.create(page=private, restriction_type=restriction, password='test-only')
+        sibling = self.home.add_child(instance=LabPage(title='Sibling', slug='sibling'))
+        self.create_entry('foreign', parent=sibling, is_featured=True, lab_type='security')
+        nested = self.create_entry('nested', is_featured=True, lab_type='security')
+        Site.objects.create(hostname='nested.example', root_page=nested)
+        soup = self.render(self.lab)
+        for selector in ('.lab-focus', '.lab-all'):
+            self.assertEqual([link['href'] for link in soup.select(f'{selector} h3 a')], [public.get_url(request=self.request())])
+        counts = {area.dt.string: area.dd.string for area in soup.select('.lab-area-list > div')}
+        self.assertEqual(counts['Security'], '1 published entry')
+        self.assertEqual([count for label, count in counts.items() if label != 'Security'], ['0 published entries'] * 4)
+        PageViewRestriction.objects.create(page=self.lab, restriction_type='login')
+        soup = self.render(self.lab)
+        self.assertFalse(soup.select('.lab-focus, .lab-record'))
+        self.assertEqual([area.dd.string for area in soup.select('.lab-area-list > div')], ['0 published entries'] * 5)
+
+    def test_populated_index_has_valid_structure_and_resolving_links(self):
+        entry = self.create_entry(is_featured=True)
+        soup = self.render(self.lab)
+        self.assertEqual(len(soup.find_all('h1')), 1)
+        self.assertEqual([h.get_text() for h in soup.select('.lab-landing h2')], [
+            'Current Focus', 'Lab Foundation', 'Lab Areas', 'All Labs', 'Operating Principles',
+        ])
+        ids = [element['id'] for element in soup.select('[id]')]
+        self.assertEqual(len(ids), len(set(ids)))
+        for section in soup.select('.lab-landing-section'):
+            self.assertEqual(section.h2['id'], section['aria-labelledby'])
+            self.assertIsNone(section.find_parent(['p', 'h1', 'h2']))
+        for listing in soup.select('.lab-records'):
+            self.assertTrue(listing.find_all('li', recursive=False))
+            self.assertFalse([child for child in listing.find_all(recursive=False) if child.name != 'li'])
+        for link in soup.select('.lab-landing a'):
+            self.assertTrue(link.get_text(strip=True))
+            if link['href'].startswith('#'):
+                self.assertIsNotNone(soup.find(id=link['href'][1:]))
+            else:
+                self.assertEqual(link['href'], entry.url)
+                self.assertEqual(self.client.get(link['href']).status_code, 200)
 
     def test_listing_prefetches_technologies_and_images_without_per_entry_queries(self):
         for number in range(3):
