@@ -43,7 +43,7 @@ def render_fixtures():
     lab = home.add_child(instance=LabPage(
         title='Lab', slug='lab',
         intro='<p>A working space for experiments in infrastructure, security, automation and observability. Build, investigate and document what happens.</p>',
-        overview='<p>A small virtualised platform supports isolated environments and repeatable experiments. The entries document the systems, decisions and findings.</p>',
+        overview='<p>A lab provides room to move from a working example to an understood system. It makes it possible to follow a change through its consequences, inspect a failure and try again.</p><p>These documented environments connect hands-on work with <strong>repeatable learning</strong>.</p>',
         **{field: '<p>Legacy documentation retained in the database.</p>'
            for field, _, _ in LabPage.section_definitions if field != 'overview'},
     ))
@@ -72,6 +72,10 @@ def render_fixtures():
     client = Client()
     paths = [lab.url, empty.url, *[entry.url for entry in entries]]
     documents = {}
+    cases = {
+        lab.url: {'entries': [entry.url for entry in entries], 'featured': [entry.url for entry in entries[:2]], 'overview': True, 'hero': False},
+        empty.url: {'entries': [], 'featured': [], 'overview': False, 'hero': False},
+    }
     for path in paths:
         response = client.get(path)
         assert response.status_code == 200, path
@@ -79,15 +83,38 @@ def render_fixtures():
     lab.hero_image = diagram
     lab.save()
     documents['/lab-with-image/'] = client.get(lab.url).content
-    return documents, Path(settings.MEDIA_ROOT)
+    cases['/lab-with-image/'] = {**cases[lab.url], 'hero': True}
+    LabEntryPage.objects.filter(pk__in=[entry.pk for entry in entries]).update(is_featured=False)
+    documents['/lab-without-featured/'] = client.get(lab.url).content
+    cases['/lab-without-featured/'] = {**cases[lab.url], 'hero': True, 'featured': []}
+    for count in (1, 3, 12):
+        variant = home.add_child(instance=LabPage(title=f'Lab catalogue with {count} entries', slug=f'lab-{count}'))
+        variant_entries = [variant.add_child(instance=LabEntryPage(
+            title=f'Documented environment {number + 1}', slug=f'environment-{number + 1}',
+            intro='A documented environment for investigating system behaviour.',
+            is_featured=number < 3,
+        )) for number in range(count)]
+        # Verify editorial ordering, including a move that differs from creation order.
+        if count > 1:
+            variant_entries[-1].move(variant_entries[0], pos='left')
+            variant_entries = [variant_entries[-1], *variant_entries[:-1]]
+        documents[variant.url] = client.get(variant.url).content
+        cases[variant.url] = {
+            'entries': [entry.url for entry in variant_entries],
+            'featured': [entry.url for entry in variant_entries if entry.is_featured][:2],
+            'overview': False, 'hero': False,
+        }
+        for entry in variant_entries:
+            documents[entry.url] = client.get(entry.url).content
+    return documents, Path(settings.MEDIA_ROOT), cases
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--output', type=Path, default=Path(tempfile.gettempdir()) / 'portfolio-lab-index-review')
+    parser.add_argument('--output', type=Path, default=Path(tempfile.gettempdir()) / 'portfolio-lab-index-v2-review')
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
-    documents, media_root = render_fixtures()
+    documents, media_root, cases = render_fixtures()
     from django.contrib.staticfiles import finders
 
     def serve(route):
@@ -116,37 +143,71 @@ def main():
             page = context.new_page()
             page.on('pageerror', lambda error: errors.append(str(error)))
             page.on('console', lambda message: errors.append(message.text) if message.type == 'error' else None)
-            for path in ('/lab/', '/empty-lab/', '/lab-with-image/'):
+            for path, expected in cases.items():
                 for width in (320, 375, 480, 768, 1024, 1440):
                     page.set_viewport_size({'width': width, 'height': 900})
                     page.goto('http://testserver' + path, wait_until='networkidle')
+                    # Load every optional image, including records below the viewport.
+                    page.locator('.lab-landing img').evaluate_all("images => images.forEach(image => image.loading = 'eager')")
+                    page.wait_for_function("[...document.querySelectorAll('.lab-landing img')].every(image => image.complete && image.naturalWidth > 0)")
                     result = page.evaluate("""() => {
                         const ids = [...document.querySelectorAll('[id]')].map(node => node.id);
+                        const rect = selector => document.querySelector(selector)?.getBoundingClientRect().toJSON();
                         return {
                             overflow: document.documentElement.scrollWidth > innerWidth,
                             h1: document.querySelectorAll('h1').length,
                             duplicateIds: ids.length !== new Set(ids).size,
-                            sections: [...document.querySelectorAll('.lab-landing h2')].map(node => node.textContent),
-                            focus: document.querySelectorAll('.lab-focus .lab-record').length,
-                            all: document.querySelectorAll('.lab-all .lab-record').length,
-                            counts: [...document.querySelectorAll('.lab-area-list dd')].map(node => node.textContent),
+                            sections: [...document.querySelectorAll('.lab-landing > section > h2, .lab-exploring > h2')].map(node => node.textContent),
+                            entries: [...document.querySelectorAll('.lab-catalogue .lab-record-link')].map(node => node.getAttribute('href')),
+                            featured: [...document.querySelectorAll('.lab-exploring a')].map(node => node.getAttribute('href')),
+                            records: document.querySelectorAll('.lab-record').length,
+                            oldUI: document.querySelectorAll('.lab-focus, .lab-foundation, .lab-area-list, .lab-principle-list').length,
+                            signalRecords: document.querySelectorAll('.lab-exploring .lab-record, .lab-exploring img').length,
+                            principles: [...document.querySelectorAll('.lab-method-list h3')].map(node => node.textContent),
+                            heroCopy: rect('.lab-hero-copy'), heroImage: rect('.lab-hero .lab-visual'),
+                            emptyState: Boolean(document.querySelector('.lab-empty')),
                             imagesLoaded: [...document.querySelectorAll('.lab-landing img')].every(img => img.naturalWidth > 0 && img.alt),
                             animations: document.querySelector('.lab-landing').getAnimations({subtree: true}).length
                         };
                     }""")
                     assert not result['overflow'] and not result['duplicateIds'], result
                     assert result['h1'] == 1 and result['imagesLoaded'] and result['animations'] == 0, result
-                    empty = path == '/empty-lab/'
-                    assert result['focus'] == (0 if empty else 2) and result['all'] == (0 if empty else 5), result
-                    assert result['counts'] == (['0 published entries'] if empty else ['1 published entry']) * 5, result
-                    if not empty:
-                        assert result['sections'] == ['Current Focus', 'Lab Foundation', 'Lab Areas', 'All Labs', 'Operating Principles'], result
-                        link = page.locator('.lab-focus h3 a').first
-                        link.focus()
-                        assert link.evaluate("node => node === document.activeElement && getComputedStyle(node).outlineStyle !== 'none'")
+                    assert result['entries'] == expected['entries'] and result['featured'] == expected['featured'], result
+                    assert result['records'] == len(expected['entries']), result
+                    assert result['emptyState'] == (not expected['entries']), result
+                    assert result['oldUI'] == 0 and result['signalRecords'] == 0, result
+                    assert result['principles'] == ['Build', 'Isolate', 'Observe', 'Document'], result
+                    headings = (['Why I Run a Lab'] if expected['overview'] else []) + ['How I Use It', 'Labs']
+                    if expected['featured']:
+                        headings.append('Currently Exploring')
+                    else:
+                        assert page.locator('.lab-exploring').count() == 0
+                    assert result['sections'] == headings, result
+                    assert bool(result.get('heroImage')) == expected['hero'], result
+                    if expected['hero']:
+                        copy, artwork = result['heroCopy'], result['heroImage']
+                        if width >= 768:
+                            assert artwork['left'] >= copy['right'], result
+                            assert artwork['width'] <= copy['width'] and artwork['height'] <= 361, result
+                            assert artwork['top'] < copy['bottom'] and copy['top'] < artwork['bottom'], result
+                        else:
+                            assert artwork['top'] >= copy['bottom'], result
+                    if expected['entries']:
+                        link = page.locator('.lab-record-link').first
+                        assert link.get_attribute('aria-label').startswith('Explore lab: ')
+                        for selector in ('.lab-record-link', '.lab-exploring a'):
+                            if page.locator(selector).count():
+                                target = page.locator(selector).first
+                                target.focus()
+                                assert target.evaluate("node => node === document.activeElement && getComputedStyle(node).outlineStyle !== 'none'")
                     if javascript and motion == 'reduce' and width in (375, 768, 1440):
                         page.evaluate("document.activeElement.blur(); scrollTo({top: 0, behavior: 'instant'})")
                         page.screenshot(path=str(args.output / f'{path.strip("/")}-{width}.png'), full_page=True)
+                    if expected['entries']:
+                        link.focus()
+                        link.press('Enter')
+                        page.wait_for_url('http://testserver' + expected['entries'][0])
+                        assert page.locator('.lab-entry-page h1').count() == 1
                     results.append({'path': path, 'width': width, 'javascript': javascript, 'motion': motion, **result})
             context.close()
         browser.close()

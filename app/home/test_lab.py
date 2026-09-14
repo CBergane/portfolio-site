@@ -69,12 +69,13 @@ class LabPageTests(TestCase):
                 self.assertFalse(soup.select('.lab-section, .lab-layout, .lab-index'))
                 self.assertIsNone(soup.find(id=section_id))
                 if field == 'overview':
-                    self.assertEqual(soup.select_one('.lab-foundation-summary').get_text(), 'Example engineering detail.')
+                    self.assertEqual(soup.select_one('.lab-why-copy').get_text(), 'Example engineering detail.')
                 else:
                     self.assertNotIn('engineering detail', soup.get_text())
-                    self.assertIsNone(soup.select_one('.lab-foundation'))
-                sections = self.lab.get_context(RequestFactory().get('/lab/'))['lab_sections']
-                self.assertEqual(sections, [{'id': section_id, 'title': title, 'content': getattr(self.lab, field)}])
+                    self.assertIsNone(soup.select_one('.lab-why'))
+                self.lab.save()
+                self.lab.refresh_from_db()
+                self.assertEqual(getattr(self.lab, field), '<p>Example <strong>engineering detail</strong>.</p>')
                 setattr(self.lab, field, '')
 
     def test_all_sections_have_expected_order_unique_ids_and_one_h1(self):
@@ -84,7 +85,7 @@ class LabPageTests(TestCase):
         soup = self.render()
         self.assertEqual([h.get_text() for h in soup.find_all('h1')], [self.lab.title])
         self.assertEqual([h.get_text() for h in soup.select('.lab-landing h2')], [
-            'Lab Foundation', 'Lab Areas', 'All Labs', 'Operating Principles',
+            'Why I Run a Lab', 'How I Use It', 'Labs',
         ])
         self.assertFalse(soup.select('.lab-index'))
         ids = [element['id'] for element in soup.select('[id]')]
@@ -98,7 +99,7 @@ class LabPageTests(TestCase):
         self.lab.networking = '<p>Network design.</p>'
         self.lab.current_experiments = '<p>Current work.</p>'
         soup = self.render()
-        self.assertFalse(soup.select('.lab-section, .lab-index, .lab-foundation'))
+        self.assertFalse(soup.select('.lab-section, .lab-index, .lab-why'))
         self.assertNotIn('Network design.', soup.get_text())
         self.assertNotIn('Current work.', soup.get_text())
 
@@ -111,42 +112,47 @@ class LabPageTests(TestCase):
         self.assertEqual(soup.select_one('.lab-intro strong').string, 'security and automation')
         self.assertIsNone(soup.select_one('.lab-visual'))
 
-    def test_foundation_is_a_short_plain_text_excerpt_without_extra_headings(self):
-        self.lab.overview = '<h2>Foundation</h2><p>' + 'word ' * 100 + 'omitted-tail</p>'
+    def test_overview_renders_full_rich_text_without_truncation(self):
+        self.lab.overview = '<p>' + 'word ' * 100 + '<strong>Complete ending.</strong></p><ul><li>Reusable knowledge</li></ul>'
         original = self.lab.overview
         soup = self.render()
-        summary = soup.select_one('.lab-foundation-summary')
-        self.assertEqual(len(summary.get_text().removesuffix(' …').split()), 80)
-        self.assertTrue(summary.get_text().startswith('Foundation word '))
-        self.assertNotIn('omitted-tail', soup.get_text())
-        self.assertFalse(summary.find_all(['h1', 'h2', 'p']))
+        narrative = soup.select_one('.lab-why-copy')
+        self.assertEqual(narrative.strong.string, 'Complete ending.')
+        self.assertEqual(narrative.li.string, 'Reusable knowledge')
+        self.assertGreater(len(narrative.get_text().split()), 100)
         self.assertEqual(self.lab.overview, original)
-        self.assertIsNone(soup.select_one('.lab-foundation a'))
+        self.assertEqual(soup.find(id='lab-why-title').string, 'Why I Run a Lab')
 
-    def test_foundation_preserves_word_boundaries_and_escapes_plain_text(self):
-        self.lab.overview = '<p>First paragraph.</p><p>Next paragraph &amp; &lt;example&gt;.</p>'
-        summary = self.render().select_one('.lab-foundation-summary')
-        self.assertEqual(summary.get_text(), 'First paragraph. Next paragraph & <example>.')
-        self.assertFalse(summary.find_all())
-        self.lab.overview = '<p> </p>'
-        self.assertFalse(self.render().select('.lab-foundation'))
+    def test_overview_preserves_paragraphs_links_and_escaped_text(self):
+        self.lab.overview = '<p>First paragraph.</p><p>Next &amp; &lt;example&gt; <a href="https://example.com/">reference</a>.</p>'
+        narrative = self.render().select_one('.lab-why-copy')
+        self.assertEqual(len(narrative.find_all('p')), 2)
+        self.assertIn('Next & <example>', narrative.get_text())
+        self.assertEqual(narrative.a['href'], 'https://example.com/')
+        self.assertIsNone(narrative.find('example'))
+        self.lab.overview = ''
+        self.assertFalse(self.render().select('.lab-why'))
 
-    def test_empty_categories_and_all_labs_have_meaningful_empty_state(self):
+    def test_empty_catalogue_has_meaningful_empty_state(self):
         soup = self.render()
-        areas = soup.select('.lab-area-list > div')
-        self.assertEqual([area.dt.string for area in areas], [
-            'Infrastructure', 'Security', 'Automation', 'Observability', 'Research',
-        ])
-        self.assertEqual([area.dd.string for area in areas], ['0 published entries'] * 5)
-        self.assertFalse(soup.select('.lab-area-list a, .lab-focus, .lab-records'))
+        self.assertEqual(soup.find(id='lab-catalogue-title').string, 'Labs')
+        self.assertFalse(soup.select('.lab-exploring, .lab-records'))
         self.assertEqual(soup.select_one('.lab-empty').string, 'No published lab entries yet.')
 
-    def test_principles_are_concise_static_guidance(self):
+    def test_previous_index_architecture_is_absent(self):
         soup = self.render()
-        self.assertEqual([item.string for item in soup.select('.lab-principle-list li')], [
-            'Isolation', 'Reproducibility', 'Observability', 'Least privilege',
-            'Documentation', 'Safe and authorised testing',
-        ])
+        self.assertFalse(soup.select('.lab-focus, .lab-foundation, .lab-areas, .lab-all, .lab-principles, .lab-area-list'))
+        for heading in ('Current Focus', 'Lab Foundation', 'Lab Areas', 'All Labs', 'Operating Principles'):
+            self.assertIsNone(soup.find('h2', string=heading))
+
+    def test_four_principles_are_compact_editorial_guidance(self):
+        soup = self.render()
+        markers = soup.select('.lab-method-list > li')
+        self.assertEqual([item.h3.string for item in markers], ['Build', 'Isolate', 'Observe', 'Document'])
+        for item in markers:
+            self.assertTrue(item.p.get_text(strip=True))
+            self.assertLessEqual(len(item.p.get_text().split()), 14)
+        self.assertFalse(soup.select('.lab-method img, .lab-method svg'))
 
     def test_hero_image_renders_rendition_with_dimensions_and_alt_text(self):
         buffer = BytesIO()

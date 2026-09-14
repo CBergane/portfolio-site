@@ -307,7 +307,7 @@ class HomePage(Page):
 
 
 class LabPage(Page):
-    """A living infrastructure document owned by a single site homepage."""
+    """A lab introduction and catalogue owned by a single site homepage."""
 
     parent_page_types = ["home.HomePage"]
     subpage_types = ["home.LabEntryPage"]
@@ -327,7 +327,7 @@ class LabPage(Page):
     operations_recovery = RichTextField(blank=True, help_text="Operational practices, validation and recovery approach.")
     current_experiments = RichTextField(blank=True, help_text="Current investigations, experiments and learning.")
 
-    # One ordered definition keeps the document and its anchor index in sync.
+    # Legacy document fields retained for editorial content and migration tooling.
     section_definitions = (
         ('overview', 'lab-overview', 'System Overview'),
         ('platform_architecture', 'lab-platform', 'Platform Architecture'),
@@ -366,24 +366,13 @@ class LabPage(Page):
 
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)
-        context['lab_sections'] = [
-            {'id': section_id, 'title': title, 'content': getattr(self, field)}
-            for field, section_id, title in self.section_definitions
-            if getattr(self, field)
-        ]
         context['lab_entries'] = public_site_pages(LabEntryPage, request).child_of(self).order_by(
             'path'
         ).defer_streamfields().select_related('hero_image').prefetch_related(
             models.Prefetch('tech_stack_items', queryset=LabEntryPageTechStack.objects.select_related('tech'))
         )
-        # Reuse the queryset's result cache for every view of the same public children.
-        context['featured_lab_entries'] = []
-        context['lab_entries_by_type'] = {lab_type: [] for lab_type, _ in LabEntryPage.LAB_TYPE_CHOICES}
-        context['lab_type_choices'] = LabEntryPage.LAB_TYPE_CHOICES
-        for entry in context['lab_entries']:
-            if entry.is_featured:
-                context['featured_lab_entries'].append(entry)
-            context['lab_entries_by_type'][entry.lab_type].append(entry)
+        # Reuse the catalogue's result cache for the small editorial signal.
+        context['featured_lab_entries'] = [entry for entry in context['lab_entries'] if entry.is_featured]
         return context
 
     class Meta:
