@@ -376,6 +376,14 @@ class LabPage(Page):
         ).defer_streamfields().select_related('hero_image').prefetch_related(
             models.Prefetch('tech_stack_items', queryset=LabEntryPageTechStack.objects.select_related('tech'))
         )
+        # Reuse the queryset's result cache for every view of the same public children.
+        context['featured_lab_entries'] = []
+        context['lab_entries_by_type'] = {lab_type: [] for lab_type, _ in LabEntryPage.LAB_TYPE_CHOICES}
+        context['lab_type_choices'] = LabEntryPage.LAB_TYPE_CHOICES
+        for entry in context['lab_entries']:
+            if entry.is_featured:
+                context['featured_lab_entries'].append(entry)
+            context['lab_entries_by_type'][entry.lab_type].append(entry)
         return context
 
     class Meta:
@@ -388,7 +396,21 @@ class LabEntryPage(Page):
     parent_page_types = ["home.LabPage"]
     subpage_types = []
 
+    LAB_TYPE_CHOICES = [
+        ('infrastructure', 'Infrastructure'),
+        ('security', 'Security'),
+        ('automation', 'Automation'),
+        ('observability', 'Observability'),
+        ('research', 'Research'),
+    ]
+
     intro = models.CharField(max_length=300, help_text="Short public summary of the lab or experiment.")
+    lab_type = models.CharField(
+        max_length=20,
+        choices=LAB_TYPE_CHOICES,
+        default='research',
+        help_text="Primary area for this lab or experiment.",
+    )
     status = models.CharField(
         max_length=20,
         choices=[
@@ -396,6 +418,10 @@ class LabEntryPage(Page):
             ('documented', 'Documented'), ('paused', 'Paused'), ('archived', 'Archived'),
         ],
         default='active',
+    )
+    is_featured = models.BooleanField(
+        default=False,
+        help_text="Feature this entry in the Current Focus section of the Lab index.",
     )
     hero_image = models.ForeignKey(
         'wagtailimages.Image', null=True, blank=True,
@@ -439,9 +465,12 @@ class LabEntryPage(Page):
 
     content_panels = Page.content_panels + [
         MultiFieldPanel([
-            FieldPanel('intro'), FieldPanel('status'), FieldPanel('hero_image'),
+            FieldPanel('intro'), FieldPanel('hero_image'),
         ], heading="Basic Info"),
-        MultiFieldPanel([InlinePanel('tech_stack_items', label='Tech stack')], heading="Technology"),
+        MultiFieldPanel([
+            FieldPanel('lab_type'), FieldPanel('status'), FieldPanel('is_featured'),
+            InlinePanel('tech_stack_items', label='Tech stack'),
+        ], heading="Lab Classification & Technology"),
         MultiFieldPanel([FieldPanel('github_url')], heading="Links"),
         MultiFieldPanel([
             FieldPanel('objective'), FieldPanel('architecture'), FieldPanel('implementation'),
