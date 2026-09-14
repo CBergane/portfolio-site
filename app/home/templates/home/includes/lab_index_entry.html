@@ -1,0 +1,19 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+<li class="lab-record{% if entry.hero_image %} lab-record--illustrated{% endif %}">
+    {% if entry.hero_image %}
+    <figure class="lab-record-image">
+        {% image entry.hero_image width-640 as entry_image %}
+        <img src="{{ entry_image.url }}" width="{{ entry_image.width }}" height="{{ entry_image.height }}" alt="{{ entry.hero_image.title }}" loading="lazy" decoding="async">
+    </figure>
+    {% endif %}
+    <div class="lab-record-copy">
+        <p class="eyebrow"><span>{{ entry.get_lab_type_display }}</span> / {{ entry.get_status_display }}</p>
+        <h3><a href="{% pageurl entry %}">{{ entry.title }} <span aria-hidden="true">&rarr;</span></a></h3>
+        {% if entry.intro %}<p class="lab-record-summary">{{ entry.intro }}</p>{% endif %}
+        {% with items=entry.tech_stack_items.all %}{% if items %}
+        <ul class="lab-entry-technologies" aria-label="Technologies">
+            {% for item in items|dictsortreversed:"is_primary" %}<li>{{ item.tech.name }}</li>{% endfor %}
+        </ul>
+        {% endif %}{% endwith %}
+    </div>
+</li>

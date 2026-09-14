@@ -3279,7 +3279,7 @@ select {
     margin-top: 0;
 }
 
-/* Lab infrastructure document */
+/* Lab shared hero and entry document */
 
 .lab-page {
     padding-top: 5.15rem;
@@ -3388,59 +3388,61 @@ select {
     padding-left: 1rem;
 }
 
-/* Lab project records and detail metadata */
+/* Lab landing page and entry metadata */
 
-.lab-projects {
+.lab-landing-section + .lab-landing-section {
     margin-top: clamp(3rem,6vw,6rem);
 }
 
-.lab-projects > h2 {
+.lab-landing-section > h2 {
     margin: 0 0 2rem;
     color: var(--frost-100);
     font-family: var(--font-display);
     font-size: clamp(1.6rem,3vw,2.4rem);
     line-height: 1.2;
     letter-spacing: -0.025em;
+    scroll-margin-top: 7rem;
 }
 
-.lab-projects-list {
+.lab-records {
     margin: 0;
     padding: 0;
     list-style: none;
     border-top: 1px solid var(--line-strong);
 }
 
-.lab-projects-record {
+.lab-record {
     display: grid;
     gap: clamp(1.5rem,3vw,3rem);
     padding-block: clamp(1.5rem,3vw,3rem);
     border-bottom: 1px solid var(--line);
 }
 
-.lab-projects-record--illustrated {
+.lab-record--illustrated {
     grid-template-columns: minmax(0,220px) minmax(0,1fr);
 }
 
-.lab-projects-image {
+.lab-record-image {
     margin: 0;
 }
 
-.lab-projects-image img {
+.lab-record-image img {
     display: block;
     width: 100%;
     height: auto;
     border: 1px solid var(--line);
 }
 
-.lab-projects-copy {
+.lab-record-copy {
     min-width: 0;
 }
 
-.lab-projects-copy .eyebrow {
+.lab-record-copy .eyebrow {
     margin-bottom: 0.75rem;
+    overflow-wrap: anywhere;
 }
 
-.lab-projects-copy h3 {
+.lab-record-copy h3 {
     margin: 0 0 1rem;
     font-family: var(--font-display);
     font-size: clamp(1.4rem,2.5vw,2rem);
@@ -3448,20 +3450,96 @@ select {
     overflow-wrap: anywhere;
 }
 
-.lab-projects-copy h3 a:hover,
-.lab-projects-copy h3 a:focus-visible {
+.lab-record-copy h3 a:hover,
+.lab-record-copy h3 a:focus-visible {
     color: var(--arctic);
 }
 
-.lab-projects-copy h3 span {
+.lab-record-copy h3 span {
     color: var(--arctic);
 }
 
-.lab-projects-summary,
+.lab-record-summary,
 .lab-entry-summary {
     max-width: 65ch;
     color: var(--frost-200);
     overflow-wrap: anywhere;
+}
+
+.lab-focus-list {
+    display: grid;
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    column-gap: clamp(2rem,4vw,4rem);
+}
+
+.lab-focus-list .lab-record {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    min-width: 0;
+}
+
+.lab-focus-list .lab-record-image {
+    order: 1;
+    margin-top: auto;
+}
+
+.lab-focus-list .lab-record-image img {
+    aspect-ratio: 16 / 9;
+    object-fit: contain;
+    background: var(--carbon-900);
+}
+
+.lab-foundation {
+    display: grid;
+    grid-template-columns: minmax(0,1fr) minmax(0,2fr);
+    gap: 0 clamp(2rem,4vw,4rem);
+}
+
+.lab-foundation-summary,
+.lab-empty,
+.lab-principles-intro {
+    max-width: 65ch;
+    margin: 0 0 1.5rem;
+    color: var(--frost-200);
+    overflow-wrap: anywhere;
+}
+
+.lab-area-list,
+.lab-principle-list {
+    display: grid;
+    gap: 0 clamp(1rem,3vw,3rem);
+    margin: 0;
+    padding: 0;
+}
+
+.lab-area-list {
+    grid-template-columns: repeat(5,minmax(0,1fr));
+}
+
+.lab-area-list > div,
+.lab-principle-list > li {
+    padding-block: 1.25rem;
+    border-top: 1px solid var(--line-strong);
+    overflow-wrap: anywhere;
+}
+
+.lab-area-list dt {
+    color: var(--frost-100);
+    font-weight: 600;
+}
+
+.lab-area-list dd {
+    margin: 0.5rem 0 0;
+    color: var(--frost-400);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+}
+
+.lab-principle-list {
+    grid-template-columns: repeat(3,minmax(0,1fr));
+    list-style: none;
+    color: var(--frost-200);
 }
 
 .lab-entry-technologies {
@@ -5016,12 +5094,18 @@ select {
 /* Lab: tablet and mobile */
 
 @media (max-width: 767px) {
-    .lab-projects-record--illustrated {
+    .lab-record--illustrated,
+    .lab-focus-list,
+    .lab-foundation {
         grid-template-columns: minmax(0,1fr);
     }
 }
 
 @media (max-width: 1023px) {
+    .lab-area-list {
+        grid-template-columns: repeat(3,minmax(0,1fr));
+    }
+
     .lab-layout {
         grid-template-columns: minmax(0,1fr);
     }
@@ -5040,6 +5124,18 @@ select {
 @media (max-width: 767px) {
     .lab-page {
         padding-top: 4.4rem;
+    }
+
+    .lab-area-list,
+    .lab-principle-list {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .lab-area-list,
+    .lab-principle-list {
+        grid-template-columns: minmax(0,1fr);
     }
 }
 
