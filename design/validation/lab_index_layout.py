@@ -23,7 +23,7 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'config.test_settings'
 os.environ['DJANGO_DEBUG'] = '1'
 
 
-def render_fixtures():
+def render_fixtures(hero_image=None, reference_html=None):
     import django
     django.setup()
     from django.conf import settings
@@ -81,6 +81,11 @@ def render_fixtures():
         assert response.status_code == 200, path
         documents[path] = response.content
     lab.hero_image = diagram
+    if hero_image:
+        lab.hero_image = get_image_model().objects.create(
+            title='Existing Lab systems artwork',
+            file=SimpleUploadedFile(hero_image.name, hero_image.read_bytes()),
+        )
     lab.save()
     documents['/lab-with-image/'] = client.get(lab.url).content
     cases['/lab-with-image/'] = {**cases[lab.url], 'hero': True}
@@ -106,15 +111,26 @@ def render_fixtures():
         }
         for entry in variant_entries:
             documents[entry.url] = client.get(entry.url).content
+    if reference_html:
+        # Copy only public prose into the disposable database, never production data.
+        from bs4 import BeautifulSoup
+        reference = BeautifulSoup(reference_html.read_bytes(), 'html.parser')
+        lab.intro = reference.select_one('.lab-intro').decode_contents()
+        lab.overview = reference.select_one('.lab-why-copy').decode_contents()
+        lab.save()
+        documents['/lab-current-copy/'] = client.get(lab.url).content
+        cases['/lab-current-copy/'] = {**cases['/lab-without-featured/'], 'overview': True}
     return documents, Path(settings.MEDIA_ROOT), cases
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, default=Path(tempfile.gettempdir()) / 'portfolio-lab-index-v2-review')
+    parser.add_argument('--hero-image', type=Path, help='Existing artwork to use in disposable fixtures; the source file is never modified.')
+    parser.add_argument('--reference-html', type=Path, help='Saved public Lab HTML for an additional fixture using its current intro and overview.')
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
-    documents, media_root, cases = render_fixtures()
+    documents, media_root, cases = render_fixtures(args.hero_image, args.reference_html)
     from django.contrib.staticfiles import finders
 
     def serve(route):
@@ -137,7 +153,7 @@ def main():
     results, errors = [], []
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch(channel='chrome', headless=True)
-        for javascript, motion in ((True, 'no-preference'), (True, 'reduce'), (False, 'reduce')):
+        for javascript, motion in ((True, 'no-preference'), (True, 'reduce'), (False, 'no-preference'), (False, 'reduce')):
             context = browser.new_context(java_script_enabled=javascript, reduced_motion=motion)
             context.route('**/*', serve)
             page = context.new_page()
@@ -153,6 +169,8 @@ def main():
                     result = page.evaluate("""() => {
                         const ids = [...document.querySelectorAll('[id]')].map(node => node.id);
                         const rect = selector => document.querySelector(selector)?.getBoundingClientRect().toJSON();
+                        const artwork = document.querySelector('.lab-hero .lab-visual');
+                        const artworkStyle = artwork && getComputedStyle(artwork);
                         return {
                             overflow: document.documentElement.scrollWidth > innerWidth,
                             h1: document.querySelectorAll('h1').length,
@@ -165,8 +183,15 @@ def main():
                             signalRecords: document.querySelectorAll('.lab-exploring .lab-record, .lab-exploring img').length,
                             principles: [...document.querySelectorAll('.lab-method-list h3')].map(node => node.textContent),
                             heroCopy: rect('.lab-hero-copy'), heroImage: rect('.lab-hero .lab-visual'),
+                            heroFirst: document.querySelector('.lab-landing').firstElementChild.matches('.lab-hero'),
+                            copyFirst: !artwork || Boolean(document.querySelector('.lab-hero-copy').compareDocumentPosition(artwork) & Node.DOCUMENT_POSITION_FOLLOWING),
+                            copyAboveArtwork: !artwork || Number(getComputedStyle(document.querySelector('.lab-hero-copy')).zIndex) > (Number(artworkStyle.zIndex) || 0),
+                            artworkIntegrated: !artwork || (artworkStyle.borderTopWidth === '0px' && artworkStyle.backgroundColor === 'rgba(0, 0, 0, 0)' && artworkStyle.boxShadow === 'none' && getComputedStyle(artwork, '::after').backgroundImage.includes('linear-gradient')),
+                            methodItems: [...document.querySelectorAll('.lab-method-list > li')].map(node => node.getBoundingClientRect().toJSON()),
+                            methodNumbers: [...document.querySelectorAll('.lab-method-number')].map(node => ({text: node.textContent, width: node.getBoundingClientRect().width})),
+                            whyHeading: rect('#lab-why-title'), whyCopy: rect('.lab-why-copy'),
                             emptyState: Boolean(document.querySelector('.lab-empty')),
-                            imagesLoaded: [...document.querySelectorAll('.lab-landing img')].every(img => img.naturalWidth > 0 && img.alt),
+                            imagesLoaded: [...document.querySelectorAll('.lab-landing img')].every(img => img.naturalWidth > 0 && img.alt && Number(img.getAttribute('width')) > 0 && Number(img.getAttribute('height')) > 0),
                             animations: document.querySelector('.lab-landing').getAnimations({subtree: true}).length
                         };
                     }""")
@@ -176,7 +201,11 @@ def main():
                     assert result['records'] == len(expected['entries']), result
                     assert result['emptyState'] == (not expected['entries']), result
                     assert result['oldUI'] == 0 and result['signalRecords'] == 0, result
-                    assert result['principles'] == ['Build', 'Isolate', 'Observe', 'Document'], result
+                    assert result['principles'] == ['01 / Build', '02 / Isolate', '03 / Observe', '04 / Document'], result
+                    assert result['heroFirst'] and result['copyFirst'] and result['copyAboveArtwork'] and result['artworkIntegrated'], result
+                    assert all(number['width'] > 0 for number in result['methodNumbers']), result
+                    columns = 4 if width >= 1024 else 2 if width > 480 else 1
+                    assert len({round(item['top']) for item in result['methodItems']}) == 4 // columns, result
                     headings = (['Why I Run a Lab'] if expected['overview'] else []) + ['How I Use It', 'Labs']
                     if expected['featured']:
                         headings.append('Currently Exploring')
@@ -186,12 +215,13 @@ def main():
                     assert bool(result.get('heroImage')) == expected['hero'], result
                     if expected['hero']:
                         copy, artwork = result['heroCopy'], result['heroImage']
-                        if width >= 768:
-                            assert artwork['left'] >= copy['right'], result
-                            assert artwork['width'] <= copy['width'] and artwork['height'] <= 361, result
+                        if width >= 1024:
+                            # Only the faded lead-in may extend toward the copy column.
+                            assert artwork['left'] >= copy['right'] - copy['width'] * .1, result
+                            assert .9 <= artwork['width'] / copy['width'] <= 1.15 and artwork['height'] <= 421, result
                             assert artwork['top'] < copy['bottom'] and copy['top'] < artwork['bottom'], result
                         else:
-                            assert artwork['top'] >= copy['bottom'], result
+                            assert artwork['top'] >= copy['bottom'] and artwork['height'] <= 281, result
                     if expected['entries']:
                         link = page.locator('.lab-record-link').first
                         assert link.get_attribute('aria-label').startswith('Explore lab: ')
@@ -200,9 +230,15 @@ def main():
                                 target = page.locator(selector).first
                                 target.focus()
                                 assert target.evaluate("node => node === document.activeElement && getComputedStyle(node).outlineStyle !== 'none'")
-                    if javascript and motion == 'reduce' and width in (375, 768, 1440):
+                                page.keyboard.press('Shift+Tab')
+                                page.keyboard.press('Tab')
+                                assert target.evaluate("node => node === document.activeElement && getComputedStyle(node).outlineStyle !== 'none'")
+                    if motion == 'reduce' and (javascript or expected['hero'] or not expected['entries']):
                         page.evaluate("document.activeElement.blur(); scrollTo({top: 0, behavior: 'instant'})")
-                        page.screenshot(path=str(args.output / f'{path.strip("/")}-{width}.png'), full_page=True)
+                        suffix = '' if javascript else '-no-js'
+                        page.screenshot(path=str(args.output / f'{path.strip("/")}-{width}{suffix}.png'), full_page=True)
+                        if expected['hero']:
+                            page.screenshot(path=str(args.output / f'{path.strip("/")}-{width}{suffix}-top.png'))
                     if expected['entries']:
                         link.focus()
                         link.press('Enter')
