@@ -148,7 +148,7 @@ class LabPageTests(TestCase):
     def test_four_principles_are_compact_editorial_guidance(self):
         soup = self.render()
         markers = soup.select('.lab-method-list > li')
-        self.assertEqual([item.h3.string for item in markers], ['Build', 'Isolate', 'Observe', 'Document'])
+        self.assertEqual([item.h3.get_text(' ', strip=True) for item in markers], ['01 / Build', '02 / Isolate', '03 / Observe', '04 / Document'])
         for item in markers:
             self.assertTrue(item.p.get_text(strip=True))
             self.assertLessEqual(len(item.p.get_text().split()), 14)

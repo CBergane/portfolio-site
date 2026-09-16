@@ -3459,11 +3459,16 @@ select {
     overflow-wrap: anywhere;
 }
 
+.lab-landing .lab-hero {
+    padding-top: clamp(3rem,6vw,6rem);
+    padding-bottom: clamp(2.5rem,4vw,4rem);
+}
+
 .lab-landing .lab-hero--illustrated {
     display: grid;
-    grid-template-columns: minmax(0,1.2fr) minmax(0,1fr);
+    grid-template-columns: minmax(0,1.08fr) minmax(0,1fr);
     align-items: center;
-    gap: clamp(2rem,5vw,5rem);
+    gap: clamp(0.75rem,1vw,1rem);
 }
 
 .lab-hero-copy,
@@ -3471,25 +3476,42 @@ select {
     min-width: 0;
 }
 
+.lab-hero-copy {
+    position: relative;
+    z-index: 1;
+}
+
 .lab-landing .lab-visual {
-    margin: 0;
+    position: relative;
+    /* Let the dark lead-in approach the copy and the art approach the frame edge. */
+    margin: 0 calc(var(--page-pad) / -2) 0 -8%;
     border: 0;
     background: transparent;
 }
 
 .lab-landing .lab-visual img {
-    max-height: 360px;
+    max-height: 420px;
     object-fit: contain;
+}
+
+.lab-landing .lab-visual::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+        linear-gradient(90deg, var(--carbon-950), rgba(8,10,13,.65) 10%, transparent 34%, transparent 96%, var(--carbon-950)),
+        linear-gradient(0deg, var(--carbon-950), transparent 10%, transparent 92%, var(--carbon-950));
 }
 
 .lab-why {
     display: grid;
-    grid-template-columns: minmax(0,1fr) minmax(0,2fr);
-    gap: 0 clamp(2rem,5vw,5rem);
+    grid-template-columns: minmax(0,min(30%,20rem)) minmax(0,65ch);
+    gap: 0 clamp(1.5rem,3vw,3rem);
 }
 
 .lab-why-copy {
-    max-width: 70ch;
+    max-width: 65ch;
 }
 
 .lab-why-copy > :first-child,
@@ -3500,7 +3522,7 @@ select {
 .lab-method-list {
     display: grid;
     grid-template-columns: repeat(4,minmax(0,1fr));
-    gap: 1.5rem clamp(1.5rem,3vw,3rem);
+    gap: 2rem clamp(1.5rem,3vw,3rem);
     margin: 0;
     padding: 1.5rem 0 0;
     border-top: 1px solid var(--line-strong);
@@ -3528,6 +3550,11 @@ select {
 .lab-method-list p {
     max-width: 35ch;
     font-size: 0.9rem;
+}
+
+.lab-method-number {
+    margin-right: 0.5em;
+    white-space: nowrap;
 }
 
 .lab-record-technologies {
@@ -5125,13 +5152,27 @@ select {
 
 @media (max-width: 767px) {
     .lab-record--illustrated,
-    .lab-landing .lab-hero--illustrated,
     .lab-why {
         grid-template-columns: minmax(0,1fr);
     }
 }
 
 @media (max-width: 1023px) {
+    .lab-landing .lab-hero--illustrated {
+        grid-template-columns: minmax(0,1fr);
+        gap: 1.25rem;
+    }
+
+    .lab-landing .lab-visual {
+        width: min(100%,36rem);
+        margin: 0;
+        justify-self: end;
+    }
+
+    .lab-landing .lab-visual img {
+        max-height: 280px;
+    }
+
     .lab-method-list {
         grid-template-columns: repeat(2,minmax(0,1fr));
     }
