@@ -1,0 +1,71 @@
+name: Safe baseline
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  django:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        database: [sqlite, postgresql]
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: portfolio_phase1
+          POSTGRES_USER: portfolio_phase1
+          POSTGRES_PASSWORD: phase1-synthetic-password
+        ports:
+          - '55432:5432'
+        options: >-
+          --health-cmd "pg_isready -U portfolio_phase1 -d portfolio_phase1"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    defaults:
+      run:
+        working-directory: app
+    env:
+      DJANGO_SETTINGS_MODULE: config.test_settings
+      TEST_DATABASE_ENGINE: ${{ matrix.database }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+          cache: pip
+          cache-dependency-path: app/requirements.txt
+      - id: python-dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Django system checks
+        run: python manage.py check
+      - name: Migration drift
+        run: python manage.py makemigrations --check --dry-run --noinput
+      - name: Django tests
+        if: ${{ !cancelled() && steps.python-dependencies.outcome == 'success' }}
+        run: python manage.py test --noinput
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - name: JavaScript syntax
+        run: git ls-files -z '*.js' | xargs -0 -r -n 1 node --check
+      - name: Shell syntax
+        run: git ls-files -z '*.sh' | xargs -0 -r -n 1 bash -n
+      - run: npm ci --ignore-scripts
+        working-directory: app
+      - name: Frontend build
+        run: npm run build:css -- --output "$RUNNER_TEMP/portfolio-phase1.css"
+        working-directory: app
