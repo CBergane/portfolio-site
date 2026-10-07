@@ -99,3 +99,46 @@ from committed migrations and writes no migration files; see
 Report that as drift and leave model/migration changes for a separately approved
 phase. Missing dependencies or an unavailable PostgreSQL 16 runtime mean the
 affected checks are blocked, not passed.
+
+## Phase 2A: document access and webhook privacy
+
+`WAGTAILDOCS_SERVE_METHOD = "serve_view"` keeps existing
+`/documents/<id>/<filename>` URLs and lets Wagtail enforce collection restrictions
+on the response that carries the document. Nginx returns 403 for raw
+`/media/documents/` requests, including public documents; use their canonical
+Wagtail URLs. Image renditions, originals and other media/static paths retain
+their existing behavior. This follows
+[Wagtail 8's document-serving guidance](https://docs.wagtail.org/en/v8.0/advanced_topics/documents/storing_and_serving.html#security-considerations).
+
+The Django suite covers public downloads, inherited login/group/password
+restrictions, authorized downloads, security headers, and conditional/HEAD
+requests. Webhook tests use only synthetic URLs and mocked HTTP responses. They
+inspect formatted logs, complete log records, stdout and stderr for secrets and
+personal data, and verify that a webhook failure still stores the submission and
+returns the existing success response. Webhook log records use `event`, `outcome`
+and, on failure, the exception class in `error_type`; exception text and request
+or response objects are never logged.
+
+Django tests do **not** validate Nginx. With a local Nginx binary, run from the
+repository root:
+
+```sh
+python3 scripts/check_nginx_documents.py --nginx /path/to/nginx --effective-config /tmp/portfolio-nginx-effective.conf
+```
+
+This runs `nginx -t` and `nginx -T` on the unmodified repository configuration
+in a test wrapper, then stages temporary paths and tests actual GET/HEAD responses
+against synthetic files and a synthetic upstream. It blocks direct public/restricted
+document paths, including encoded and normalized variants, and checks canonical
+document routing, image renditions, originals, other media and static files.
+Only filesystem aliases, the listen address/port and the upstream address are
+substituted with temporary paths and loopback services. The access rules are
+unchanged. The emitted configuration is the effective **local test** configuration,
+not evidence about a deployed proxy or Cloudflare's cache.
+
+The CI `nginx` job also checks the unmodified repository config with `nginx -t`
+and `nginx -T` inside the same `nginx:1.29-alpine` image family used by Compose,
+then runs the HTTP regression check there. Python is installed only as a test
+tool in that disposable container; application dependencies are unchanged.
+If Nginx or the disposable container runtime is unavailable, report that check
+as blocked. No production container, media volume or backup is used.

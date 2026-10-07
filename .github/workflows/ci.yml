@@ -69,3 +69,20 @@ jobs:
       - name: Frontend build
         run: npm run build:css -- --output "$RUNNER_TEMP/portfolio-phase1.css"
         working-directory: app
+
+  nginx:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Effective Nginx configuration and document access
+        run: |
+          docker run --rm --entrypoint sh \
+            --volume "$PWD/nginx.conf:/etc/nginx/conf.d/default.conf:ro" \
+            --volume "$PWD/nginx.conf:/work/nginx.conf:ro" \
+            --volume "$PWD/scripts/check_nginx_documents.py:/work/scripts/check_nginx_documents.py:ro" \
+            docker.io/library/nginx:1.29-alpine -ec '
+              nginx -t
+              nginx -T
+              apk add --no-cache python3
+              python3 /work/scripts/check_nginx_documents.py
+            '

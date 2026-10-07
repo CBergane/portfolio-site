@@ -5,6 +5,10 @@ from django_ratelimit.decorators import ratelimit
 from .contact_security import contact_ratelimit_key, get_client_ip
 import requests
 import os
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 def verify_turnstile(token, client_ip):
@@ -41,7 +45,9 @@ def send_discord_notification(submission):
     webhook_url = os.getenv('DISCORD_WEBHOOK_URL')
     
     if not webhook_url:
-        print("⚠️ No Discord webhook URL configured")
+        logger.info('Discord webhook notification skipped', extra={
+            'event': 'discord_webhook', 'outcome': 'not_configured',
+        })
         return False
     
     embed = {
@@ -63,10 +69,16 @@ def send_discord_notification(submission):
     try:
         response = requests.post(webhook_url, json=payload, timeout=10)
         response.raise_for_status()
-        print(f"✅ Discord notification sent for submission from {submission.name}")
+        logger.info('Discord webhook notification sent', extra={
+            'event': 'discord_webhook', 'outcome': 'sent',
+        })
         return True
-    except requests.exceptions.RequestException as e:
-        print(f"❌ Failed to send Discord notification: {e}")
+    except requests.exceptions.RequestException as exc:
+        # Exception text and request/response objects can contain webhook secrets.
+        logger.warning('Discord webhook notification failed', extra={
+            'event': 'discord_webhook', 'outcome': 'failed',
+            'error_type': type(exc).__name__,
+        })
         return False
 
 

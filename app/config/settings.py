@@ -193,6 +193,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # -------------------------------------------------
 WAGTAIL_SITE_NAME = "Christian Bergane Portfolio"
 WAGTAILADMIN_BASE_URL = os.getenv("WAGTAILADMIN_BASE_URL", "http://localhost:8000")
+# Keep document permissions and security headers on the download response.
+WAGTAILDOCS_SERVE_METHOD = "serve_view"
 
 # -------------------------------------------------
 # Static / Media (WhiteNoise i prod)
