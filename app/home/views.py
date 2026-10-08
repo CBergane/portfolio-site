@@ -5,13 +5,22 @@ import time
 import requests
 from django.conf import settings
 from django.http import HttpRequest, JsonResponse
-from django.views.decorators.http import require_http_methods
+from django.shortcuts import render
+from django.urls import reverse
+from django.views.decorators.http import require_http_methods, require_safe
 from django_ratelimit.decorators import ratelimit
 
 from .contact_security import contact_ratelimit_key, get_client_ip
 
 
 logger = logging.getLogger(__name__)
+
+
+@require_safe
+def robots(request: HttpRequest):
+    return render(request, 'robots.txt', {
+        'sitemap_url': request.build_absolute_uri(reverse('sitemap')),
+    }, content_type='text/plain; charset=utf-8')
 
 
 def verify_turnstile(token: str | None, client_ip: str) -> bool:

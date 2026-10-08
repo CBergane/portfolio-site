@@ -20,17 +20,17 @@
         {% include "home/tags/hero_art.html" %}
         <div class="page-frame signal-hero__grid">
             <div class="signal-hero__content">
-                <p class="eyebrow"><span>01</span> Stockholm / Web development · Infrastructure · Security</p>
+                <p class="eyebrow"><span>01</span> Stockholm / IT Security · Infrastructure · Web Development</p>
                 <h1 id="hero-title">Christian<br>Bergane</h1>
                 <span class="hero-rule" aria-hidden="true"></span>
 
                 <p class="signal-hero__statement">
-                    I build systems that remain understandable when they fail.
+                    IT Security, grounded in infrastructure.
                 </p>
 
                 <dl class="hero-meta">
-                    <div><dt>Focus</dt><dd>Web development, Infrastructure, Security</dd></div>
-                    <div><dt>Domain</dt><dd>Applications and the systems behind them</dd></div>
+                    <div><dt>Focus</dt><dd>IT Security, Infrastructure, Web Development</dd></div>
+                    <div><dt>Domain</dt><dd>Information security and infrastructure</dd></div>
                     <div><dt>Approach</dt><dd>Systematic, measurable, durable</dd></div>
                 </dl>
 
@@ -148,9 +148,11 @@
                 <h2 id="position-title">Security is a property<br>of the whole system.</h2>
                 <div class="position-section__copy">
                     <p>
-                        My work connects web development, infrastructure and security. I care about
-                        how systems are deployed, how they behave under pressure and whether another
-                        engineer can understand them six months later.
+                        My primary focus is IT Security: vulnerability assessment, threat analysis
+                        and risk evaluation, including incident and crisis management. I work with
+                        Linux, networking, virtualization and private-cloud infrastructure, and build
+                        web applications with Python, Django and Wagtail. My previous SRE experience
+                        informs how I approach reliability and recovery.
                     </p>
                     <p>
                         Two decades in professional kitchens taught me calm execution, clear ownership
@@ -169,19 +171,19 @@
             </div>
             <div class="capability-grid">
                 <article class="capability">
-                    <span class="capability__index">{% include "home/tags/icon.html" with name="web" only %} A</span><h3>Web development</h3>
-                    <p>Web tools and automation that turn operational needs into maintainable workflows.</p>
-                    <p class="capability__tools">Python · Django · Wagtail · HTMX</p>
+                    <span class="capability__index">{% include "home/tags/icon.html" with name="security" only %} A</span><h3>IT Security</h3>
+                    <p>Information security, vulnerability assessment, threat analysis and risk evaluation, with a focus on incident and crisis management.</p>
+                    <p class="capability__tools">Assessment · Threat analysis · Risk · Incident readiness</p>
                 </article>
                 <article class="capability">
                     <span class="capability__index">{% include "home/tags/icon.html" with name="infrastructure" only %} B</span><h3>Infrastructure</h3>
-                    <p>Small platforms that are reproducible, observable and straightforward to recover.</p>
-                    <p class="capability__tools">Proxmox · Podman · Cloudflare · PostgreSQL</p>
+                    <p>Linux, networking and virtualization for private-cloud environments, with attention to isolation and operational reliability.</p>
+                    <p class="capability__tools">Linux · Proxmox · Podman · Networking</p>
                 </article>
                 <article class="capability">
-                    <span class="capability__index">{% include "home/tags/icon.html" with name="security" only %} C</span><h3>Security</h3>
-                    <p>Detection thinking, hardening, threat intelligence and practical defensive controls.</p>
-                    <p class="capability__tools">Sentinel · Defender · Linux · KQL</p>
+                    <span class="capability__index">{% include "home/tags/icon.html" with name="web" only %} C</span><h3>Web Development</h3>
+                    <p>Python and Django applications, using Wagtail and PostgreSQL with secure development practices.</p>
+                    <p class="capability__tools">Python · Django · Wagtail · PostgreSQL</p>
                 </article>
             </div>
         </div>
@@ -192,14 +194,14 @@
             <div class="signal-section__panel">
                 <div class="signal-section__panel-meta" aria-hidden="true"><span>SIGNAL REGISTRY</span><span>STOCKHOLM</span><span>INDEX / 05</span></div>
                 <div class="signal-section__grid">
-                    <div class="signal-section__editorial"><p class="eyebrow"><span>05</span> / Current signal</p><h2 id="signal-title">Learning is part of the infrastructure.</h2></div>
+                    <div class="signal-section__editorial"><p class="eyebrow"><span>05</span> / Current signal</p><h2 id="signal-title">Learning informs the work.</h2></div>
                     <svg class="signal-section__route" aria-hidden="true" viewBox="0 0 1200 360" preserveAspectRatio="none"><path class="signal-section__route-secondary" d="M30 292H430V86H1160M660 326V210H1135"/><path d="M42 272H510V142H1144"/><circle cx="510" cy="272" r="5"/><circle cx="510" cy="142" r="5"/><circle cx="1144" cy="142" r="5"/></svg>
                     <dl class="signal-section__metrics" aria-label="Signal registry">
                         <div><dt>Systems published</dt><dd>{{ published_project_count }}</dd></div>
                         <div><dt>Notes logged</dt><dd>{{ published_note_count }}</dd></div>
                         {% if latest_project %}<div><dt>Latest system</dt><dd><a href="{% pageurl latest_project %}">{{ latest_project.title }}</a></dd></div>{% endif %}
                         {% if latest_note %}<div><dt>Latest note</dt><dd><a href="{% pageurl latest_note %}">{{ latest_note.title }} <time datetime="{{ latest_note.date|date:'Y-m-d' }}">{{ latest_note.date|date:"d M Y" }}</time></a></dd></div>{% endif %}
-                        <div><dt>Primary focus</dt><dd>Web development · Infrastructure · Security</dd></div>
+                        <div><dt>Primary focus</dt><dd>IT Security · Infrastructure · Web Development</dd></div>
                     </dl>
                 </div>
             </div>
@@ -209,7 +211,7 @@
     <section class="contact-cta" aria-labelledby="contact-title">
         <div class="page-frame contact-cta__inner reveal">
             <p class="eyebrow"><span>06</span> Contact</p>
-            <h2 id="contact-title">Have a system worth<br>making more resilient?</h2>
+            <h2 id="contact-title">Security, infrastructure<br>or a web application?</h2>
             {% if navigation.contact %}<a class="button button--primary" href="{% pageurl navigation.contact %}">Start a conversation</a>{% endif %}
         </div>
     </section>

@@ -182,3 +182,83 @@ refactor has not started. Backup files and Git history remain untouched, so this
 review cannot establish that their contents contain no credentials or personal
 data. CI checkout exclusion prevents their normal inclusion in the proposed
 workflow; it does not repair previous checkouts or repository disclosure.
+
+## Phase 5B — positioning, SEO and crawl reliability (2026-10-08)
+
+Hardcoded branding now leads with IT Security, followed by Infrastructure and
+Web Development. The homepage retains previous SRE experience as background and
+keeps the existing kitchen background. CSS, JavaScript, typography, colors,
+animations, visual assets, page slugs, model fields and migrations are unchanged.
+No stored Wagtail articles, introductions or production records were rewritten.
+
+### Confirmed defects and corrections
+
+- The unmodified sitemap route raised `TemplateDoesNotExist: sitemap.xml` in an
+  isolated database. Enabling Django's built-in sitemap app supplies its template;
+  this app introduces no database models or migrations.
+- Once rendering worked, regression tests demonstrated that the stock sitemap
+  included nested Sites and emitted HTTP URLs behind forwarded HTTPS. The small
+  sitemap subclass reuses existing public Site discovery and the same HTTPS URL
+  handling as canonical links. Drafts, private branches and other Sites are excluded.
+- Chromium showed identical three-pixel horizontal overflow at 320px in the
+  baseline and initial implementation. The cause was the existing current-signal
+  heading's long word. Shortening it to "Learning informs the work" fixes the
+  overflow through copy alone; no style or layout rule changed.
+- A synthetic missing share-image file demonstrated a page-rendering failure.
+  That specific image I/O error now falls back to a summary card.
+
+### Editorial and crawl policy
+
+- Titles use Wagtail `seo_title`, then the page title, with a professional homepage
+  fallback. Descriptions use `search_description`, then a plain-text introduction
+  limited to 160 characters, then the site description. Only the old shared default
+  or an empty description receives the new professional fallback, without a write.
+  Authored CMS metadata remains authoritative. Obsolete meta-keyword output is removed.
+- Only the explicitly configured Open Graph image is used, after checking direct
+  and inherited collection restrictions. Wagtail images have no separate publication
+  flag; choosing a public-collection image in SEO settings is a publication choice.
+  Project hero images are not automatically selected. Private, draft and preview
+  pages emit no canonical, Open Graph URL or share image and use `noindex,nofollow`.
+- Public canonical links use Wagtail's configured host, honor HTTPS forwarding,
+  and discard tracking/arbitrary query parameters. Unfiltered Notes pagination
+  retains the actual rendered page number; invalid inputs follow existing pagination.
+  Filtered Work/Notes listings use `noindex,follow` without a canonical pointing
+  to a different result set. Filter behavior and public URLs are unchanged.
+- `/robots.txt` intentionally supports GET/HEAD, rejects POST and advertises the
+  existing sitemap route. Admin and document paths remain disallowed for crawlers;
+  access controls are still enforced independently.
+
+### Final verification
+
+| Check | Result |
+| --- | --- |
+| Python 3.11.16 / SQLite | 228 tests passed |
+| Python 3.13.15 / SQLite | 228 tests passed |
+| Python 3.11.16 / PostgreSQL 16.14 | 228 tests passed |
+| Python 3.13.15 / PostgreSQL 16.14 | 228 tests passed |
+| Django system and migration-drift checks | Passed on SQLite and PostgreSQL; no generated migrations |
+| Syntax | 66 Python files, four JavaScript files and both shell scripts passed |
+| Node 24 frontend build | Passed; byte-for-byte identical to the pre-change build |
+| Rendered SEO, sitemap and robots | 28 new regressions passed, including image privacy and pagination |
+| Navigation, model contracts and private documents | Existing full-suite regressions passed |
+| Nginx document protection | Existing synthetic HTTP and configuration checks passed |
+| Chromium 153 | 213 hero checks, eight before/after style comparisons and 30 page checks passed; no console errors |
+
+SEO adds two fixed publication/privacy queries per rendered page: Work 22 to 24,
+Notes 21 to 23, and Home 25 to 27. Existing related-data checks still prove that
+card queries do not grow per item. The frontend build retains the pre-existing
+Browserslist freshness warning; no dependency or lockfile changed.
+
+Tests explicitly used `config.test_settings`. PostgreSQL ran in a fresh cluster
+at `/tmp/portfolio-phase5b-pgdata`, bound only to loopback port 55435, with synthetic
+credentials and disposable test databases. Browser tooling and required libraries
+were staged in `/tmp`, with a fresh profile and intercepted requests; neither
+production pages nor external notification services were contacted. Browser
+evidence is in `/tmp/portfolio-phase5b-visual-review`.
+
+Remaining editorial work: stored Work/Notes headings and introductions, the authored
+contact introduction, custom SEO text, SOC naming/ETA/duplicated sections, scanner
+capability contradictions and the dated advisory's status. These remain untouched.
+Required local checks are not blocked. Production runtime/CMS confirmation was
+intentionally outside scope; no production logs, credentials or backups were read.
+No commit, push or deployment was performed.

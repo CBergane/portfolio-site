@@ -5,6 +5,7 @@ Allow: /
 Disallow: /cms-backend-2025/
 Disallow: /secret-django-control/
 Disallow: /documents/
+Disallow: /media/documents/
 
 # Sitemap
-Sitemap: {{ request.scheme }}://{{ request.get_host }}/sitemap.xml
+Sitemap: {{ sitemap_url }}

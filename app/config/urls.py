@@ -9,7 +9,8 @@ from wagtail import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
 from wagtail.contrib.sitemaps.views import sitemap
 
-from home.views import contact_form_submit
+from home.sitemaps import PublicPageSitemap
+from home.views import contact_form_submit, robots
 
 # Minimal och snabb hälsokontroll (GET/HEAD). Låg overhead, plain text.
 @require_safe
@@ -24,7 +25,8 @@ urlpatterns = [
     # API/verktyg
     path('documents/', include(wagtaildocs_urls)),
     path('api/contact-submit', contact_form_submit, name='contact_submit'),
-    path('sitemap.xml', sitemap, name='sitemap'),
+    path('sitemap.xml', sitemap, {'sitemaps': {'wagtail': PublicPageSitemap}}, name='sitemap'),
+    path('robots.txt', robots, name='robots'),
 
     # Hälsa – måste ligga FÖRE wagtail_urls
     path('healthz', healthz, name='healthz'),

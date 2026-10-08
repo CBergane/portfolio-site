@@ -135,12 +135,13 @@ class PublicQueryTests(TestCase):
                 self.assertTrue(all('body' in project.get_deferred_fields() for project in projects))
 
     def test_rendered_query_counts_do_not_grow_per_card(self):
+        # SEO adds two fixed queries to check publication and inherited privacy.
         for page, params, expected in (
-            (self.work, {}, 22),
-            (self.work, {'category': 'platform', 'tech': 'python,django'}, 22),
-            (self.notes, {}, 21),
-            (self.notes, {'page': 2}, 21),
-            (self.home, {}, 25),
+            (self.work, {}, 24),
+            (self.work, {'category': 'platform', 'tech': 'python,django'}, 24),
+            (self.notes, {}, 23),
+            (self.notes, {'page': 2}, 23),
+            (self.home, {}, 27),
         ):
             with self.subTest(page=type(page).__name__, params=params):
                 cache.clear()
