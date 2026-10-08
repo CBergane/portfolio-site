@@ -14,9 +14,10 @@ jobs:
       fail-fast: false
       matrix:
         database: [sqlite, postgresql]
+        python: ['3.11.16', '3.13.15']
     services:
       postgres:
-        image: postgres:16
+        image: postgres:16-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea
         env:
           POSTGRES_DB: portfolio_phase1
           POSTGRES_USER: portfolio_phase1
@@ -36,13 +37,24 @@ jobs:
       TEST_DATABASE_ENGINE: ${{ matrix.database }}
     steps:
       - uses: actions/checkout@v6
+        with:
+          sparse-checkout: |
+            /*
+            !/*_backup.*
+          sparse-checkout-cone-mode: false
       - uses: actions/setup-python@v6
         with:
-          python-version: '3.13'
+          python-version: ${{ matrix.python }}
           cache: pip
           cache-dependency-path: app/requirements.txt
       - id: python-dependencies
-        run: python -m pip install -r requirements.txt
+        run: >-
+          python -m pip install --require-hashes --only-binary=:all: -r requirements.txt
+      - name: Dependency compatibility
+        run: python -m pip check
+      - name: Python syntax
+        working-directory: .
+        run: git ls-files -z '*.py' | xargs -0 -r python -m py_compile
       - name: Django system checks
         run: python manage.py check
       - name: Migration drift
@@ -55,32 +67,83 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          sparse-checkout: |
+            /*
+            !/*_backup.*
+          sparse-checkout-cone-mode: false
       - uses: actions/setup-node@v6
         with:
-          node-version: '24'
+          node-version: '24.21.0'
           cache: npm
           cache-dependency-path: app/package-lock.json
       - name: JavaScript syntax
         run: git ls-files -z '*.js' | xargs -0 -r -n 1 node --check
       - name: Shell syntax
-        run: git ls-files -z '*.sh' | xargs -0 -r -n 1 bash -n
+        run: |
+          git ls-files -z '*.sh' | xargs -0 -r -n 1 bash -n
+          bash -n deploy/scripts/portfolio-wait-healthy
       - run: npm ci --ignore-scripts
+        working-directory: app
+      - name: Runtime npm vulnerability audit
+        run: npm audit --omit=dev
+        working-directory: app
+      # ponytail: Tailwind 3 has two unresolved build-only advisories; revisit when patched (DEPENDENCIES.md).
+      - name: Full npm vulnerability audit (includes known build-only findings)
+        continue-on-error: true
+        run: npm audit
         working-directory: app
       - name: Frontend build
         run: npm run build:css -- --output "$RUNNER_TEMP/portfolio-phase1.css"
         working-directory: app
 
+  python-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          sparse-checkout: |
+            /*
+            !/*_backup.*
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11.16'
+      - run: python -m pip install pip-audit==2.10.1
+      - run: pip-audit --strict --require-hashes --no-deps --disable-pip -r app/requirements.txt
+
+  container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          sparse-checkout: |
+            /*
+            !/*_backup.*
+          sparse-checkout-cone-mode: false
+      - name: Build the locked application image
+        run: docker build --tag portfolio-ci ./app
+      - name: Container Django checks and tests
+        run: |
+          docker run --rm --env DJANGO_SETTINGS_MODULE=config.test_settings portfolio-ci \
+            bash -ec 'python manage.py check && python manage.py makemigrations --check --dry-run --noinput && python manage.py test --noinput'
+
   nginx:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          sparse-checkout: |
+            /*
+            !/*_backup.*
+          sparse-checkout-cone-mode: false
       - name: Effective Nginx configuration and document access
         run: |
           docker run --rm --entrypoint sh \
             --volume "$PWD/nginx.conf:/etc/nginx/conf.d/default.conf:ro" \
             --volume "$PWD/nginx.conf:/work/nginx.conf:ro" \
             --volume "$PWD/scripts/check_nginx_documents.py:/work/scripts/check_nginx_documents.py:ro" \
-            docker.io/library/nginx:1.29-alpine -ec '
+            docker.io/library/nginx:1.29-alpine@sha256:5616878291a2eed594aee8db4dade5878cf7edcb475e59193904b198d9b830de -ec '
               nginx -t
               nginx -T
               apk add --no-cache python3

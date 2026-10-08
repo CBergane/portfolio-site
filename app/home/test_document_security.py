@@ -35,8 +35,8 @@ class DocumentSecurityTests(TestCase):
     def assert_document_bytes(self, response, content):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.streaming)
-        self.addCleanup(response.close)
         self.assertEqual(b''.join(response.streaming_content), content)
+        self.assertTrue(response.closed)
         self.assertNotIn('Location', response)
         self.assertEqual(response['X-Content-Type-Options'], 'nosniff')
         self.assertEqual(response['Content-Security-Policy'], "default-src 'none'")

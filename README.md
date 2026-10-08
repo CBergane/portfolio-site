@@ -26,6 +26,8 @@ The HTB card is rendered server-side and cached. Configure these env vars (and s
 See [INSTALL.md](INSTALL.md) for setup instructions.
 
 For isolated SQLite/PostgreSQL 16 tests and CI checks, see [TESTING.md](TESTING.md).
+For dependency locks, security findings and reproducible build limits, see
+[DEPENDENCIES.md](DEPENDENCIES.md).
 
 ---
 Built with ❤️ for the infosec community

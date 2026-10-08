@@ -1,12 +1,13 @@
 # Phase 1: safe baseline
 
-Use Python 3.13 and Node.js 24 (the CI versions). Install the existing dependencies
+Use Python 3.11 (production) and 3.13 (additional CI compatibility), with Node.js 24.
+Install the locked dependencies
 in a disposable virtual environment; no production environment file is needed.
 Run these commands from the repository root:
 
 ```sh
 python3.13 -m venv /tmp/portfolio-phase1-venv
-/tmp/portfolio-phase1-venv/bin/python -m pip install -r app/requirements.txt
+/tmp/portfolio-phase1-venv/bin/python -m pip install --require-hashes --only-binary=:all: -r app/requirements.txt
 cd app
 ```
 
@@ -49,7 +50,7 @@ docker run --detach --rm --name portfolio-phase1-postgres \
   --env POSTGRES_DB=portfolio_phase1 \
   --env POSTGRES_USER=portfolio_phase1 \
   --env POSTGRES_PASSWORD=phase1-synthetic-password \
-  postgres:16
+  postgres:16-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea
 docker exec portfolio-phase1-postgres pg_isready -U portfolio_phase1 -d portfolio_phase1
 ```
 
@@ -81,7 +82,9 @@ the tracked CSS untouched:
 
 ```sh
 git ls-files -z '*.js' | xargs -0 -r -n 1 node --check
+git ls-files -z '*.py' | xargs -0 -r /tmp/portfolio-phase1-venv/bin/python -m py_compile
 git ls-files -z '*.sh' | xargs -0 -r -n 1 bash -n
+bash -n deploy/scripts/portfolio-wait-healthy
 cd app
 npm ci --ignore-scripts
 npm run build:css -- --output /tmp/portfolio-phase1.css
@@ -142,3 +145,27 @@ then runs the HTTP regression check there. Python is installed only as a test
 tool in that disposable container; application dependencies are unchanged.
 If Nginx or the disposable container runtime is unavailable, report that check
 as blocked. No production container, media volume or backup is used.
+
+## Phase 2B: dependency and build validation
+
+See [DEPENDENCIES.md](DEPENDENCIES.md) for the dated advisory inventory, exposure
+assessment, remaining frontend advisories, lock regeneration command and local
+verification results. CI exercises both Python versions with the hashed lock,
+runs audits, and builds/tests the application container without production config.
+
+After changing dependencies, repeat all checks above and `python -m pip check`,
+then run these audits (from the repository root, in a disposable tooling venv
+with pip-audit 2.10.1 installed):
+
+```sh
+pip-audit --strict --require-hashes --no-deps --disable-pip -r app/requirements.txt
+cd app
+npm audit
+npm audit --omit=dev
+```
+
+The full npm audit currently exits 1 for two documented build-only advisories;
+inspect its output for new findings. Do not use `npm audit fix --force`. Builds
+must use `npm ci --ignore-scripts` and the committed lock. Build CSS into `/tmp`
+as shown above, then compare it with the previous build before accepting visual
+changes. Container base/service digests must be refreshed deliberately.

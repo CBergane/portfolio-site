@@ -1,0 +1,25 @@
+# Direct application dependencies. Keep Django 5.2 and Wagtail 8.
+beautifulsoup4==4.13.4
+dj-database-url==2.3.0
+Django==5.2.18
+django-htmx==1.19.0
+django-modelcluster==6.5
+django-ratelimit==4.1.0
+django-taggit==5.0.1
+gunicorn==22.0.0
+Markdown==3.9
+psycopg[binary]==3.2.3
+python-dotenv==1.2.4
+redis==6.4.0
+requests==2.34.2
+wagtail==8.0
+wagtail-markdown==0.14.1
+whitenoise==6.7.0
+
+# Security fixes for transitive dependencies; preserve other locked versions.
+idna==3.20
+pillow==12.3.0
+pillow-heif==1.8.0
+soupsieve==2.10
+sqlparse==0.6.0
+urllib3==2.8.0
