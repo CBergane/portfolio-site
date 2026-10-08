@@ -53,7 +53,12 @@ class ProjectIndexPage(Page):
         context = super().get_context(request, *args, **kwargs)
 
         # Base queryset
-        all_projects = public_site_pages(ProjectPage, request).descendant_of(self).order_by('-date')
+        all_projects = public_site_pages(ProjectPage, request).descendant_of(self).order_by(
+            '-date'
+        ).defer_streamfields().select_related('category', 'hero_image').prefetch_related(
+            models.Prefetch('tech_stack_items', queryset=ProjectPageTechStack.objects.select_related('tech')),
+            'hero_image__renditions',
+        )
 
         def get_multi(key: str) -> list[str]:
             """

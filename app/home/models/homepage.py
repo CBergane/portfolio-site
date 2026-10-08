@@ -26,11 +26,16 @@ class HomePage(Page):
         selected_project_ids = list(
             self.selected_projects.order_by('sort_order').values_list('project_id', flat=True)
         )
+        published_projects = public_site_pages(ProjectPage, request).defer_streamfields()
+        published_notes = public_site_pages(BlogPage, request).defer_streamfields()
+        project_cards = published_projects.select_related('category', 'hero_image').prefetch_related(
+            'hero_image__renditions'
+        )
 
         if selected_project_ids:
-            available_projects = public_site_pages(ProjectPage, request).filter(
+            available_projects = project_cards.filter(
                 id__in=selected_project_ids
-            ).select_related('category', 'hero_image')
+            )
             projects_by_id = {project.id: project for project in available_projects}
             selected_projects = [
                 projects_by_id[project_id]
@@ -39,20 +44,18 @@ class HomePage(Page):
             ]
         else:
             selected_projects = list(
-                public_site_pages(ProjectPage, request).select_related(
-                    'category', 'hero_image'
-                ).order_by('-date', '-first_published_at')[:3]
+                project_cards.order_by('-date', '-first_published_at')[:3]
             )
-
-        published_projects = public_site_pages(ProjectPage, request)
-        published_notes = public_site_pages(BlogPage, request)
 
         context['primary_project'] = selected_projects[0] if selected_projects else None
         context['supporting_projects'] = selected_projects[1:]
         context['total_projects'] = published_projects.count()
         context['published_project_count'] = context['total_projects']
         context['published_note_count'] = published_notes.count()
-        context['latest_project'] = published_projects.order_by('-date', '-first_published_at').first()
+        context['latest_project'] = (
+            published_projects.order_by('-date', '-first_published_at').first()
+            if selected_project_ids else context['primary_project']
+        )
         context['latest_note'] = published_notes.order_by('-date', '-first_published_at').first()
         return context
 

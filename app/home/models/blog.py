@@ -38,7 +38,9 @@ class BlogIndexPage(Page):
         context = super().get_context(request, *args, **kwargs)
 
         # Get all published blog posts
-        all_posts = public_site_pages(BlogPage, request).descendant_of(self).order_by('-first_published_at')
+        all_posts = public_site_pages(BlogPage, request).descendant_of(self).order_by(
+            '-first_published_at'
+        ).select_related('categories').prefetch_related('tags')
 
         # Filter by category if provided
         category = request.GET.get('category')

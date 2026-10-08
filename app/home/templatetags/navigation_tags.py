@@ -13,7 +13,13 @@ def get_site_root(context):
 
 @register.simple_tag(takes_context=True)
 def get_site_navigation(context):
-    return site_destinations(context.get('request'), context.get('page'))
+    request, page = context.get('request'), context.get('page')
+    key = (request, page.pk if page else None, page.path if page else None)
+    cached = context.get('_home_site_navigation')
+    if cached is None or cached[0] != key:
+        cached = (key, site_destinations(request, page))
+        context['_home_site_navigation'] = cached
+    return cached[1]
 
 
 @register.inclusion_tag('home/tags/main_navigation.html', takes_context=True)
