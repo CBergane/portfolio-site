@@ -1,0 +1,115 @@
+version: '3.8'
+
+# Synthetic local stack only; invoke with -p portfolio_phase4a --env-file /dev/null.
+services:
+  db:
+    image: docker.io/library/postgres:16-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea
+    container_name: portfolio_phase4a_db
+    environment:
+      POSTGRES_DB: phase4a_db
+      POSTGRES_USER: phase4a_user
+      POSTGRES_PASSWORD: phase4a-synthetic-password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks: [integration]
+    healthcheck:
+      test: ['CMD', 'pg_isready', '-h', '127.0.0.1', '-U', 'phase4a_user', '-d', 'phase4a_db']
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+    logging:
+      driver: k8s-file
+
+  redis:
+    image: docker.io/library/redis:7-alpine@sha256:858f009f9709ce576febc734aa78b8f6d624b82571f9ddb6bda4377c833b3499
+    container_name: portfolio_phase4a_redis
+    command: ['redis-server', '--save', '', '--appendonly', 'no']
+    tmpfs: ['/data']
+    networks: [integration]
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+    logging:
+      driver: k8s-file
+
+  web:
+    build:
+      context: ../../app
+      dockerfile: Dockerfile
+    image: localhost/portfolio-phase4a-web:integration
+    container_name: portfolio_phase4a_web
+    environment:
+      DJANGO_SETTINGS_MODULE: integration_settings
+      PYTHONPATH: /integration:/app
+      DJANGO_SECRET_KEY: phase4a-synthetic-django-secret-never-use-in-production
+      DJANGO_DEBUG: '0'
+      DJANGO_ALLOWED_HOSTS: 127.0.0.1,localhost,web,portfolio_phase4a_web
+      DATABASE_URL: postgres://phase4a_user:phase4a-synthetic-password@db:5432/phase4a_db
+      CACHE_URL: redis://redis:6379/1
+      SECURE_SSL_REDIRECT: '0'
+      WAGTAILADMIN_BASE_URL: http://127.0.0.1:8088
+      CSRF_TRUSTED_ORIGINS_EXTRA: http://127.0.0.1:8088
+      CONTACT_TRUSTED_PROXY_NETWORKS: 10.77.44.0/24
+      INIT_WAGTAIL_HOME: '1'
+      SITE_HOSTNAME: 127.0.0.1
+      SITE_PORT: '8088'
+      SITE_NAME: Synthetic Phase 4A portfolio
+      GUNICORN_WORKERS: '2'
+      GUNICORN_THREADS: '4'
+      DISCORD_WEBHOOK_URL: ''
+      TURNSTILE_SITE_KEY: ''
+      TURNSTILE_SECRET_KEY: ''
+      HTB_TOKEN: ''
+      HTB_USER_ID: ''
+    volumes:
+      - static_files:/app/staticfiles
+      - media_files:/app/media
+      - ./:/integration:ro
+    networks: [integration]
+    depends_on: [db, redis]
+    healthcheck:
+      test: ['CMD', 'python', '/integration/healthcheck.py']
+      interval: 5s
+      timeout: 10s
+      retries: 12
+      start_period: 90s
+    restart: unless-stopped
+    logging:
+      driver: k8s-file
+
+  nginx:
+    image: docker.io/library/nginx:1.29-alpine@sha256:5616878291a2eed594aee8db4dade5878cf7edcb475e59193904b198d9b830de
+    container_name: portfolio_phase4a_nginx
+    ports:
+      - '127.0.0.1:8088:8080'
+    volumes:
+      - static_files:/static:ro
+      - media_files:/media:ro
+      - ./nginx.integration.conf:/etc/nginx/conf.d/default.conf:ro
+    networks: [integration]
+    depends_on: [web]
+    healthcheck:
+      test: ['CMD-SHELL', 'wget -q -O /dev/null http://127.0.0.1:8080/healthz']
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+    logging:
+      driver: k8s-file
+
+volumes:
+  postgres_data:
+    name: portfolio_phase4a_postgres
+  static_files:
+    name: portfolio_phase4a_static
+  media_files:
+    name: portfolio_phase4a_media
+
+networks:
+  integration:
+    name: portfolio_phase4a_network
+    external: true
