@@ -11,8 +11,8 @@ from django.core.cache import cache
 from django.test import SimpleTestCase, TestCase
 from django.urls import reverse
 
-from .models import ContactSubmission
-from .views import send_discord_notification
+from ..models import ContactSubmission
+from ..views import send_discord_notification
 
 
 WEBHOOK_URL = 'https://discord.example.invalid/api/webhooks/123456789/synthetic-webhook-token'

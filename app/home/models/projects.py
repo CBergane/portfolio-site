@@ -71,12 +71,7 @@ class ProjectIndexPage(Page):
             if len(values) == 1 and "," in values[0]:
                 values = [v.strip() for v in values[0].split(",") if v.strip()]
 
-            # de-dupe, keep order
-            out: list[str] = []
-            for v in values:
-                if v and v not in out:
-                    out.append(v)
-            return out
+            return list(dict.fromkeys(value for value in values if value))
 
         selected_status = (request.GET.get('status') or "").strip()
         selected_categories = get_multi('category')
@@ -95,13 +90,10 @@ class ProjectIndexPage(Page):
             all_projects = all_projects.filter(status=selected_status)
 
         # Helpers to build querystrings (toggle + keep other params)
-        def build_qs(*, status=None, toggle_category=None, toggle_tech=None, clear_all=False) -> str:
+        def build_qs(*, status=None, toggle_category=None, toggle_tech=None) -> str:
             cats = list(selected_categories)
             techs = list(selected_techs)
             stat = selected_status
-
-            if clear_all:
-                cats, techs, stat = [], [], ""
 
             if status is not None:
                 stat = (status or "").strip()
@@ -131,12 +123,6 @@ class ProjectIndexPage(Page):
         categories = ProjectCategory.objects.all()
         tech_stacks = TechStack.objects.all()
 
-        status_defs = [
-            ("completed", "✓ completed"),
-            ("in_progress", "⏳ in progress"),
-            ("ongoing", "∞ ongoing"),
-            ("archived", "📦 archived"),
-        ]
         status_label_map = {
             "completed": "COMPLETED",
             "in_progress": "IN PROGRESS",
@@ -145,8 +131,7 @@ class ProjectIndexPage(Page):
         }
 
         status_links = []
-        for value, _legacy_label in status_defs:
-            label = status_label_map[value]
+        for value, label in status_label_map.items():
             is_active = (selected_status == value)
             # klick på aktiv status -> toggla av status (behåll övriga filter)
             qs = build_qs(status="" if is_active else value)

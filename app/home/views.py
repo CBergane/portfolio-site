@@ -1,17 +1,21 @@
-from django.http import JsonResponse
+import logging
+import os
+import time
+
+import requests
 from django.conf import settings
+from django.http import HttpRequest, JsonResponse
 from django.views.decorators.http import require_http_methods
 from django_ratelimit.decorators import ratelimit
+
 from .contact_security import contact_ratelimit_key, get_client_ip
-import requests
-import os
-import logging
 
 
 logger = logging.getLogger(__name__)
 
 
-def verify_turnstile(token, client_ip):
+def verify_turnstile(token: str | None, client_ip: str) -> bool:
+    """Verify the contact challenge's success, hostname and action."""
     if not token or len(token) > 2048 or not settings.TURNSTILE_SECRET_KEY:
         return False
 
@@ -38,7 +42,7 @@ def verify_turnstile(token, client_ip):
     )
 
 
-def send_discord_notification(submission):
+def send_discord_notification(submission) -> bool:
     """
     Send contact form submission to Discord webhook
     """
@@ -89,21 +93,21 @@ def send_discord_notification(submission):
     method="POST",
     block=False,
 )
-def contact_form_submit(request):
+def contact_form_submit(request: HttpRequest) -> JsonResponse:
     """
     Handle contact form submission with rate limiting
     """
     
     from .forms import ContactForm
-    from .models import ContactSubmission
-    import time
-    
+
+    success_payload = {
+        'success': True,
+        'message': 'Thank you! Your message has been sent.',
+    }
+
     # Silently discard obvious bot submissions caught by the honeypot.
     if request.POST.get("website", "").strip():
-        return JsonResponse({
-            "success": True,
-            "message": "Thank you! Your message has been sent.",
-        })
+        return JsonResponse(success_payload)
     
     # Check rate limit
     if getattr(request, 'limited', False):
@@ -127,35 +131,25 @@ def contact_form_submit(request):
     
     form = ContactForm(request.POST)
     
-    if form.is_valid():
-        client_ip = get_client_ip(request)
-        token = request.POST.get('cf-turnstile-response', '').strip()
-        if not verify_turnstile(token, client_ip):
-            return JsonResponse({
-                'success': False,
-                'errors': {'__all__': ['Verification failed. Please try again.']},
-            }, status=400)
-
-        submission = form.save(commit=False)
-        
-        # Use the same trusted client-IP resolution as rate limiting.
-        submission.ip_address = client_ip or None
-        
-        submission.user_agent = request.META.get('HTTP_USER_AGENT', '')
-        submission.save()
-        
-        # Update session
-        request.session['last_contact_submission'] = current_time
-        
-        # Send Discord
-        send_discord_notification(submission)
-        
-        return JsonResponse({
-            'success': True,
-            'message': 'Thank you! Your message has been sent.'
-        })
-    else:
+    if not form.is_valid():
         return JsonResponse({
             'success': False,
             'errors': form.errors
         }, status=400)
+
+    client_ip = get_client_ip(request)
+    token = request.POST.get('cf-turnstile-response', '').strip()
+    if not verify_turnstile(token, client_ip):
+        return JsonResponse({
+            'success': False,
+            'errors': {'__all__': ['Verification failed. Please try again.']},
+        }, status=400)
+
+    submission = form.save(commit=False)
+    # Use the same trusted client-IP resolution as rate limiting.
+    submission.ip_address = client_ip or None
+    submission.user_agent = request.META.get('HTTP_USER_AGENT', '')
+    submission.save()
+    request.session['last_contact_submission'] = current_time
+    send_discord_notification(submission)
+    return JsonResponse(success_payload)

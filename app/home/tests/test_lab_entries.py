@@ -16,12 +16,12 @@ from wagtail.images import get_image_model
 from wagtail.models import Page, PageViewRestriction, Site
 from wagtail.search import index
 
-from .models import (
+from ..models import (
     BlogIndexPage, BlogPage, ContactPage, HomePage, LabEntryPage, LabEntryPageTechStack,
     LabPage, ProjectIndexPage, ProjectPage, TechStack,
 )
-from .templatetags.navigation_tags import main_navigation
-from .navigation import public_site_pages
+from ..templatetags.navigation_tags import main_navigation
+from ..navigation import public_site_pages
 
 
 SECTIONS = (

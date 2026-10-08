@@ -1,5 +1,5 @@
 """Representative public listings; related data must not cost queries per card."""
-from datetime import date
+from datetime import date, datetime, timezone
 from io import BytesIO
 
 from PIL import Image
@@ -11,19 +11,21 @@ from django.test import RequestFactory, TestCase, override_settings
 from wagtail.images import get_image_model
 from wagtail.models import Page, PageViewRestriction, Site
 
-from .models import (
+from ..models import (
     BlogCategory, BlogIndexPage, BlogPage, ContactPage, HomePage,
     HomePageProject, LabPage, ProjectCategory, ProjectIndexPage,
     ProjectPage, ProjectPageTechStack, SEOSettings, SocialMediaSettings, TechStack,
 )
-from .reading import reading_minutes
-from .templatetags.navigation_tags import get_site_navigation
+from ..reading import reading_minutes
+from ..templatetags.navigation_tags import get_site_navigation
 
 
 @override_settings(ALLOWED_HOSTS=['testserver', 'nested.example', 'other.example'])
 class PublicQueryTests(TestCase):
     @classmethod
     def setUpTestData(cls):
+        # Rendition caches outlive rolled-back image IDs from other test classes.
+        cache.clear()
         Site.objects.all().delete()
         cls.home = cls.publish(Page.get_first_root_node(), HomePage(title='Query home', slug='query-home'))
         cls.site = Site.objects.create(hostname='testserver', root_page=cls.home, is_default_site=True)
@@ -40,6 +42,7 @@ class PublicQueryTests(TestCase):
         cls.techs = [TechStack.objects.create(name=name, slug=name.lower()) for name in ('Python', 'Django')]
         cls.projects, cls.posts = [], []
         for number in range(12):
+            published_at = datetime(2026, 1, number + 1, tzinfo=timezone.utc)
             source = BytesIO()
             Image.new('RGB', (32, 24), color=(number * 10, 80, 120)).save(source, format='PNG')
             image = get_image_model().objects.create(
@@ -56,6 +59,7 @@ class PublicQueryTests(TestCase):
             project = cls.work.add_child(instance=ProjectPage(
                 title=f'Public project {number}', slug=f'project-{number}', intro='Project summary',
                 date=date(2026, 1, number + 1), category=cls.project_categories[number % 2],
+                first_published_at=published_at,
                 hero_image=image, body=body, live=False,
             ))
             for order, tech in enumerate(cls.techs):
@@ -65,6 +69,7 @@ class PublicQueryTests(TestCase):
             post = cls.notes.add_child(instance=BlogPage(
                 title=f'Public note {number}', slug=f'note-{number}', intro='Note summary',
                 date=date(2026, 1, number + 1), categories=cls.blog_categories[number % 2],
+                first_published_at=published_at,
                 body=body, live=False,
             ))
             post.tags.add('python', 'django')

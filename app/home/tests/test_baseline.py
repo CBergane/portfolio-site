@@ -9,7 +9,7 @@ from wagtail.contrib.settings.registry import registry
 from wagtail.models import Page
 from wagtail.snippets.models import get_snippet_models
 
-from . import models as home
+from .. import models as home
 
 
 MODEL_NAMES = (

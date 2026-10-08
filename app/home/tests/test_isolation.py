@@ -15,7 +15,7 @@ from django.core.files.storage import default_storage
 from django.core.mail import get_connection
 from django.test import SimpleTestCase, override_settings
 
-from .views import send_discord_notification, verify_turnstile
+from ..views import send_discord_notification, verify_turnstile
 
 
 class TestSettingsIsolationTests(SimpleTestCase):
