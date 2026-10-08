@@ -42,7 +42,7 @@ class WagtailCompatibilityTests(TestCase):
             with self.subTest(model=name):
                 model = getattr(home, name)
                 self.assertIs(apps.get_model('home', name), model)
-                self.assertEqual(model.__module__, 'home.models')
+                self.assertTrue(model.__module__.startswith('home.models.'))
                 self.assertEqual(model._meta.label_lower, f'home.{name.lower()}')
                 self.assertEqual(model._meta.db_table, f'home_{name.lower()}')
                 self.assertIn(model._meta.db_table, tables)

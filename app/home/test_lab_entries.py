@@ -459,7 +459,7 @@ class LabEntryTests(TestCase):
         request = self.request()
         public_entries = public_site_pages(LabEntryPage, request)
         # Isolate listing queries from Site resolution and public-filter setup.
-        with patch('home.models.public_site_pages', return_value=public_entries), self.assertNumQueries(2):
+        with patch('home.models.lab.public_site_pages', return_value=public_entries), self.assertNumQueries(2):
             context = self.lab.get_context(request)
         with self.assertNumQueries(0):
             collections = [context['lab_entries'], context['featured_lab_entries']]
