@@ -12,11 +12,11 @@ StartLimitBurst=5
 Type=oneshot
 RemainAfterExit=yes
 WorkingDirectory=/opt/portfolio
-ExecStart=/usr/bin/env --unset=XDG_RUNTIME_DIR /bin/podman-compose start
+ExecStart=/usr/bin/env --unset=XDG_RUNTIME_DIR /bin/podman-compose --podman-path /usr/bin/podman start
 ExecStartPost=/usr/local/sbin/portfolio-wait-healthy
-ExecStop=/usr/bin/env --unset=XDG_RUNTIME_DIR /bin/podman-compose stop
+ExecStopPost=/usr/bin/env --unset=XDG_RUNTIME_DIR /bin/podman-compose --podman-path /usr/bin/podman stop -t 45
 TimeoutStartSec=180
-TimeoutStopSec=120
+TimeoutStopSec=240
 Restart=on-failure
 RestartSec=15
 

@@ -59,6 +59,8 @@ def check(nginx, effective_config=None):
                 listener.bind(('127.0.0.1', 0))
                 port = listener.getsockname()[1]
             source = (Path(__file__).resolve().parents[1] / 'nginx.conf').read_text()
+            assert source.count('${NGINX_LOCAL_RESOLVERS}') == 1
+            source = source.replace('${NGINX_LOCAL_RESOLVERS}', '127.0.0.1')
             staged = root / 'site.conf'
             staged.write_text(source)
             wrapper = root / 'nginx.conf'
@@ -72,7 +74,7 @@ def check(nginx, effective_config=None):
             dumped = subprocess.run([*command, '-T'], check=True, capture_output=True, text=True)
             if effective_config:
                 Path(effective_config).write_text(dumped.stdout)
-            print('PASS nginx -t and nginx -T (unmodified repository config in test wrapper)')
+            print('PASS nginx -t and nginx -T (repository template with synthetic resolver)')
             replacements = {
                 'listen 8080;': f'listen 127.0.0.1:{port};',
                 'alias /media/;': f'alias "{root}/media/";',

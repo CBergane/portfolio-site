@@ -16,7 +16,7 @@ from wagtail.models import Collection, CollectionViewRestriction, Site
 
 assert getattr(settings, 'PHASE4A_ISOLATED', False)
 database = settings.DATABASES['default']
-assert (database['HOST'], database['NAME'], database['USER']) == ('db', 'phase4a_db', 'phase4a_user')
+assert (database['HOST'], database['NAME'], database['USER']) == ('db', 'phase4a_db', 'phase4a_user@:/#?%+')
 assert Site.objects.get(is_default_site=True).hostname == '127.0.0.1'
 root = Collection.get_first_root_node()
 private = Collection.objects.filter(name='Phase 4A restricted documents').first()

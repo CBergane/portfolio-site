@@ -13,6 +13,8 @@ django.setup()
 from django.conf import settings
 
 assert settings.PHASE4A_ISOLATED
+assert settings.DATABASES['default']['USER'] == 'phase4a_user@:/#?%+'
+assert settings.DATABASES['default']['PASSWORD'] == 'phase4a-synthetic-p@ss:/#?%+&= $!'
 for name in ('DISCORD_WEBHOOK_URL', 'TURNSTILE_SITE_KEY', 'TURNSTILE_SECRET_KEY', 'HTB_TOKEN', 'HTB_USER_ID'):
     assert os.environ.get(name) == ''
 with patch('socket.getaddrinfo', side_effect=AssertionError('External DNS must not run')) as dns:

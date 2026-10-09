@@ -22,7 +22,7 @@ COMPOSE = [
     '--env-file', '/dev/null', '-p', PROJECT, '-f', str(DIRECTORY / 'compose.yml'),
 ]
 REDACTIONS = [
-    'phase4a-synthetic-password',
+    'phase4a-synthetic-p@ss:/#?%+&= $!',
     'phase4a-synthetic-django-secret-never-use-in-production',
 ]
 
@@ -58,23 +58,9 @@ def assert_owned_resources():
 
 
 def wait_for(*services):
-    deadline = time.monotonic() + 180
-    while time.monotonic() < deadline:
-        ready = []
-        for service in services:
-            # Podman 3.4 cannot supply Compose's healthy dependency wait.
-            result = execute([*PODMAN, 'healthcheck', 'run', f'{PROJECT}_{service}'], check=False)
-            data = inspect(service)
-            if not data['State']['Running']:
-                logs = execute([*PODMAN, 'logs', '--tail', '40', f'{PROJECT}_{service}'], check=False)
-                raise RuntimeError(sanitized(logs.stdout + logs.stderr))
-            health = data['State'].get('Health') or data['State'].get('Healthcheck') or {}
-            ready.append(result.returncode == 0 and health.get('Status') == 'healthy')
-        if all(ready):
-            print('PASS configured health checks: ' + ', '.join(services), flush=True)
-            return
-        time.sleep(3)
-    raise RuntimeError('Readiness timed out: ' + ', '.join(services))
+    execute(['/usr/bin/python3', str(ROOT / 'deploy/scripts/portfolio-wait-healthy'),
+             '--timeout', '180', *(f'{PROJECT}_{service}' for service in services)])
+    print('PASS configured health checks: ' + ', '.join(services), flush=True)
 
 
 def prepare_network():
@@ -122,9 +108,7 @@ def release_stale_test_port():
 
 def up():
     # Fail if the isolated copy drifts from the production document/security rules.
-    expected = (ROOT / 'nginx.conf').read_text().replace(
-        'resolver 10.89.0.1', 'resolver 10.77.44.1'
-    ).replace('portfolio_web:8000', 'portfolio_phase4a_web:8000')
+    expected = (ROOT / 'nginx.conf').read_text().replace('portfolio_web:8000', 'portfolio_phase4a_web:8000')
     assert (DIRECTORY / 'nginx.integration.conf').read_text() == expected
     assert_owned_resources()
     prepare_network()

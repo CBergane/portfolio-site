@@ -84,7 +84,8 @@ the tracked CSS untouched:
 git ls-files -z '*.js' | xargs -0 -r -n 1 node --check
 git ls-files -z '*.py' | xargs -0 -r /tmp/portfolio-phase1-venv/bin/python -m py_compile
 git ls-files -z '*.sh' | xargs -0 -r -n 1 bash -n
-bash -n deploy/scripts/portfolio-wait-healthy
+python3 -m py_compile deploy/scripts/portfolio-wait-healthy
+python3 scripts/test_deployment.py
 cd app
 npm ci --ignore-scripts
 npm run build:css -- --output /tmp/portfolio-phase1.css
@@ -129,20 +130,20 @@ repository root:
 python3 scripts/check_nginx_documents.py --nginx /path/to/nginx --effective-config /tmp/portfolio-nginx-effective.conf
 ```
 
-This runs `nginx -t` and `nginx -T` on the unmodified repository configuration
-in a test wrapper, then stages temporary paths and tests actual GET/HEAD responses
-against synthetic files and a synthetic upstream. It blocks direct public/restricted
+This renders the template's resolver placeholder with a loopback test resolver,
+runs `nginx -t` and `nginx -T` in a test wrapper, then stages temporary paths and
+tests actual GET/HEAD responses against synthetic files and a synthetic upstream. It blocks direct public/restricted
 document paths, including encoded and normalized variants, and checks canonical
 document routing, image renditions, originals, other media and static files.
-Only filesystem aliases, the listen address/port and the upstream address are
+Only the resolver, filesystem aliases, listen address/port and upstream address are
 substituted with temporary paths and loopback services. The access rules are
 unchanged. The emitted configuration is the effective **local test** configuration,
 not evidence about a deployed proxy or Cloudflare's cache.
 
-The CI `nginx` job also checks the unmodified repository config with `nginx -t`
-and `nginx -T` inside the same `nginx:1.29-alpine` image family used by Compose,
-then runs the HTTP regression check there. Python is installed only as a test
-tool in that disposable container; application dependencies are unchanged.
+The CI `nginx` job first checks the template through the pinned image's native
+entrypoint with `nginx -t`, then runs the HTTP regression check and `nginx -T`
+inside the same `nginx:1.29-alpine` image family used by Compose. Python is installed
+only as a test tool in that disposable container; application dependencies are unchanged.
 If Nginx or the disposable container runtime is unavailable, report that check
 as blocked. No production container, media volume or backup is used.
 

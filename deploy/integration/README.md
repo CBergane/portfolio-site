@@ -6,6 +6,9 @@ not load the production `.env`, mount existing media or backups, or connect a
 Cloudflare tunnel. All database credentials, users and documents are synthetic.
 Application webhook, Turnstile and HTB credentials are empty; the test settings
 also block outgoing `requests` HTTP calls before network I/O.
+Database credentials deliberately contain URL-reserved characters and a literal
+dollar sign. The web container uses the production readiness module to check
+PostgreSQL, Redis and local Gunicorn, with the same bounded probe as production.
 
 Requirements: Python 3.9 or newer, `/usr/bin/podman` 3.4.4, Podman Compose 1.6.0,
 `ss` (Ubuntu's iproute2 package), and the CNI `dnsname` plugin. Image downloads and
@@ -94,9 +97,14 @@ static/media volumes read-only. Redis uses `/data` on tmpfs with persistence
 disabled, avoiding anonymous image volumes. Images are pinned to the same digests
 as the production configuration.
 
-The isolated Nginx configuration copies production rules with only the upstream
-container name and DNS resolver changed. Startup rejects any other drift. The
-production Compose file, Dockerfile, application code and Nginx file are untouched.
+The isolated Nginx template copies production rules with only the upstream
+container name changed. Both use the pinned image's native resolver substitution;
+startup rejects any other drift. The runner does not modify production configuration.
+
+Host resource failures, including dnsmasq/inotify exhaustion before startup, block
+networking and recovery checks. Do not change global kernel limits or signal
+unrelated processes as part of these tests. See [../PHASE6A.md](../PHASE6A.md) for
+the current verification results; earlier restart failures remain historical evidence.
 
 ## Safe cleanup
 
@@ -119,4 +127,5 @@ are kept. Logs redact the synthetic database/Django credentials; document-test
 session tokens are kept in memory and are not printed. Do not run `fixtures.py`
 directly for log collection because its JSON contains the test session token.
 
-See [RESULTS.md](RESULTS.md) for the verified behavior and deployment limits.
+See [RESULTS.md](RESULTS.md) for Phase 4A results and [../README.md](../README.md)
+for the separate production deployment and rollback checklist.

@@ -13,7 +13,7 @@ services:
     networks:
       - portfolio_network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U ${POSTGRES_USER} -d ${POSTGRES_DB} || exit 1"]
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U \"$$POSTGRES_USER\" -d \"$$POSTGRES_DB\" || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -23,6 +23,7 @@ services:
     image: docker.io/library/redis:7-alpine@sha256:858f009f9709ce576febc734aa78b8f6d624b82571f9ddb6bda4377c833b3499
     container_name: portfolio_redis
     command: ["redis-server", "--save", "", "--appendonly", "no"]
+    tmpfs: [/data]
     networks:
       - portfolio_network
     healthcheck:
@@ -33,6 +34,7 @@ services:
     restart: unless-stopped
 
   web:
+    image: ${PORTFOLIO_WEB_IMAGE:-localhost/portfolio-web:local}
     build:
       context: ./app
       dockerfile: Dockerfile
@@ -41,7 +43,13 @@ services:
       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
       DJANGO_DEBUG: ${DJANGO_DEBUG}
       DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS}
-      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST: db
+      POSTGRES_PORT: "5432"
+      DB_TIMEOUT_SEC: "60"
+      RUN_MIGRATIONS: "0"
       INIT_WAGTAIL_HOME: "0"
       CACHE_URL: redis://redis:6379/1
       DISCORD_WEBHOOK_URL: ${DISCORD_WEBHOOK_URL}
@@ -64,22 +72,26 @@ services:
       redis:
         condition: service_healthy
     restart: unless-stopped
+    stop_grace_period: 45s
     healthcheck:
-      test: ["CMD-SHELL", "python -c \"import socket; s=socket.socket(); s.connect(('localhost',8000)); s.close()\""]
+      test: ["CMD", "timeout", "--kill-after=1s", "10s", "python", "-m", "config.healthcheck"]
       interval: 30s
-      timeout: 10s
+      timeout: 12s
       retries: 3
       start_period: 40s
 
   nginx:
     image: docker.io/library/nginx:1.29-alpine@sha256:5616878291a2eed594aee8db4dade5878cf7edcb475e59193904b198d9b830de
     container_name: portfolio_nginx
+    environment:
+      NGINX_ENTRYPOINT_LOCAL_RESOLVERS: "1"
+      NGINX_ENVSUBST_FILTER: "^NGINX_LOCAL_RESOLVERS$"
     ports:
       - "127.0.0.1:80:8080"
     volumes:
       - static_files:/static:ro
       - media_files:/media:ro
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx.conf:/etc/nginx/templates/default.conf.template:ro
     networks:
       - portfolio_network
     depends_on:
@@ -87,7 +99,7 @@ services:
         condition: service_healthy
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "wget -q -O /dev/null --header='Host: cbergane.se' --header='X-Forwarded-Proto: https' http://127.0.0.1:8080/healthz || exit 1"]
+      test: ["CMD-SHELL", "wget -T 3 -q -O /dev/null --header='Host: cbergane.se' --header='X-Forwarded-Proto: https' http://127.0.0.1:8080/healthz || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
