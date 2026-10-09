@@ -46,3 +46,11 @@ app/node_modules/
 /backups/
 /*_backup.*
 /volumes/
+
+
+# Backups
+/data_backup.json
+/portfolio_backup.sql.gz
+/media_backup.tar.gz
+*.sql.gz
+*.dump
