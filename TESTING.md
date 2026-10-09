@@ -91,6 +91,19 @@ npm ci --ignore-scripts
 npm run build:css -- --output /tmp/portfolio-phase1.css
 ```
 
+For browser navigation regressions, use an authoring environment with the app
+dependencies, Playwright and Chromium installed:
+
+```sh
+python design/validation/navigation_clicks.py --htmx-script /tmp/htmx-1.9.10.min.js
+```
+
+Supply a local copy of the pinned HTMX script for the swap checks; without it the
+script explicitly reports those checks as skipped. All browser requests are served
+locally from synthetic in-memory Django pages and existing assets. Checks cover raw
+pointer clicks during scrolling, mobile focus/scroll restoration, resize and Back
+navigation, and normal/reduced motion at widths from 320 to 1366 pixels.
+
 `.github/workflows/ci.yml` runs Django checks, migration drift checks and the test
 suite on both database backends using a fresh PostgreSQL 16 service, then syntax
 and frontend build checks in a separate job. It uses no deployment steps or

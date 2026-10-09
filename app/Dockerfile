@@ -61,8 +61,8 @@ WORKDIR /app
 COPY --chown=appuser:appuser . .
 RUN sed -i 's/\r$//' /app/entrypoint.sh && chmod +x /app/entrypoint.sh
 
-# overwrite output.css with freshly built Tailwind
-COPY --from=nodebuilder /src/static/css/output.css /app/static/css/output.css
+# Copy compiled Tailwind CSS with correct ownership and permissions
+COPY --chown=appuser:appuser --chmod=644 --from=nodebuilder /src/static/css/output.css /app/static/css/output.css
 
 USER appuser
 EXPOSE 8000
