@@ -4,6 +4,7 @@ import re
 
 import markdown
 from bs4 import BeautifulSoup
+from wagtail.blocks import StreamValue
 
 
 def visible_text(value, *, is_markdown=False):
@@ -21,18 +22,23 @@ def reading_minutes(page):
 
     Count body text, code, image captions and quotes, plus project case-study
     prose. Never render image renditions or count page metadata/TOC.
-    This helper is side-effect free; callers decide whether to persist the result.
+    Never write to the database; callers decide whether to persist the result.
     """
     parts = []
-    for block in getattr(page, 'body', ()) or ():
-        value = block.value
-        if block.block_type == 'code':
+    body = getattr(page, 'body', ()) or ()
+    # Serialized text avoids resolving image choosers, including on lazy streams.
+    blocks = body.get_prep_value() if isinstance(body, StreamValue) else (
+        {'type': block.block_type, 'value': block.value} for block in body
+    )
+    for block in blocks:
+        value = block['value']
+        if block['type'] == 'code':
             parts.append(str(value.get('code', '')))
-        elif block.block_type in ('image', 'quote'):
-            keys = ('caption', 'attribution') if block.block_type == 'image' else ('quote', 'author')
+        elif block['type'] in ('image', 'quote'):
+            keys = ('caption', 'attribution') if block['type'] == 'image' else ('quote', 'author')
             parts.extend(visible_text(value.get(key, '')) for key in keys)
         else:
-            parts.append(visible_text(value, is_markdown=block.block_type == 'markdown'))
+            parts.append(visible_text(value, is_markdown=block['type'] == 'markdown'))
     for field in (
         'problem', 'solution', 'architecture', 'security_considerations',
         'testing_validation', 'outcome', 'lessons_learned',

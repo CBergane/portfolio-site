@@ -10,7 +10,7 @@ Modern portfolio site showcasing my cybersecurity work, CTF write-ups, and proje
 - 🏗️ Infrastructure as Code (Docker/Podman)
 - 🔐 Security-first architecture
 - 📝 Dynamic blog & project showcase
-- 🚀 Zero-downtime deployments
+- 🚀 Planned maintenance deployments with retained rollback images
 
 ## Cloudflare / HTTPS Enforcement
 - Configure Cloudflare (or upstream proxy) to issue a strict HTTP→HTTPS redirect using status **308** so POST requests, like the contact form, are never downgraded or retried over HTTP.
@@ -24,6 +24,12 @@ The HTB card is rendered server-side and cached. Configure these env vars (and s
 
 ## Local Development
 See [INSTALL.md](INSTALL.md) for setup instructions.
+
+For isolated SQLite/PostgreSQL 16 tests and CI checks, see [TESTING.md](TESTING.md).
+For dependency locks, security findings and reproducible build limits, see
+[DEPENDENCIES.md](DEPENDENCIES.md).
+For production preparation, persistent volumes and rollback, see
+[deploy/README.md](deploy/README.md).
 
 ---
 Built with ❤️ for the infosec community

@@ -1,26 +1,34 @@
-{% load static wagtailcore_tags navigation_tags wagtailsettings_tags %}
+{% load static wagtailcore_tags navigation_tags wagtailsettings_tags seo_tags %}
 {% get_settings %}
 {% get_site_root as site_root %}
+{% page_seo as seo %}
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>{% block title %}{{ page.title }}{% endblock %} | {{ settings.home.SEOSettings.site_name }}</title>
-    <meta name="description" content="{% block meta_description %}{{ settings.home.SEOSettings.meta_description }}{% endblock %}">
-    <meta name="keywords" content="{{ settings.home.SEOSettings.meta_keywords }}">
+    <title>{% block title %}{{ seo.title }}{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}{{ seo.description }}{% endblock %}">
     <meta name="author" content="Christian Bergane">
     <meta name="theme-color" content="#080a0d">
 
     <meta property="og:type" content="website">
-    <meta property="og:url" content="{{ request.build_absolute_uri }}">
-    <meta property="og:title" content="{% block og_title %}{{ page.title }} | {{ settings.home.SEOSettings.site_name }}{% endblock %}">
-    <meta property="og:description" content="{% block og_description %}{{ settings.home.SEOSettings.meta_description }}{% endblock %}">
+    {% if seo.canonical %}<link rel="canonical" href="{{ seo.canonical }}">{% endif %}
+    {% if seo.robots %}<meta name="robots" content="{{ seo.robots }}">{% endif %}
+    {% if seo.url %}<meta property="og:url" content="{{ seo.url }}">{% endif %}
+    <meta property="og:title" content="{% block og_title %}{{ seo.title }}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{{ seo.description }}{% endblock %}">
+    {% if seo.image_url %}
+    <meta property="og:image" content="{{ seo.image_url }}">
+    <meta property="og:image:alt" content="{{ seo.image_alt }}">
+    <meta name="twitter:image" content="{{ seo.image_url }}">
+    <meta name="twitter:image:alt" content="{{ seo.image_alt }}">
+    {% endif %}
 
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{% block twitter_title %}{{ page.title }} | {{ settings.home.SEOSettings.site_name }}{% endblock %}">
-    <meta name="twitter:description" content="{% block twitter_description %}{{ settings.home.SEOSettings.meta_description }}{% endblock %}">
+    <meta name="twitter:card" content="{% if seo.image_url %}summary_large_image{% else %}summary{% endif %}">
+    <meta name="twitter:title" content="{% block twitter_title %}{{ seo.title }}{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}{{ seo.description }}{% endblock %}">
 
     <link rel="icon" href="{% static 'images/brand/favicon.ico' %}" sizes="16x16 32x32 48x48">
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/brand/favicon-32x32.png' %}">
@@ -65,7 +73,7 @@
             {% if site_root %}<a href="{% pageurl site_root %}" class="site-brand" aria-label="CBergane home">{% else %}<span class="site-brand" aria-label="CBergane">{% endif %}
                 <span class="site-brand__mark" aria-hidden="true"></span>
                 <span>CBERGANE</span>
-                <span class="site-brand__descriptor">WEB / INFRASTRUCTURE / SECURITY</span>
+                <span class="site-brand__descriptor">IT SECURITY / INFRASTRUCTURE / WEB DEVELOPMENT</span>
             {% if site_root %}</a>{% else %}</span>{% endif %}
 
             <nav class="site-nav site-nav--desktop" aria-label="Primary navigation">
@@ -91,7 +99,7 @@
         <div class="site-footer__inner">
             <div class="site-footer__identity">
                 <span class="meta-label">CBERGANE / STOCKHOLM</span>
-                <p>Web development, Infrastructure and Security.</p>
+                <p>IT Security, Infrastructure and Web Development.</p>
             </div>
 
             <div class="site-footer__links" aria-label="Social links">

@@ -8,7 +8,7 @@ from django.urls import path
 
 from wagtail.models import Page, Site
 
-from .models import ContactPage, HomePage, ProjectIndexPage
+from ..models import ContactPage, HomePage, ProjectIndexPage
 
 
 def unavailable_view(request):

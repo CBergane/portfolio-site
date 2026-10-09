@@ -14,9 +14,9 @@ from wagtail.images import get_image_model
 from wagtail.models import Page, PageViewRestriction, Site
 from wagtail.search import index
 
-from .models import BlogIndexPage, BlogPage, ContactPage, HomePage, LabEntryPage, LabPage, ProjectIndexPage, ProjectPage
-from .navigation import site_destinations
-from .templatetags.navigation_tags import main_navigation
+from ..models import BlogIndexPage, BlogPage, ContactPage, HomePage, LabEntryPage, LabPage, ProjectIndexPage, ProjectPage
+from ..navigation import site_destinations
+from ..templatetags.navigation_tags import main_navigation
 
 
 SECTIONS = (

@@ -99,6 +99,7 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "django.contrib.sitemaps",
     "django.contrib.staticfiles",
 ]
 
@@ -139,23 +140,19 @@ WSGI_APPLICATION = "config.wsgi.application"
 # -------------------------------------------------
 # Database (PostgreSQL via env)
 # -------------------------------------------------
-#DATABASES = {
-#    "default": {
-#        "ENGINE": "django.db.backends.postgresql",
-#        "NAME": os.getenv("POSTGRES_DB"),
-#        "USER": os.getenv("POSTGRES_USER"),
-#        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
-#        "HOST": os.getenv("POSTGRES_HOST", "localhost"),  # 'db' i docker
-#        "PORT": os.getenv("POSTGRES_PORT", "5432"),
-#    }
-#}
-import os, dj_database_url
 DATABASES = {
-    "default": dj_database_url.config(
-        default=os.getenv("DATABASE_URL", "postgres://portfolio_user:@db:5432/portfolio_db"),
-        conn_max_age=600,
-    )
+    "default": dj_database_url.config(conn_max_age=600) if os.getenv("DATABASE_URL") else {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("POSTGRES_DB", "portfolio_db"),
+        "USER": os.getenv("POSTGRES_USER", "portfolio_user"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD", ""),
+        "HOST": os.getenv("POSTGRES_HOST", "db"),
+        "PORT": os.getenv("POSTGRES_PORT", "5432"),
+        "CONN_MAX_AGE": 600,
+    }
 }
+if DATABASES["default"]["ENGINE"] == "django.db.backends.postgresql":
+    DATABASES["default"].setdefault("OPTIONS", {}).setdefault("connect_timeout", 3)
 
 # -------------------------------------------------
 # Cache / rate limiting
@@ -172,6 +169,7 @@ else:
         "default": {
             "BACKEND": "django.core.cache.backends.redis.RedisCache",
             "LOCATION": os.getenv("CACHE_URL", "redis://redis:6379/1"),
+            "OPTIONS": {"socket_connect_timeout": 2, "socket_timeout": 2},
         }
     }
 
@@ -193,6 +191,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # -------------------------------------------------
 WAGTAIL_SITE_NAME = "Christian Bergane Portfolio"
 WAGTAILADMIN_BASE_URL = os.getenv("WAGTAILADMIN_BASE_URL", "http://localhost:8000")
+# Keep document permissions and security headers on the download response.
+WAGTAILDOCS_SERVE_METHOD = "serve_view"
 
 # -------------------------------------------------
 # Static / Media (WhiteNoise i prod)

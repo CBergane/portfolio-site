@@ -36,11 +36,10 @@ def site_destinations(request, current_page=None):
         # the ancestor preference and the fallback for legacy sibling details.
         if site and name in ('work', 'notes'):
             candidates = candidates.exclude(pk=site.root_page_id)
-        branch = (
-            candidates.ancestor_of(current_page, inclusive=True).order_by('-depth').first()
-            if current_page else None
-        )
-        destinations[name] = branch or candidates.first()
+        # The small set of indexes serves both ancestor preference and fallback.
+        candidates = list(candidates)
+        ancestors = [page for page in candidates if current_page and current_page.path.startswith(page.path)]
+        destinations[name] = max(ancestors, key=lambda page: page.depth, default=None) or next(iter(candidates), None)
     return destinations
 
 

@@ -1,39 +1,64 @@
-#!/bin/sh
-set -u
+#!/usr/bin/python3
+"""Bounded startup gate using configured probes and either Podman health format."""
+import argparse
+import json
+import subprocess
+import time
 
-unset XDG_RUNTIME_DIR
 
-attempt=1
-max_attempts=30
+CONTAINERS = ('portfolio_db', 'portfolio_redis', 'portfolio_web', 'portfolio_nginx')
 
-while [ "$attempt" -le "$max_attempts" ]; do
-    all_healthy=1
-    summary=""
 
-    for container in portfolio_db portfolio_web portfolio_nginx; do
-        health="$(
-            /usr/bin/podman inspect "$container" \
-              --format '{{if .State.Health}}{{.State.Health.Status}}{{else}}{{.State.Status}}{{end}}' \
-              2>/dev/null
-        )" || health="missing"
+def wait_for_health(containers=CONTAINERS, timeout=150):
+    if not containers:
+        return 1
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        statuses = {}
+        for container in containers:
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                break
+            try:
+                # Recheck readiness now; a cached healthy state can be stale.
+                probe = subprocess.run(
+                    ['/usr/bin/podman', 'healthcheck', 'run', container],
+                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                    timeout=min(12, remaining),
+                )
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    break
+                result = subprocess.run(
+                    ['/usr/bin/podman', 'inspect', container],
+                    capture_output=True, text=True, timeout=min(5, remaining), check=True,
+                )
+                state = json.loads(result.stdout)[0]['State']
+                health = state.get('Health') or state.get('Healthcheck') or {}
+                status = health.get('Status', 'no_healthcheck')
+                if state.get('Status') != 'running':
+                    status = state.get('Status', 'not_running')
+                elif probe.returncode:
+                    status = 'probe_failed'
+                statuses[container] = status
+            except subprocess.TimeoutExpired:
+                statuses[container] = 'timeout'
+            except (OSError, subprocess.CalledProcessError, ValueError, KeyError, IndexError, TypeError, AttributeError):
+                statuses[container] = 'unavailable'
+        print('Readiness: ' + ' '.join(f'{name}={statuses.get(name, "timeout")}' for name in containers), flush=True)
+        if (time.monotonic() < deadline and len(statuses) == len(containers)
+                and all(status == 'healthy' for status in statuses.values())):
+            return 0
+        time.sleep(min(5, max(0, deadline - time.monotonic())))
+    print('Portfolio readiness timed out.', flush=True)
+    return 1
 
-        summary="${summary}${container}=${health} "
 
-        if [ "$health" != "healthy" ]; then
-            all_healthy=0
-        fi
-    done
-
-    printf 'Health attempt %s/%s: %s\n' \
-      "$attempt" "$max_attempts" "$summary"
-
-    if [ "$all_healthy" -eq 1 ]; then
-        exit 0
-    fi
-
-    attempt=$((attempt + 1))
-    sleep 5
-done
-
-echo "Portfolio containers did not become healthy in time." >&2
-exit 1
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--timeout', type=int, default=150)
+    parser.add_argument('containers', nargs='*', default=CONTAINERS)
+    args = parser.parse_args()
+    if args.timeout <= 0:
+        parser.error('--timeout must be positive')
+    raise SystemExit(wait_for_health(args.containers, args.timeout))

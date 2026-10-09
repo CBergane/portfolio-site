@@ -13,30 +13,36 @@ echo "🚀 Starting Django application..."
 RUN_MIGRATIONS="${RUN_MIGRATIONS:-1}"
 RUN_COLLECTSTATIC="${RUN_COLLECTSTATIC:-1}"
 
-# -------- Wait for DB (prefer DATABASE_URL) --------
-if [[ -n "${DATABASE_URL:-}" ]]; then
-  echo "⏳ Waiting for database via DATABASE_URL ..."
-  # loopa tills vi kan göra en enkel query
-  until psql "${DATABASE_URL}" -Atqc "select 1" >/dev/null 2>&1; do
-    sleep 2
-  done
-else
-  DB_HOST="${POSTGRES_HOST:-${DATABASE_HOST:-db}}"
-  DB_PORT="${POSTGRES_PORT:-${DATABASE_PORT:-5432}}"
-  DB_USER="${POSTGRES_USER:-${DATABASE_USER:-postgres}}"
-  DB_NAME="${POSTGRES_DB:-${DATABASE_NAME:-postgres}}"
-  DB_PASSWORD="${POSTGRES_PASSWORD:-${DATABASE_PASSWORD:-}}"
-  export PGHOST="$DB_HOST" PGPORT="$DB_PORT" PGUSER="$DB_USER" PGPASSWORD="$DB_PASSWORD"
+# Use the same database settings as Django; credentials never enter shell arguments.
+DB_TIMEOUT_SEC="${DB_TIMEOUT_SEC:-60}"
+if [[ ! "$DB_TIMEOUT_SEC" =~ ^[1-9][0-9]{0,3}$ ]] || (( DB_TIMEOUT_SEC > 3600 )); then
+  echo "❌ DB_TIMEOUT_SEC must be an integer between 1 and 3600." >&2
+  exit 1
+fi
+echo "⏳ Waiting for database (limit ${DB_TIMEOUT_SEC}s) ..."
+if ! timeout --kill-after=1s "${DB_TIMEOUT_SEC}s" python - >/dev/null 2>&1 <<'PY'
+import os
+import time
+import django
 
-  echo "⏳ Waiting for database ${PGHOST}:${PGPORT} (db=${DB_NAME}) ..."
-  secs=0; limit="${DB_TIMEOUT_SEC:-60}"
-  until psql -d "$DB_NAME" -Atqc "select 1" >/dev/null 2>&1; do
-    sleep 2; secs=$((secs+2))
-    if (( secs >= limit )); then
-      echo "❌ Database not ready after ${limit}s" >&2
-      exit 1
-    fi
-  done
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
+django.setup()
+from django.db import connection, OperationalError, InterfaceError
+
+while True:
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute('SELECT 1')
+            assert cursor.fetchone() == (1,)
+        connection.close()
+        break
+    except (OperationalError, InterfaceError):
+        connection.close()
+        time.sleep(2)
+PY
+then
+  echo "❌ Database readiness failed or timed out (limit ${DB_TIMEOUT_SEC}s)." >&2
+  exit 1
 fi
 echo "✅ Database is ready!"
 

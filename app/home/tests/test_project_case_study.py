@@ -17,8 +17,8 @@ from wagtail.images import get_image_model
 from wagtail.models import Page, Site
 from wagtail.search import index
 
-from .models import HomePage, ProjectIndexPage, ProjectPage, ProjectPageTechStack, TechStack
-from .reading import reading_minutes
+from ..models import HomePage, ProjectIndexPage, ProjectPage, ProjectPageTechStack, TechStack
+from ..reading import reading_minutes
 
 
 SECTIONS = {

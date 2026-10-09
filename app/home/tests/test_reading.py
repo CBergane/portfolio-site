@@ -6,9 +6,9 @@ from django.template.loader import render_to_string
 from django.test import RequestFactory, SimpleTestCase, TestCase, override_settings
 from wagtail.models import Page, PageViewRestriction, Site
 
-from .models import BlogIndexPage, BlogPage, HomePage, ProjectIndexPage, ProjectPage
-from .navigation import adjacent_content, site_destinations
-from .reading import reading_minutes, visible_text
+from ..models import BlogIndexPage, BlogPage, HomePage, ProjectIndexPage, ProjectPage
+from ..navigation import adjacent_content, site_destinations
+from ..reading import reading_minutes, visible_text
 
 
 class ReadingTimeTests(SimpleTestCase):
