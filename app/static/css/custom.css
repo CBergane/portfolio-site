@@ -846,6 +846,13 @@ select {
     overflow-wrap: anywhere;
 }
 
+/* Keep the centered links stationary when the section readout disappears. */
+.section-rail__status[hidden] {
+    display: block;
+    visibility: hidden;
+    min-height: calc(1.5em + 1.1rem + 2px);
+}
+
 .section-rail b {
     position: absolute;
     width: 1px;
